@@ -1,8 +1,8 @@
 ## SecureRepository Services
 
 ### Introduction
-This backend service serves as the Github-Backup application Backend.
-### GitHub-Backup Service features
+This backend service serves as the SecureRepository product Backend.
+### SecureRepository Service features
 - Register repositories
 - Registered repositories reports
 - Backup repositories reports
