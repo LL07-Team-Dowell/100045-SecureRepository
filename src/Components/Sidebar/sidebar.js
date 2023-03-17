@@ -27,7 +27,7 @@ const SideBar = () => {
           <i className="fa-solid fa-circle-user"></i>
           <span className="user-name">Welcome User001</span>
         </div>
-        <Link to="/register" id = 'button-register'>
+        <Link to="/100045-SecureRepository/register" id = 'button-register'>
           {" "}
           <button className="button-register">Register Repository</button>
         </Link>

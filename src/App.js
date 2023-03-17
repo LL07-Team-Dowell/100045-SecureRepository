@@ -22,7 +22,11 @@ export const AppRouter = createBrowserRouter([
         element: <MainContent />,
       },
       {
-        path: "/register",
+        path: "/100045-SecureRepository",
+        element: <MainContent />,
+      },
+      {
+        path: "/100045-SecureRepository/register",
         element: <WithMaterialUI />,
       },
     ],

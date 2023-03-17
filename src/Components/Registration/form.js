@@ -6,16 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import "./form.css";
 import { Link } from "react-router-dom";
 
-// const validationSchema = yup.object({
-//   repoName: yup
-//     .string()
-//     .matches(/^\d{6,}-\w/i, "not matched")
-//     .required("Please Enter Your Repository Name"),
-//   repoURL: yup
-//     .string()
-//     .matches(/^https:\/\/\w/i, "Enter correct repo url")
-//     .required("Please Paste Your Repository URL"),
-// });
+
 const validationSchema = yup.object({
   repoURL: yup
     .string()
@@ -60,7 +51,7 @@ export const WithMaterialUI = () => {
     <div>
       <div className="cross-btn">
         {" "}
-        <Link to="/">
+        <Link to="/100045-SecureRepository">
           <i className="fa-solid fa-xmark"></i>{" "}
         </Link>
       </div>
