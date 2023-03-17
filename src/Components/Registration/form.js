@@ -18,7 +18,7 @@ const validationSchema = yup.object({
     .matches(/^\d{6,}-\w/i, "must start with digits")
     .test({
       name: "match-substring",
-      message: "Repository Name should with Repo Name in the URL",
+      message: "Repository Name should match with Repo Name in the URL",
       test: function (value) {
         const repoURL = this.parent.repoURL;
         if (!repoURL) {
