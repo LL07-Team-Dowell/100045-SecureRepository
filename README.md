@@ -12,8 +12,8 @@ This backend service serves as the SecureRepository product Backend.
 | HTTP Verbs | Endpoints                      | Action                                               |
 |------------|--------------------------------|------------------------------------------------------|
 | POST       | /backup/repositoryClone/              | To resgister the repository              |
-| GET       | /get-respository-reports/:company_id/ | To get reports for registered repository                           |
-| GET        | /get-backup-reports/:company_id/  | To get the reports for backup                       |
+| GET       | /reports/get-respository-reports/:company_id/ | To get reports for registered repository                           |
+| GET        | /reports/get-backup-reports/:company_id/  | To get the reports for backup                       |
 
 ### Endpoints Definition(Request - Response).
 #### Register repositories
