@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./sidebar.css";
 import logo from "../Assets/Sidebar Assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 // import RegisterRepository from "../Forms/form";
 
@@ -27,11 +27,12 @@ const SideBar = () => {
           <i className="fa-solid fa-circle-user"></i>
           <span className="user-name">Welcome User001</span>
         </div>
-        <Link to="/100045-SecureRepository/register" id = 'button-register'>
+        <Link to="register" id = 'button-register'>
           {" "}
           <button className="button-register">Register Repository</button>
         </Link>
       </aside>
+      <Outlet/>
     </>
   );
 };

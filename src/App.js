@@ -3,10 +3,12 @@ import SideBar from "./Components/Sidebar/sidebar";
 import { MainContent } from "./Components/Main/main";
 import { WithMaterialUI } from "./Components/Registration/form";
 import { createBrowserRouter, Outlet } from "react-router-dom";
+import UseDowellLogin from "./Components/Login/login2";
+import Portfolio from "./Components/Portfolio/portfolio";
+
 function App() {
   return (
     <>
-      <SideBar />
       <Outlet />
     </>
   );
@@ -19,15 +21,21 @@ export const AppRouter = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <MainContent />,
+        element: <UseDowellLogin />,
       },
       {
         path: "/100045-SecureRepository",
-        element: <MainContent />,
+        element: <SideBar/>,
+        children:[
+          {
+            path:'register',
+            element : <WithMaterialUI/>
+          }
+        ]
       },
       {
-        path: "/100045-SecureRepository/register",
-        element: <WithMaterialUI />,
+        path: "/100045-SecureRepository/portfolio",
+        element: <Portfolio />,
       },
     ],
   },
