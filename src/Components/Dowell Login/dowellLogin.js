@@ -3,7 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 const dowellLoginUrl =
-  "https://100014.pythonanywhere.com/?redirect_url=" + window.location.origin + "/#/" 
+  "https://100014.pythonanywhere.com/?redirect_url=" +
+  window.location.origin +
+  "/100045-SecureRepository";
 
 const dowellLogoutUrl =
   "https://100014.pythonanywhere.com/sign-out?redirect_url=http://localhost:3000/#/";
@@ -36,26 +38,25 @@ const getUserInfo = async (session_id) => {
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
   sessionStorage.setItem("portfolio_info", JSON.stringify(res.data));
   console.log(res.data.portfolio_info[0].product);
-//   const portfolio = res?.data?.portfolio_info[0]?.product;
-//   if (portfolio) {
-//     console.log("Redirect to portfolio");
-//   } else {
-//     console.log("create a portfolio");
-//   }
+  //   const portfolio = res?.data?.portfolio_info[0]?.product;
+  //   if (portfolio) {
+  //     console.log("Redirect to portfolio");
+  //   } else {
+  //     console.log("create a portfolio");
+  //   }
 };
 
 export default function useDowellLogin() {
   const queryParams = new URLSearchParams(window.location.search);
   const searchParams = queryParams.get("session_id");
   const searchParams2 = queryParams.get("id");
-  
+
   const localSession = sessionStorage.getItem("session_id")
     ? sessionStorage.getItem("session_id")
     : null;
   const localId = sessionStorage.getItem("id")
     ? sessionStorage.getItem("id")
     : null;
-
 
   useEffect(() => {
     const session_id = searchParams;
