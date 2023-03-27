@@ -1,8 +1,8 @@
 import React from "react";
+import "./form.css";
+import { TextField, Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import "./form.css";
 import { Link } from "react-router-dom";
 
@@ -34,7 +34,7 @@ const validationSchema = yup.object({
     .required("Please Enter Your Repository Name"),
 });
 
-export const WithMaterialUI = () => {
+const RegisterForm = () => {
   const formik = useFormik({
     initialValues: {
       repoName: "",
@@ -47,10 +47,10 @@ export const WithMaterialUI = () => {
   });
 
   return (
-    <div>
+    <div className="form-container">
       <div className="cross-btn">
         {" "}
-        <Link to="/100045-SecureRepository">
+        <Link to="/">
           <i className="fa-solid fa-xmark"></i>{" "}
         </Link>
       </div>
@@ -86,3 +86,5 @@ export const WithMaterialUI = () => {
     </div>
   );
 };
+
+export default RegisterForm;

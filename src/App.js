@@ -1,44 +1,21 @@
-import "./App.css";
 import SideBar from "./Components/Sidebar/sidebar";
-import { MainContent } from "./Components/Main/main";
-import { WithMaterialUI } from "./Components/Registration/form";
-import { createBrowserRouter, Outlet } from "react-router-dom";
-import UseDowellLogin from "./Components/Login/login2";
-import Portfolio from "./Components/Portfolio/portfolio";
-
+import { Route } from "react-router-dom";
+import { Routes } from "react-router-dom";
+import Home from "./Components/Home/home";
+import RegisterForm from "./Components/Register Form/form";
+import DowellLogin from "./Components/Dowell Login/dowellLogin";
 function App() {
   return (
     <>
-      <Outlet />
+      {" "}
+      <DowellLogin />
+      <SideBar />
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/register" element={<RegisterForm />} />
+      </Routes>
     </>
   );
 }
-
-export const AppRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "/",
-        element: <UseDowellLogin />,
-      },
-      {
-        path: "/100045-SecureRepository",
-        element: <SideBar/>,
-        children:[
-          {
-            path:'register',
-            element : <WithMaterialUI/>
-          }
-        ]
-      },
-      {
-        path: "/100045-SecureRepository/portfolio",
-        element: <Portfolio />,
-      },
-    ],
-  },
-]);
 
 export default App;

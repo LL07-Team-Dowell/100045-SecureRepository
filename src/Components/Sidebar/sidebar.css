@@ -1,34 +1,40 @@
 .sidebar {
   height: 100vh;
-  width: 40vw;
+  width: 30%;
   max-width: 380px;
   min-width: 200px;
-  background-color: #0c1e35;
+  background-color: #54595f;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  padding-top: 1rem;
+  position: relative;
 }
 
 .sidebar-header-top {
-  width: 80%;
+  width: 70%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 2em 0;
+  margin: 0.5em 0;
 }
 .sidebar-header-top > a > .logo {
-  width: 60px;
+  width: 28px;
 }
 
 .sidebar-header-top > .title {
-  color: #7d84ab;
+  color: #fdfbfb;
 }
 
 .fa-bars {
-  color: #7d84ab;
+  color: #7a7a7a;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+.fa-bars:hover::before {
+  display: block;
 }
 
 .fa-bars:hover,
@@ -37,20 +43,58 @@
 }
 
 .sidebar-header-bottom {
-  width: 80%;
+  width: 70%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 2em 0;
+  margin: 0.5em 0;
+}
+.sidebar-header-bottom > .sidebar-icons {
+  position: relative;
 }
 
-.sidebar-header-bottom > i {
-  font-size: 1.5rem;
-  color: #7d84ab;
+.tooltip {
+  position: relative;
+  display: inline-block;
+  color: #7a7a7a;
   cursor: pointer;
 }
-.sidebar-header-bottom > i:hover {
-  color: #dee2ec;
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  padding: 0.5em 0.9em;
+  background-color: #181717;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  line-height: 1rem;
+  margin-left: -35px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-family: sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 55%;
+  margin-left: 0px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 0.8;
 }
 
 .user-profile {
@@ -62,14 +106,37 @@
   gap: 1.3em;
 }
 .user-profile > i {
-  font-size: 8rem;
+  font-size: 4rem;
   color: #dee2ec;
 }
 
 .user-profile > .user-name {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #dee2ec;
+}
+.main-logo {
+  margin: 2em 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+}
+.main-logo > .user-name {
+  font-size: 0.9rem;
+  color: #61cd70;
+}
+.main-logo > img {
+  width: 100px;
+}
+.btn-container {
+  margin: 1em 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
 }
 
 .button-register {
@@ -84,7 +151,6 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 1.5;
-  margin: 2em 0;
   max-width: none;
   min-height: 44px;
   min-width: 10px;
@@ -92,7 +158,8 @@
   overflow: hidden;
   padding: 9px 20px 8px;
   text-align: center;
-  width: 100%;
+  width: 30%;
+  min-width: 200px;
 }
 
 .button-register:hover {
@@ -102,10 +169,30 @@
   scale: 0.9;
 }
 
-#button-register{
-
+#button-register {
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
 }
+
+.sidebar-bottom {
+  position: absolute;
+  bottom: 2%;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5em 0;
+}
+
+.sidebar-bottom > .fa-solid {
+  font-size: 1.2rem;
+  color: #fdfbfb;
+}
+
+@media screen and (max-width: 900px) {
+  .sidebar {
+     width:100%
+    }
+  }
