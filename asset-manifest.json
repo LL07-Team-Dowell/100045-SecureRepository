@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/SavinderSingh77//100045-SecureRepository/static/css/main.c7ebeaf7.css",
-    "main.js": "/SavinderSingh77//100045-SecureRepository/static/js/main.9c73c7f2.js",
-    "static/js/787.49348129.chunk.js": "/SavinderSingh77//100045-SecureRepository/static/js/787.49348129.chunk.js",
-    "static/media/logo.png": "/SavinderSingh77//100045-SecureRepository/static/media/logo.b763da6f69bdc4ae5dce.png",
-    "index.html": "/SavinderSingh77//100045-SecureRepository/index.html",
-    "main.c7ebeaf7.css.map": "/SavinderSingh77//100045-SecureRepository/static/css/main.c7ebeaf7.css.map",
-    "main.9c73c7f2.js.map": "/SavinderSingh77//100045-SecureRepository/static/js/main.9c73c7f2.js.map",
-    "787.49348129.chunk.js.map": "/SavinderSingh77//100045-SecureRepository/static/js/787.49348129.chunk.js.map"
+    "main.css": "/100045-SecureRepository/static/css/main.c7ebeaf7.css",
+    "main.js": "/100045-SecureRepository/static/js/main.2cc2c8b0.js",
+    "static/js/787.49348129.chunk.js": "/100045-SecureRepository/static/js/787.49348129.chunk.js",
+    "static/media/logo.png": "/100045-SecureRepository/static/media/logo.b763da6f69bdc4ae5dce.png",
+    "index.html": "/100045-SecureRepository/index.html",
+    "main.c7ebeaf7.css.map": "/100045-SecureRepository/static/css/main.c7ebeaf7.css.map",
+    "main.2cc2c8b0.js.map": "/100045-SecureRepository/static/js/main.2cc2c8b0.js.map",
+    "787.49348129.chunk.js.map": "/100045-SecureRepository/static/js/787.49348129.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c7ebeaf7.css",
-    "static/js/main.9c73c7f2.js"
+    "static/js/main.2cc2c8b0.js"
   ]
 }
