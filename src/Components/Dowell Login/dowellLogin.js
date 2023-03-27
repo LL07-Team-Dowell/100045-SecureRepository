@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 const dowellLoginUrl =
-  "https://100014.pythonanywhere.com/?redirect_url=http://localhost:3000/#/";
+  "https://100014.pythonanywhere.com/?redirect_url=" + window.location.origin + "/#/" 
 
 const dowellLogoutUrl =
   "https://100014.pythonanywhere.com/sign-out?redirect_url=http://localhost:3000/#/";
