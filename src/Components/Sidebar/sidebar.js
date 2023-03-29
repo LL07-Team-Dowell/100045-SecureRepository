@@ -1,7 +1,7 @@
 import React from "react";
 import "./sidebar.css";
 import logo from "../Assets/Sidebar Assets/logo.png";
-// import mainLogo from "../Assets/Sidebar Assets/mainLogo.webp";
+import MainLogo from '../Assets/Sidebar Assets/MainLogo.png'
 import { Link } from "react-router-dom";
 
 const SideBar = () => {
@@ -41,7 +41,7 @@ const SideBar = () => {
         </div>
         <div className="main-logo">
           <span className="user-name">Savinder</span>
-          {/* <img src={mainLogo} alt="main-logo" /> */}
+          <img src={MainLogo} alt="main-logo" />
         </div>
 
         <div className="btn-container">
