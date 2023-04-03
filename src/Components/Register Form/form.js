@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./form.css";
 import { TextField, Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import "./form.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import useGetResponse from "../Custom Hooks/useGetResponse";
 
 const validationSchema = yup.object({
   repoURL: yup
@@ -34,7 +36,14 @@ const validationSchema = yup.object({
     .required("Please Enter Your Repository Name"),
 });
 
+let data;
 const RegisterForm = () => {
+  const [repoUrl, setRepoUrl] = useState(null);
+  const [repoName, setRepoName] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [getResponse, status, webHookLink] = useGetResponse();
+  
+  console.log(getResponse, status, webHookLink);
   const formik = useFormik({
     initialValues: {
       repoName: "",
@@ -42,9 +51,15 @@ const RegisterForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(JSON.stringify(values, null, 2));
+      console.log(values);
+      setRepoUrl(values.repoURL);
+      setRepoName(values.repoName);
+      setLoading(true);
+      getResponse(values.repoName, values.repoURL);
     },
   });
+
+  console.log(formik.isSubmitting);
 
   return (
     <div className="form-container">
@@ -83,6 +98,29 @@ const RegisterForm = () => {
           Submit
         </Button>
       </form>
+
+      {formik.isSubmitting && !status && !webHookLink ? (
+        <div className="loading-spinner-container">
+          {" "}
+          <div className="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      ) : formik.isSubmitting && status && webHookLink ? (
+        <div className="response">
+          <div>Status : {status}</div>
+          <div>Web Hook Link : {webHookLink}</div>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

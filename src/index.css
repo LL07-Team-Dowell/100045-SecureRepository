@@ -11,6 +11,7 @@ body {
   max-width: 1440px;
   padding: 0 3em;
   overflow-x: hidden;
+  margin: 0 auto;
 }
 
 #root {

@@ -7,9 +7,6 @@ const dowellLoginUrl =
   window.location.origin +
   "/100045-SecureRepository";
 
-// const dowellLogoutUrl =
-//   "https://100014.pythonanywhere.com/sign-out?redirect_url=http://localhost:3000/#/";
-
 const getUserInfoOther = async (session_id) => {
   const session = {
     session_id: session_id,
@@ -36,14 +33,7 @@ const getUserInfo = async (session_id) => {
   });
 
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-  sessionStorage.setItem("portfolio_info", JSON.stringify(res.data));
-  console.log(res.data.portfolio_info[0].product);
-  //   const portfolio = res?.data?.portfolio_info[0]?.product;
-  //   if (portfolio) {
-  //     console.log("Redirect to portfolio");
-  //   } else {
-  //     console.log("create a portfolio");
-  //   }
+  localStorage.setItem("userInfo", JSON.stringify(res.data));
 };
 
 export default function useDowellLogin() {
