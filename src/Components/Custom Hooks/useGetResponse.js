@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 const useGetResponse = () => {
   const data = JSON.parse(sessionStorage.getItem("userInfo"));
-  console.log(data);
-
   const [status, setStatus] = useState(null);
   const [webHookLink, setWebHookLink] = useState(null);
   async function getResponse(repoName, repoUrl) {
@@ -23,7 +21,6 @@ const useGetResponse = () => {
       url: "http://100045.pythonanywhere.com/backup/repositoryClone/",
       data: requestHeaders,
     });
-    console.log(res.data);
     setStatus(res.data.status);
     setWebHookLink(res.data.webhook_link);
   }

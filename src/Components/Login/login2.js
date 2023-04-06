@@ -39,13 +39,10 @@ const getUserInfo = async (session_id) => {
 
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
   sessionStorage.setItem("portfolio_info", JSON.stringify(res.data));
-  console.log(res.data.portfolio_info[0].product);
   const portfolio = res?.data?.portfolio_info[0]?.product;
   if (portfolio) {
-    console.log("Redirect to portfolio");
     window.location.replace("http://localhost:3000/100045-SecureRepository/");
   } else {
-    console.log("create a portfolio");
     window.location.replace(
       "http://localhost:3000/100045-SecureRepository/portfolio"
     );
@@ -54,15 +51,12 @@ const getUserInfo = async (session_id) => {
 
 export default function useDowellLogin() {
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(sessionStorage.getItem("session_id"));
   const localSession = sessionStorage.getItem("session_id")
     ? sessionStorage.getItem("session_id")
     : null;
   const localId = sessionStorage.getItem("id")
     ? sessionStorage.getItem("id")
     : null;
-  console.log(localSession);
-
   useEffect(() => {
     const session_id = searchParams.get("session_id");
     const id = searchParams.get("id");

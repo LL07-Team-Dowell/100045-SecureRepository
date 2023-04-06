@@ -1,27 +1,22 @@
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-
 const dowellLoginUrl =
   "https://100014.pythonanywhere.com/?redirect_url=" +
   window.location.origin +
   "/100045-SecureRepository";
-
 const getUserInfoOther = async (session_id) => {
   const session = {
     session_id: session_id,
   };
-
   const res = await axios({
     method: "post",
     url: "https://100093.pythonanywhere.com/api/userinfo/",
     data: session,
   });
-
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
 };
 
-const getUserInfo = async (session_id) => {
+ const getUserInfo = async (session_id) => {
   const session = {
     session_id: session_id,
   };
@@ -31,9 +26,8 @@ const getUserInfo = async (session_id) => {
     url: "https://100014.pythonanywhere.com/api/userinfo/",
     data: session,
   });
-
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-  localStorage.setItem("userInfo", JSON.stringify(res.data));
+ 
 };
 
 export default function useDowellLogin() {

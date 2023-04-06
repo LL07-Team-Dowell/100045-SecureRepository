@@ -5,30 +5,10 @@ import MainLogo from "../Assets/Sidebar Assets/MainLogo.png";
 import { Link } from "react-router-dom";
 import logoutUrl from "../Constants/constant";
 import { profileUrl } from "../Constants/constant";
-import { usePortfolioData } from "../Portfolio Info/usePortfolioInfo";
-import { useEffect } from "react";
-import axios from "axios";
-import { Accordion } from "../Accordian/accordian";
-import { useState } from "react";
+import useGetUserInfo from "../Custom Hooks/useGetUserInfo";
 
 const SideBar = () => {
-  const [data, setData] = useState("");
-  const [userInfo, setUserInfo] = useState(localStorage.getItem("userInfo"));
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setUserInfo(JSON.parse(localStorage.getItem("userInfo")));
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    setData(JSON.parse(localStorage.getItem("userInfo")));
-  }, [setUserInfo]);
-
+  const data = useGetUserInfo();
   const portfolio = data?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
@@ -127,55 +107,65 @@ const SideBar = () => {
         </div>
 
         <div className="btn-container">
-          <Link to="/register" id="button-register">
-            {" "}
-            <button className="button-register">Register</button>
-          </Link>
-          <div className="line"></div>
-          <div>
-            <Accordion title="Reports">
-              <ul>
-                <li>
-                  {" "}
-                  <Link> Backup Report </Link>
-                </li>
-                <li>
-                  {" "}
-                  <Link> Repository Report </Link>
-                </li>
-              </ul>
-            </Accordion>
+          <div className="register-repository link-container">
+            <h3 className="title">Register Repository</h3>
+            <Link to="/register" id="button-register">
+              Register
+            </Link>
+            <div className="horizontal-line"></div>
+          </div>
+
+          <div className="reports link-container">
+            <h3 className="title">Reports</h3>
+            <Link to="/register" id="button-register">
+              Backup Report
+            </Link>
+            <div className="horizontal-line"></div>
+            <Link to="/register" id="button-register">
+              Repository Report
+            </Link>
+            <div className="horizontal-line"></div>
           </div>
         </div>
 
         <div className="sidebar-bottom">
-          <a href={logoutUrl}>
-            <i className="fa-solid fa-power-off tooltip">
-              <span className="tooltiptext">Logout</span>
-            </i>
-          </a>
+          <span className="company-name">
+            Dowell True moments user experience lab
+          </span>
+          <div className="real-data">
+            <span>6</span>
+            <span> {portfolioInfo?.data_type} </span>
+          </div>
 
-          <a href={profileUrl}>
-            <i className="fa-solid fa-user tooltip">
-              <span className="tooltiptext">Profile</span>
-            </i>
-          </a>
+          <div className="sidebar-bottom-icons">
+            <a href={logoutUrl}>
+              <i className="fa-solid fa-power-off tooltip">
+                <span className="tooltiptext">Logout</span>
+              </i>
+            </a>
 
-          <Link to="/">
-            <i className="fa-solid fa-house tooltip">
-              <span className="tooltiptext">Home</span>
-            </i>
-          </Link>
-          <Link>
-            <i className="fa-solid fa-shield-halved tooltip">
-              <span className="tooltiptext">Legal Status</span>
-            </i>
-          </Link>
-          <Link>
-            <i className="fa-solid fa-gear tooltip">
-              <span className="tooltiptext">Settings</span>
-            </i>
-          </Link>
+            <a href={profileUrl}>
+              <i className="fa-solid fa-user tooltip">
+                <span className="tooltiptext">Profile</span>
+              </i>
+            </a>
+
+            <Link to="/">
+              <i className="fa-solid fa-house tooltip">
+                <span className="tooltiptext">Home</span>
+              </i>
+            </Link>
+            <Link>
+              <i className="fa-solid fa-shield-halved tooltip">
+                <span className="tooltiptext">Legal Status</span>
+              </i>
+            </Link>
+            <Link>
+              <i className="fa-solid fa-gear tooltip">
+                <span className="tooltiptext">Settings</span>
+              </i>
+            </Link>
+          </div>
         </div>
       </aside>
     </>
