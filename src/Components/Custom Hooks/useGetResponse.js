@@ -18,7 +18,7 @@ const useGetResponse = () => {
 
     const res = await axios({
       method: "post",
-      url: "http://100045.pythonanywhere.com/backup/repositoryClone/",
+      url: "https://100045.pythonanywhere.com/backup/repositoryClone/",
       data: requestHeaders,
     });
     setStatus(res.data.status);
