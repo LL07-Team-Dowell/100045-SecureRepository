@@ -3,16 +3,20 @@ import axios from "axios";
 
 const useGetResponse = () => {
   const data = JSON.parse(sessionStorage.getItem("userInfo"));
+  const [dataSecureRepository] = data.portfolio_info.filter(
+    (item) => item.product === "Secure Repositories"
+  );
   const [status, setStatus] = useState(null);
   const [webHookLink, setWebHookLink] = useState(null);
+  console.log(data.portfolio_info[1].org_id);
   async function getResponse(repoName, repoUrl) {
     console.log(repoName, repoUrl);
     const requestHeaders = {
       repository_name: repoName,
       repository_url: repoUrl,
-      org_name: data.portfolio_info.org_name,
-      company_id: data.portfolio_info.org_id,
-      data_type: data.portfolio_info.data_type,
+      org_name: dataSecureRepository.org_name,
+      company_id: dataSecureRepository.org_id,
+      data_type: dataSecureRepository.data_type,
       created_by: data.userinfo.username,
     };
 
