@@ -5,6 +5,7 @@
   align-items: center;
   padding: 1em 2em;
   justify-self: center;
+  align-self: center;
 }
 .home-text > p {
   text-align: center;
@@ -15,7 +16,7 @@
 }
 
 @media screen and (max-width: 900px) {
-  .home-text{
+  .home-text {
     width: 100%;
     padding: 1em 0;
   }

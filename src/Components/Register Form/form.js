@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./form.css";
 import { TextField, Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import "./form.css";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import useGetResponse from "../Custom Hooks/useGetResponse";
+import Skeleton from "@mui/material/Skeleton";
 
 const validationSchema = yup.object({
   repoURL: yup
@@ -42,7 +42,7 @@ const RegisterForm = () => {
   const [repoName, setRepoName] = useState(null);
   const [loading, setLoading] = useState(false);
   const [getResponse, status, webHookLink] = useGetResponse();
-  
+
   console.log(getResponse, status, webHookLink);
   const formik = useFormik({
     initialValues: {
@@ -100,18 +100,34 @@ const RegisterForm = () => {
       </form>
 
       {formik.isSubmitting && !status && !webHookLink ? (
-        <div className="loading-spinner-container">
-          {" "}
-          <div className="lds-roller">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+        // <div className="loading-spinner-container">
+        //   {" "}
+        //   <div className="lds-roller">
+        //     <div></div>
+        //     <div></div>
+        //     <div></div>
+        //     <div></div>
+        //     <div></div>
+        //     <div></div>
+        //     <div></div>
+        //     <div></div>
+        //   </div>
+        // </div>
+        <div className="skeleton-box">
+          <Skeleton
+            variant="rounded"
+            style={{
+              width: "100%",
+              height: "20px",
+            }}
+          />
+          <Skeleton
+            variant="rounded"
+            style={{
+              width: "100%",
+              height: "20px",
+            }}
+          />
         </div>
       ) : formik.isSubmitting && status && webHookLink ? (
         <div className="response">

@@ -6,18 +6,22 @@ const useGetResponse = () => {
   const [dataSecureRepository] = data.portfolio_info.filter(
     (item) => item.product === "Secure Repositories"
   );
+  const [dataWorkflowAI] = data.portfolio_info.filter(
+    (item) => item.product === "Workflow AI"
+  );
   const [status, setStatus] = useState(null);
   const [webHookLink, setWebHookLink] = useState(null);
-  console.log(data.portfolio_info[1].org_id);
   async function getResponse(repoName, repoUrl) {
-    console.log(repoName, repoUrl);
+    console.log(repoName, repoUrl, dataWorkflowAI?.org_id);
     const requestHeaders = {
       repository_name: repoName,
       repository_url: repoUrl,
-      org_name: dataSecureRepository.org_name,
-      company_id: dataSecureRepository.org_id,
-      data_type: dataSecureRepository.data_type,
-      created_by: data.userinfo.username,
+      // org_name: dataSecureRepository.org_name,
+      // company_id: dataSecureRepository.org_id,
+      org_name: dataWorkflowAI?.org_name,
+      company_id: dataWorkflowAI?.org_id,
+      data_type: dataSecureRepository?.data_type,
+      created_by: data?.userinfo?.username,
     };
 
     const res = await axios({

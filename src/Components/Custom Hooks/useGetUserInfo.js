@@ -5,7 +5,6 @@ const useGetUserInfo = () => {
   const [data, setData] = useState(
     JSON.parse(sessionStorage.getItem("userInfo"))
   );
-
   const queryParams = new URLSearchParams(window.location.search);
   const [sessionId, setSessionId] = useState(queryParams.get("session_id"));
   const [id] = useState(queryParams.get("id"));

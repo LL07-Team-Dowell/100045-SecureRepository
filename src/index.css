@@ -3,29 +3,32 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
 }
 
 body {
-  width: 100vw;
-  max-width: 2140px;
-  padding: 0 3em;
-  overflow-x: hidden;
+  max-width: 1840px;
   margin: 0 auto;
 }
 
 #root {
-  position: relative;
-  width: 100%;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 3em;
-  
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-left: 5rem;
+  padding: 20px 0;
+  height: 100vh;
 }
 
 @media screen and (max-width: 900px) {
-#root {
+  #root {
     flex-wrap: wrap;
+    justify-content: center;
+    padding-left: 0;
+    margin: 0;
+  }
+  body {
+    padding: 0;
   }
 }

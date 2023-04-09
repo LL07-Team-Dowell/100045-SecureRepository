@@ -117,11 +117,11 @@ const SideBar = () => {
 
           <div className="reports link-container">
             <h3 className="title">Reports</h3>
-            <Link to="/register" id="button-register">
+            <Link to="/backup">
               Backup Report
             </Link>
             <div className="horizontal-line"></div>
-            <Link to="/register" id="button-register">
+            <Link to="/report" >
               Repository Report
             </Link>
             <div className="horizontal-line"></div>
@@ -168,6 +168,7 @@ const SideBar = () => {
           </div>
         </div>
       </aside>
+      {/* <div className="box"></div> */}
     </>
   );
 };
