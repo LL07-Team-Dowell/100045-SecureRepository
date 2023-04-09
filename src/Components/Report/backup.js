@@ -97,7 +97,7 @@ const Backup = () => {
                   >
                     Backup Report
                   </TableCell>
-                  <TableCell align="right">{index+1}</TableCell>
+                  <TableCell align="right">{index + 1}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

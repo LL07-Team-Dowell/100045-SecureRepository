@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./sidebar.css";
 import logo from "../Assets/Sidebar Assets/logo.png";
 import MainLogo from "../Assets/Sidebar Assets/MainLogo.png";
 import { Link } from "react-router-dom";
 import logoutUrl from "../Constants/constant";
 import { profileUrl } from "../Constants/constant";
-import useGetUserInfo from "../Custom Hooks/useGetUserInfo";
+import userContext from "../Custom Hooks/userContext";
 
 const SideBar = () => {
-  const data = useGetUserInfo();
+  const { userInfo } = useContext(userContext);
+  const data = userInfo;
   const portfolio = data?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
@@ -117,13 +118,9 @@ const SideBar = () => {
 
           <div className="reports link-container">
             <h3 className="title">Reports</h3>
-            <Link to="/backup">
-              Backup Report
-            </Link>
+            <Link to="/backup">Backup Report</Link>
             <div className="horizontal-line"></div>
-            <Link to="/report" >
-              Repository Report
-            </Link>
+            <Link to="/report">Repository Report</Link>
             <div className="horizontal-line"></div>
           </div>
         </div>

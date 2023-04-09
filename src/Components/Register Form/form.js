@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./form.css";
 import { TextField, Button } from "@mui/material";
 import { useFormik } from "formik";
@@ -36,14 +36,14 @@ const validationSchema = yup.object({
     .required("Please Enter Your Repository Name"),
 });
 
-let data;
+
 const RegisterForm = () => {
   const [repoUrl, setRepoUrl] = useState(null);
   const [repoName, setRepoName] = useState(null);
   const [loading, setLoading] = useState(false);
   const [getResponse, status, webHookLink] = useGetResponse();
 
-  console.log(getResponse, status, webHookLink);
+  // console.log(getResponse, status, webHookLink);
   const formik = useFormik({
     initialValues: {
       repoName: "",
@@ -51,7 +51,7 @@ const RegisterForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       setRepoUrl(values.repoURL);
       setRepoName(values.repoName);
       setLoading(true);
@@ -59,7 +59,7 @@ const RegisterForm = () => {
     },
   });
 
-  console.log(formik.isSubmitting);
+  // console.log(formik.isSubmitting);
 
   return (
     <div className="form-container">

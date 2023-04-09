@@ -3,12 +3,15 @@ import axios from "axios";
 
 const useGetResponse = () => {
   const data = JSON.parse(sessionStorage.getItem("userInfo"));
-  const [dataSecureRepository] = data.portfolio_info.filter(
+  const [dataSecureRepository] = data?.portfolio_info.filter(
     (item) => item.product === "Secure Repositories"
   );
-  const [dataWorkflowAI] = data.portfolio_info.filter(
+
+  // Getting org_id & org_name from WorkFlow AI Portfolio. Because Secure Repository portfolio is not giving org_id
+  const [dataWorkflowAI] = data?.portfolio_info.filter(
     (item) => item.product === "Workflow AI"
   );
+
   const [status, setStatus] = useState(null);
   const [webHookLink, setWebHookLink] = useState(null);
   async function getResponse(repoName, repoUrl) {
