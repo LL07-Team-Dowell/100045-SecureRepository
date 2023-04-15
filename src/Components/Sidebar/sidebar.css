@@ -1,6 +1,5 @@
 .sidebar {
   width: 30%;
-  max-width: 450px;
   min-width: 200px;
   background-color: #54595f;
   display: flex;
@@ -18,7 +17,7 @@
   -ms-overflow-style: none;
   z-index: 999;
 }
-.sidebar::-webkit-scrollbar{
+.sidebar::-webkit-scrollbar {
   width: 0;
   display: none;
 }
@@ -145,7 +144,9 @@
   color: #7a7a7a;
   cursor: pointer;
 }
-
+.fa-ellipsis-vertical {
+  position: relative;
+}
 .fa-ellipsis-vertical:hover .portfolio-info {
   display: flex;
 }
@@ -263,14 +264,30 @@
   font-size: 0.9rem;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1108px) {
   .sidebar {
-    width: 100vw;
+    width: 70%;
     position: relative;
     left: 0;
   }
+  .portfolio-info {
+    position: absolute;
+    left: -220px;
+    top: -70px;
+  }
+  .sidebar-bottom-icons{
+    justify-content: space-around;
+  }
 }
 
+@media screen and (max-width: 650px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+}
 @media only screen and (min-width: 1441px) {
   .sidebar-bottom-icons > a > .fa-solid {
     font-size: 1.8rem;
@@ -287,10 +304,4 @@
   .real-data {
     font-size: 1.1rem;
   }
-}
-
-.box {
-  width: 30%;
-  height: 500px;
-  border: 1px solid red;
 }

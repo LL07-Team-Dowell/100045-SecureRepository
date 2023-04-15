@@ -1,11 +1,17 @@
 import React from "react";
-import './home.css'
+import "./home.css";
 const Home = () => {
   return (
     <>
-      <div className = "home-text">   <p>Welcome to the GitHub Backup Application. Click on the Register Button to continue</p></div>
+      <div className="home-text">
+        {" "}
+        <p>
+          Welcome to the GitHub Backup Application. Click on the Register link
+          to continue!
+        </p>
+      </div>
     </>
   );
 };
 
-export default Home
+export default Home;

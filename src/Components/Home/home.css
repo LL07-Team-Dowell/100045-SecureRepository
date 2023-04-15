@@ -1,26 +1,29 @@
-.home-text {
-  width: 70%;
+.home-text > p {
+  text-align: center;
+  font-size: 2.3rem;
+  color: #1f1a1a;
+  font-weight: bold;
+  line-height: 60px;
+  
+}
+
+.home-text{
+  align-self: center;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1em 2em;
-  justify-self: center;
-  align-self: center;
-}
-.home-text > p {
-  text-align: center;
-  font-size: 1.3rem;
-  color: #1f1a1a;
-  font-weight: bold;
-  line-height: 30px;
 }
 
-@media screen and (max-width: 900px) {
-  .home-text {
-    width: 100%;
-    padding: 1em 0;
+@media screen and (max-width:1108px) {
+  .home-text  {
+    height: auto;
   }
+  
+}
+@media screen and (max-width:776px) {
   .home-text > p {
-    font-size: 0.8rem;
+    font-size: 1.5rem;
   }
+  
 }

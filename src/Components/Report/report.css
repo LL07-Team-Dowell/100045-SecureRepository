@@ -1,10 +1,9 @@
 .reports-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 1rem;
   width: 50%;
- 
 }
 
 .reports-container > .text {
@@ -16,9 +15,9 @@
 thead th {
   background-color: #272626;
 }
-.css-11xur9t-MuiPaper-root-MuiTableContainer-root {
+/* .css-11xur9t-MuiPaper-root-MuiTableContainer-root {
   width: 60%;
-}
+} */
 .css-1ygcj2i-MuiTableCell-root {
   color: #ffffff !important;
 }
@@ -50,35 +49,6 @@ thead th {
   margin-bottom: 10px;
 }
 
-/* 
-.table {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid black;
-  padding: 10px;
-}
-
-.cell {
-  flex-basis: 45%;
-  text-align: center;
-  word-wrap: wrap;
-  word-break: break-all;
-}
-.header {
-  background-color: gray;
-  color: white;
-  font-weight: bold;
-} */
-
 .reports-container {
   margin: 2rem;
   display: flex;
@@ -100,4 +70,27 @@ thead th {
     width: 100%;
     overflow-x: scroll;
   }
+}
+.table {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.table-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.cell {
+  border: 1px solid black;
+  flex: 1;
+  padding: 10px;
 }
