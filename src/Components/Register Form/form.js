@@ -42,6 +42,7 @@ const RegisterForm = () => {
   const [repoName, setRepoName] = useState(null);
   const [loading, setLoading] = useState(false);
   const [getResponse, status, webHookLink] = useGetResponse();
+  const [buttonText, setButtonText] = useState("Copy WebHookLink");
 
   const formik = useFormik({
     initialValues: {
@@ -57,6 +58,10 @@ const RegisterForm = () => {
     },
   });
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(webHookLink);
+  };
+
   const loaderPopup = (
     <Popup open={loading}>
       <div className="popup-loader">
@@ -70,13 +75,21 @@ const RegisterForm = () => {
           />
         ) : (
           <>
-            <div className="response">
-              <div className="status">
+            <div className="response" >
+              <div className="status" style={{ textAlign: "left" }}>
                 <span>{"Status : " + status}</span>
               </div>
-              <div className="web-hook-link">
+              <div className="web-hook-link" style={{ textAlign: "left" }}>
                 <span>{"Web Hook Link : " + webHookLink}</span>
+              
               </div>
+              <button className="copy-btn" onClick={()=>{
+                copyToClipboard();
+                setButtonText("Copied");
+                setTimeout(() => {
+                  setButtonText("Copy WebHookLink");
+                }, 3000)
+              }}>{buttonText}</button>
             </div>
           </>
         )}
