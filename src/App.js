@@ -7,6 +7,7 @@ import DowellLogin from "./Components/Dowell Login/dowellLogin";
 import { useState } from "react";
 import userContext from "./Components/Custom Hooks/userContext";
 import { RotatingLines } from "react-loader-spinner";
+import CreatePortfolio from "./Components/Create Portfolio/createPortfolio";
 
 function App() {
   const [userInfo, setUserInfo] = useState({
@@ -48,7 +49,12 @@ function App() {
       </>
     );
   } else {
-    return (
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    const portfolioInfo = userInfo.portfolio_info.filter(
+      (info) => info.product === "Secure Repositories"
+    );
+
+    return portfolioInfo.length ? (
       <>
         <userContext.Provider
           value={{ userInfo: userInfo, setUserInfo: setUserInfo }}
@@ -60,6 +66,8 @@ function App() {
           </Routes>
         </userContext.Provider>
       </>
+    ) : (
+      <CreatePortfolio />
     );
   }
 }
