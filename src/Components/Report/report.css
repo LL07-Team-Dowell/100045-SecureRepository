@@ -1,96 +1,104 @@
-.reports-container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 1rem;
-  width: 50%;
-}
-
-.reports-container > .text {
-  text-align: center;
-  font-size: 2.3rem;
-  color: darkgreen;
-}
-
-thead th {
-  background-color: #272626;
-}
-/* .css-11xur9t-MuiPaper-root-MuiTableContainer-root {
-  width: 60%;
-} */
-.css-1ygcj2i-MuiTableCell-root {
-  color: #ffffff !important;
-}
-.css-1azl6jz-MuiTableCell-root {
-  color: #ffffff !important;
-}
-
-.css-11xur9t-MuiPaper-root-MuiTableContainer-root {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-@media screen and (max-width: 900px) {
-  .css-11xur9t-MuiPaper-root-MuiTableContainer-root {
-    justify-content: center;
-  }
-  .reports-container {
-    width: 100%;
-  }
-  .css-11xur9t-MuiPaper-root-MuiTableContainer-root {
-    width: 100%;
-  }
-}
-
-.text {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.reports-container {
-  margin: 2rem;
+.table-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-
-@media screen and (max-width: 720px) {
-  .reports-container {
-    margin: 1rem;
-  }
-
-  .MuiTableCell-root {
-    font-size: 0.8rem;
-  }
-
-  .MuiTable-root {
-    font-size: 0.8rem;
-    width: 100%;
-    overflow-x: scroll;
-  }
-}
-.table {
-  display: flex !important;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  width: 100%;
 }
-
-.table-box {
-  display: flex;
-  flex-direction: column;
+table {
+  margin: auto;
+  width: 100%;
+  border-style: none;
+  border-spacing: 0;
+  border-collapse: collapse;
+  text-align: center;
+  padding: 12px;
+  border: 2px solid rgb(71, 71, 71);
+  cursor: pointer;
+  z-index: 3;
 }
-
-.row {
-  display: flex;
-  flex-direction: row;
-}
-
-.cell {
-  border: 1px solid black;
-  flex: 1;
+tr th {
+  background-color: rgb(92, 92, 92);
   padding: 10px;
+  color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.mobname {
+  background-color: greenyellow;
+  color: black;
+}
+h1 {
+  text-align: center;
+}
+tr td {
+  padding: 9px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  word-break: break-all;
+}
+.row {
+  background-color: rgb(143, 3, 3);
+  color: white;
+}
+
+.tabdata {
+  background-color: rgb(226, 225, 225);
+}
+
+.button-know-more {
+  background-color: #222;
+  border-radius: 4px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Farfetch Basis", "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0;
+  max-width: none;
+  min-height: 44px;
+  min-width: 10px;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 70%;
+}
+
+.button-know-more:hover,
+.button-know-more:focus {
+  opacity: 0.75;
+}
+
+@media screen and (max-width: 500px) {
+  .button-know-more {
+    min-height: 30px;
+    width: 100%;
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  z-index: 999;
+  background: #181515ee;
+  width: 90vw;
+  height: 90vh;
+  color:white;
+  border-radius: 7px;
+}
+
+.close{
+  padding:1rem 2rem;
+  font-size: 2rem;
+  cursor: pointer;
 }

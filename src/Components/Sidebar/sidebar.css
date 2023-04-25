@@ -1,6 +1,7 @@
 .sidebar {
   width: 30%;
   min-width: 200px;
+
   background-color: #54595f;
   display: flex;
   flex-direction: column;
@@ -277,6 +278,12 @@
   }
   .sidebar-bottom-icons {
     justify-content: space-around;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .sidebar {
+   max-width: 400px;
   }
 }
 

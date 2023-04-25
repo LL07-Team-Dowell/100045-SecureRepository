@@ -10,7 +10,6 @@ import Paper from "@mui/material/Paper";
 import Shimmer from "../Shimmer/shimmer";
 import { Skeleton } from "@mui/material";
 
-
 function createData(name, data) {
   return { name, data };
 }

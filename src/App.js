@@ -8,6 +8,8 @@ import { useState } from "react";
 import userContext from "./Components/Custom Hooks/userContext";
 import { RotatingLines } from "react-loader-spinner";
 import CreatePortfolio from "./Components/Create Portfolio/createPortfolio";
+import ApiDataModal from "./Components/Report/newReport";
+import ApiDataModal2 from "./Components/Report/newBackup";
 
 function App() {
   const [userInfo, setUserInfo] = useState({
@@ -63,6 +65,8 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/register" element={<RegisterForm />} />
+            <Route exact path="/report" element={<ApiDataModal />} />
+            <Route exact path="/backup" element={<ApiDataModal2 />} />
           </Routes>
         </userContext.Provider>
       </>
