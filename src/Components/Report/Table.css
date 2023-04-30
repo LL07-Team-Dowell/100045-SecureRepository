@@ -1,11 +1,13 @@
 .table-container {
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 2rem;
   padding: 1rem 1.5rem;
   width: 100%;
+  min-height: 90vh;
 }
 table {
   margin: auto;
@@ -15,16 +17,17 @@ table {
   border-collapse: collapse;
   text-align: center;
   padding: 12px;
-  border: 2px solid rgb(71, 71, 71);
   cursor: pointer;
   z-index: 3;
+  border-radius: 30px;
 }
 tr th {
-  background-color: rgb(92, 92, 92);
-  padding: 10px;
+  background-color: #1b43a1;
+  padding: 1rem 0.5rem;
   color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
 .mobname {
   background-color: greenyellow;
   color: black;
@@ -38,12 +41,15 @@ tr td {
   word-break: break-all;
 }
 .row {
-  background-color: rgb(143, 3, 3);
+  background-color: rgba(51, 172, 131, 0.74);
   color: white;
 }
 
 .tabdata {
-  background-color: rgb(226, 225, 225);
+  background-color: rgb(187, 195, 202);
+  font-weight: 700;
+  background-color: #abb3b1;
+  color: #100f0f;
 }
 
 .button-know-more {
@@ -61,7 +67,7 @@ tr td {
   margin: 0;
   max-width: none;
   min-height: 44px;
-  min-width: 10px;
+  min-width: 50px;
   outline: none;
   overflow: hidden;
   position: relative;
@@ -70,7 +76,7 @@ tr td {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: 70%;
+  width: 80%;
 }
 
 .button-know-more:hover,
@@ -78,8 +84,18 @@ tr td {
   opacity: 0.75;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
+  tr th {
+    font-size: 0.8rem;
+  }
+  .tabdata {
+    font-size: 0.7rem;
+  }
+  .table-container {
+    padding: 1rem 0.3rem;
+  }
   .button-know-more {
+    font-size: 8px;
     min-height: 30px;
     width: 100%;
   }
@@ -87,18 +103,19 @@ tr td {
 
 .modal {
   position: fixed;
-  top: 5%;
+  top: 20%;
   left: 5%;
   z-index: 999;
   background: #181515ee;
   width: 90vw;
   height: 90vh;
-  color:white;
+  color: white;
   border-radius: 7px;
 }
 
-.close{
-  padding:1rem 2rem;
-  font-size: 2rem;
+.close {
+  padding: 1rem 2rem;
   cursor: pointer;
+  color: white;
+  font-size: 3rem;
 }

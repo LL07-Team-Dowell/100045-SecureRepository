@@ -1,64 +1,27 @@
 .create-portfolio {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  gap: 1rem;
-  height: 100vh;
-  margin-left: -100px;
+  gap: 2rem;
 }
-.create-portfolio h2 {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 2rem;
-  color: #312f2f;
-}
-
-.create-portfolio h3 {
-  font-family: sans-serif;
-  font-size: 1.5rem;
-  color: #4b4a4d;
-}
-.create-portfolio > button {
-  padding: 1rem 1.5rem;
-  z-index: 999;
-  background-color: #312f2f;
-  border-radius: 7px;
-  border: none;
-}
-.create-portfolio > button > a {
+.create-portfolio button a {
   text-decoration: none;
-  color: white;
+  color: #ffffff;
 }
-
-.create-portfolio > button {
-  background-color: #222;
-  border-radius: 4px;
-  border-style: none;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  font-family: "Farfetch Basis", "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.5;
-  margin: 0;
-  max-width: none;
-  min-height: 44px;
-  min-width: 10px;
-  outline: none;
-  overflow: hidden;
-  padding: 9px 20px 8px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: 100%;
+@media screen and (max-width: 1000px) {
+  .nextui-c-PJLV-ibNJLYr-css {
+    font-size: 40px;
+  }
+  .nextui-c-PJLV-ijtZBCJ-css {
+    font-size: 30px;
+  }
 }
-
-.create-portfolio > button :hover,
-.create-portfolio > button :focus {
-  opacity: 0.75;
+@media screen and (max-width: 500px) {
+  .nextui-c-PJLV-ibNJLYr-css {
+    font-size: 30px;
+  }
+  .nextui-c-PJLV-ijtZBCJ-css {
+    font-size: 20px;
+  }
 }

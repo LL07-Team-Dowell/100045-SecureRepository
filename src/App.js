@@ -1,15 +1,15 @@
-import SideBar from "./Components/Sidebar/sidebar";
 import { Route } from "react-router-dom";
 import { Routes } from "react-router-dom";
-import Home from "./Components/Home/home";
+import Home from "./Components/Home/Home.js";
 import RegisterForm from "./Components/Register Form/form";
 import DowellLogin from "./Components/Dowell Login/dowellLogin";
 import { useState } from "react";
 import userContext from "./Components/Custom Hooks/userContext";
-import { RotatingLines } from "react-loader-spinner";
 import CreatePortfolio from "./Components/Create Portfolio/createPortfolio";
-import ApiDataModal from "./Components/Report/newReport";
-import ApiDataModal2 from "./Components/Report/newBackup";
+import Navbar from "./Components/Navbar/Navbar.js";
+import Loader from "./Components/Loader/Loader";
+import BackupRepo from "./Components/Report/BackupRepo.js";
+import ReportRepo from "./Components/Report/ReportRepo.js";
 
 function App() {
   const [userInfo, setUserInfo] = useState({
@@ -34,19 +34,7 @@ function App() {
           value={{ userInfo: userInfo, setUserInfo: setUserInfo }}
         >
           {<DowellLogin />}
-          {searchParams ? (
-            <div style={{ position: "fixed", left: "47%", top: "50%" }}>
-              <RotatingLines
-                strokeColor="grey"
-                strokeWidth="5"
-                animationDuration="0.75"
-                width="96"
-                visible={true}
-              />
-            </div>
-          ) : (
-            <></>
-          )}
+          {searchParams ? <Loader /> : null}
         </userContext.Provider>
       </>
     );
@@ -61,12 +49,12 @@ function App() {
         <userContext.Provider
           value={{ userInfo: userInfo, setUserInfo: setUserInfo }}
         >
-          <SideBar />
+          <Navbar />
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/register" element={<RegisterForm />} />
-            <Route exact path="/report" element={<ApiDataModal />} />
-            <Route exact path="/backup" element={<ApiDataModal2 />} />
+            <Route exact path="/repo reports" element={<ReportRepo />} />
+            <Route exact path="/backup repo" element={<BackupRepo />} />
           </Routes>
         </userContext.Provider>
       </>

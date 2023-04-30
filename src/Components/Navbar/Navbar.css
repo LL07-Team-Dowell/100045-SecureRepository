@@ -1,0 +1,26 @@
+.company-logo {
+  width: 50px;
+  border-radius: 5px;
+}
+
+.css-1t6c9ts {
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.css-2uchni {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.fa-address-book {
+  color: #ffffff;
+  font-size: 2.1rem;
+  cursor: pointer;
+}
+.settings-link {
+  text-decoration: none;
+  color: #363434;
+}

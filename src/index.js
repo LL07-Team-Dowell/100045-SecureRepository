@@ -3,9 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { HashRouter, RouterProvider } from "react-router-dom";
-import userContext from "./Components/Custom Hooks/userContext";
-import { useContext } from "react";
+import { HashRouter, } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

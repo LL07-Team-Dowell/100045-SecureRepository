@@ -1,29 +1,89 @@
-.home-text > p {
-  text-align: center;
-  font-size: 2.3rem;
-  color: #1f1a1a;
-  font-weight: bold;
-  line-height: 60px;
-  
-}
-
-.home-text{
-  align-self: center;
-  height: 100vh;
+.home-text-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
 }
 
-@media screen and (max-width:1108px) {
-  .home-text  {
-    height: auto;
-  }
-  
+
+
+#button-79 {
+  margin-top: 2rem;
+  backface-visibility: hidden;
+  background: #1976d2;
+  border: 0;
+  border-radius: .375rem;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Circular,Helvetica,sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  padding: 1rem 2.5rem;
+
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transform: translateZ(0) scale(1);
+  transition: transform .2s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
-@media screen and (max-width:776px) {
-  .home-text > p {
-    font-size: 1.5rem;
+
+#button-79:disabled {
+  color: #787878;
+  cursor: auto;
+}
+
+#button-79:not(:disabled):hover {
+  transform: scale(1.05);
+}
+
+#button-79:not(:disabled):hover:active {
+  transform: scale(1.05) translateY(.125rem);
+}
+
+#button-79:focus {
+  outline: 0 solid transparent;
+}
+
+#button-79:focus:before {
+  border-width: .125rem;
+  content: "";
+  left: calc(-1*.375rem);
+  pointer-events: none;
+  position: absolute;
+  top: calc(-1*.375rem);
+  transition: border-radius;
+  user-select: none;
+}
+
+#button-79:focus:not(:focus-visible) {
+  outline: 0 solid transparent;
+}
+
+#button-79:not(:disabled):active {
+  transform: translateY(.125rem);
+}
+
+@media screen and (max-width: 1000px) {
+  .nextui-c-PJLV-icpwxgA-css {
+    font-size: 40px;
   }
-  
+  .nextui-c-PJLV-ibpPWqr-css {
+    font-size: 40px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .nextui-c-PJLV-icpwxgA-css {
+    font-size: 30px;
+  }
+  .nextui-c-PJLV-ibpPWqr-css {
+    font-size: 30px;
+  }
 }

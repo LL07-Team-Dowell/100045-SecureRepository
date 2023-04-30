@@ -75,21 +75,26 @@ const RegisterForm = () => {
           />
         ) : (
           <>
-            <div className="response" >
+            {console.log(status, webHookLink)}
+            <div className="response">
               <div className="status" style={{ textAlign: "left" }}>
                 <span>{"Status : " + status}</span>
               </div>
               <div className="web-hook-link" style={{ textAlign: "left" }}>
                 <span>{"Web Hook Link : " + webHookLink}</span>
-              
               </div>
-              <button className="copy-btn" onClick={()=>{
-                copyToClipboard();
-                setButtonText("Copied");
-                setTimeout(() => {
-                  setButtonText("Copy WebHookLink");
-                }, 3000)
-              }}>{buttonText}</button>
+              <button
+                className="copy-btn"
+                onClick={() => {
+                  copyToClipboard();
+                  setButtonText("Copied");
+                  setTimeout(() => {
+                    setButtonText("Copy WebHookLink");
+                  }, 3000);
+                }}
+              >
+                {buttonText}
+              </button>
             </div>
           </>
         )}
@@ -102,7 +107,7 @@ const RegisterForm = () => {
       <div className="cross-btn">
         {" "}
         <Link to="/">
-          <i className="fa-solid fa-xmark"></i>{" "}
+          <i className="fa-regular fa-circle-xmark"></i>{" "}
         </Link>
       </div>
 
@@ -129,7 +134,13 @@ const RegisterForm = () => {
           error={formik.touched.repoName && Boolean(formik.errors.repoName)}
           helperText={formik.touched.repoName && formik.errors.repoName}
         />
-        <Button color="primary" variant="contained" fullWidth type="submit">
+        <Button
+          id="button-79"
+          color="primary"
+          variant="contained"
+          fullWidth
+          type="submit"
+        >
           Submit
         </Button>
       </form>

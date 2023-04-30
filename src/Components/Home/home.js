@@ -1,17 +1,34 @@
-import React from "react";
-import "./home.css";
-const Home = () => {
-  return (
-    <>
-      <div className="home-text">
-        {" "}
-        <p>
-          Welcome to the GitHub Backup Application. Click on the Register link
-          to continue!
-        </p>
-      </div>
-    </>
-  );
-};
+import { Text } from "@nextui-org/react";
+import { Link } from "react-router-dom";
+import "./Home.css";
 
-export default Home;
+export default function Home() {
+  return (
+    <div className="home-text-container">
+      <Text
+        h1
+        size={60}
+        css={{
+          color: "#1976d2",
+        }}
+        weight="bold"
+      >
+        Welcome to Secure Repository!
+      </Text>
+      <Text
+        h1
+        size={60}
+        css={{
+          color: "#111827",
+        }}
+        weight="bold"
+      >
+        Please click the 'Register' button to Secure your Repository
+      </Text>
+      <Link to="register">
+        {" "}
+        <button id="button-79">Register</button>{" "}
+      </Link>
+    </div>
+  );
+}
