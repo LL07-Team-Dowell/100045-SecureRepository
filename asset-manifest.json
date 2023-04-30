@@ -1,17 +1,16 @@
 {
   "files": {
-    "main.css": "/100045-SecureRepository/static/css/main.33e0aec6.css",
-    "main.js": "/100045-SecureRepository/static/js/main.c06b64f8.js",
+    "main.css": "/100045-SecureRepository/static/css/main.776381e1.css",
+    "main.js": "/100045-SecureRepository/static/js/main.4d193444.js",
     "static/js/787.49348129.chunk.js": "/100045-SecureRepository/static/js/787.49348129.chunk.js",
-    "static/media/MainLogo.png": "/100045-SecureRepository/static/media/MainLogo.251f868e401d2d12c38d.png",
     "static/media/logo.png": "/100045-SecureRepository/static/media/logo.b763da6f69bdc4ae5dce.png",
     "index.html": "/100045-SecureRepository/index.html",
-    "main.33e0aec6.css.map": "/100045-SecureRepository/static/css/main.33e0aec6.css.map",
-    "main.c06b64f8.js.map": "/100045-SecureRepository/static/js/main.c06b64f8.js.map",
+    "main.776381e1.css.map": "/100045-SecureRepository/static/css/main.776381e1.css.map",
+    "main.4d193444.js.map": "/100045-SecureRepository/static/js/main.4d193444.js.map",
     "787.49348129.chunk.js.map": "/100045-SecureRepository/static/js/787.49348129.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.33e0aec6.css",
-    "static/js/main.c06b64f8.js"
+    "static/css/main.776381e1.css",
+    "static/js/main.4d193444.js"
   ]
 }
