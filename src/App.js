@@ -15,18 +15,8 @@ function App() {
   const [userInfo, setUserInfo] = useState({
     userInfo: [{ userInfo: "test" }],
   });
-
   const queryParams = new URLSearchParams(window.location.search);
   const searchParams = queryParams.get("session_id");
-
-  // const [isSessionId, setIsSessionId] = useState(
-  //   sessionStorage.getItem("session_id")
-  // );
-  // useEffect(() => {
-  //   const session_id = sessionStorage.getItem("session_id");
-  //   setIsSessionId(session_id);
-  // }, [sessionStorage]);
-
   if (userInfo?.userInfo?.[0]?.userInfo === "test") {
     return (
       <>
