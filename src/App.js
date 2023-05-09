@@ -30,11 +30,11 @@ function App() {
     );
   } else {
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    const portfolioInfo = userInfo.portfolio_info.filter(
+    const portfolioInfo = userInfo.portfolio_info?.filter(
       (info) => info.product === "Secure Repositories"
     );
 
-    return portfolioInfo.length ? (
+    return portfolioInfo?.length ? (
       <>
         <userContext.Provider
           value={{ userInfo: userInfo, setUserInfo: setUserInfo }}

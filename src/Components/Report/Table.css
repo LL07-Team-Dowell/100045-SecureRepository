@@ -9,8 +9,14 @@
   width: 100%;
   min-height: 90vh;
 }
+
+.loader-container {
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 table {
-  margin: auto;
   width: 100%;
   border-style: none;
   border-spacing: 0;
@@ -118,4 +124,35 @@ tr td {
   cursor: pointer;
   color: white;
   font-size: 3rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  margin: 0 0.5rem;
+  border: none;
+  background-color: #fff;
+  color: #1976d2;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+.pagination button.active {
+  background-color: #1976d2;
+  color: #fff;
+}
+.table-box {
+  width: 100%;
 }
