@@ -254,8 +254,8 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <a className="settings-link" href={setting.path} target="blank">
+              {settings.map((setting,index) => (
+                <a key = {index} className="settings-link" href={setting.path} target="blank">
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">
                       {setting.linkName}

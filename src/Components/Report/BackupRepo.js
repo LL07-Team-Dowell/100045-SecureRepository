@@ -5,10 +5,16 @@ import { useContext } from "react";
 import userContext from "../Custom Hooks/userContext";
 import { Text } from "@nextui-org/react";
 import License from "../License/License";
+import { useQuery } from "react-query";
 
+async function getReport(org_id) {
+  const data = await fetch(
+    `https://100045.pythonanywhere.com/reports/get-backup-reports/${org_id}/`
+  );
+  const dataJson = await data.json();
+  return dataJson.data;
+}
 export default function BackupRepo() {
-  const [data, setData] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [showModal, setShowModal] = useState(false);
@@ -18,17 +24,12 @@ export default function BackupRepo() {
     (item) => item?.product === "Secure Repositories"
   );
 
-  useEffect(() => {
-    getReport(portfolio.org_id);
-  }, []);
-
-  async function getReport(org_id) {
-    const data = await fetch(
-      `https://100045.pythonanywhere.com/reports/get-backup-reports/${org_id}/`
-    );
-    const dataJson = await data.json();
-    setData(dataJson.data);
-  }
+  const { isLoading, data } = useQuery(
+    ["backup-repo"],
+    () => getReport(portfolio.org_id),
+    { refetchOnMount : false,
+   }
+  );
 
   const handleTableClick = (selected) => {
     setSelectedData(selected);
@@ -41,7 +42,7 @@ export default function BackupRepo() {
   };
   console.log(data);
   const renderTable = () => {
-    if (data.length === 0)
+    if (isLoading)
       return (
         <div className="loader-container">
           {" "}
@@ -137,13 +138,18 @@ export default function BackupRepo() {
             </tr>
             <tr>
               <td>Commit URL</td>
-              <td> <a href = {row.commit_url} target  = "_blank" > {row.commit_url} </a></td>
+              <td>
+                {" "}
+                <a href={row.commit_url} target="_blank">
+                  {" "}
+                  {row.commit_url}{" "}
+                </a>
+              </td>
             </tr>
             <tr>
               <td>License</td>
               <td>{<License url={row?.license?.[0]?.url} />}</td>
             </tr>
-           
           </table>
         </div>
       </div>
