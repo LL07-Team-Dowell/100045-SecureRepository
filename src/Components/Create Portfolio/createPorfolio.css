@@ -1,27 +1,35 @@
 .create-portfolio {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  gap: 2rem;
+  border: 0.2px solid #e6e4e3;
+  width: 50%;
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  margin: 150px auto;
 }
-.create-portfolio button a {
-  text-decoration: none;
-  color: #ffffff;
+
+ .create-portfolio button {
+ font-size: 1rem;
+ margin-top: 1.8rem;
+ padding: 10px 0;
+ border-radius: 20px;
+ outline: none;
+ border: none;
+ border: none;
+ width: 250px;
+ color: #fff;
+ cursor: pointer;
+ background-color: #333;
 }
-@media screen and (max-width: 1000px) {
-  .nextui-c-PJLV-ibNJLYr-css {
-    font-size: 40px;
-  }
-  .nextui-c-PJLV-ijtZBCJ-css {
-    font-size: 30px;
-  }
+
+@media screen and (max-width: 700px) {
+  .create-portfolio {
+  width: 90%;
+  padding: 20px;
+  margin: 20px auto;
 }
-@media screen and (max-width: 500px) {
-  .nextui-c-PJLV-ibNJLYr-css {
-    font-size: 30px;
-  }
-  .nextui-c-PJLV-ijtZBCJ-css {
-    font-size: 20px;
-  }
 }
+

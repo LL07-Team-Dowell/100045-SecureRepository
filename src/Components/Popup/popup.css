@@ -1,0 +1,83 @@
+.popup {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-inner {
+  position: relative;
+  padding: 35px 32px;
+  width: 100%;
+  max-width: 640px;
+  background-color: white;
+}
+
+.popup-inner h2{
+ margin-top: 50px;
+ margin-bottom: -50px;
+}
+
+.popup-inner .close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 150px;
+}
+
+.popup-inner .copy-btn {
+  position: absolute;
+  top: 16px;
+  right: 150px;
+  width: 150px;
+  margin-right: 20px;
+}
+
+.popup .content {
+  margin-top: 60px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.popup .content .left {
+  font-weight: bold;
+}
+
+.popup .content .right {
+  max-width: 400px;
+  word-wrap: break-word;
+  margin-left: 15px;
+}
+
+@media screen and (max-width: 700px) {
+  .popup-inner .close-btn {
+    width: 90px;
+  }
+
+  .popup-inner .copy-btn {
+    width: 90px;
+    right: 90px;
+  }
+  .popup .content {
+    margin-top: 70px;
+    flex-wrap: nowrap;
+    font-size: 14px;
+  }
+
+  .popup .content .left {
+    font-weight: bold;
+    flex-basis: 50%;
+  }
+
+  .popup .content .right {
+    max-width: 150px;
+    flex-basis: 50%;
+  }
+}

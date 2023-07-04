@@ -26,11 +26,13 @@ const useGetResponse = () => {
       data: requestHeaders,
     });
 
-    setStatus(res.data.status);
+    setStatus(JSON.stringify(res.data.messsage));
     setWebHookLink(res.data.webhook_link);
   }
+
 
   return [getResponse, status, webHookLink];
 };
 
 export default useGetResponse;
+

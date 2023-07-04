@@ -1,191 +1,139 @@
 import React, { useState, useEffect } from "react";
 import "./Table.css";
+import { useStateValue } from "../../Context/StateProvider";
+import Popup from "../Popup/Popup";
 import Loader from "../Loader/Loader";
-import { useContext } from "react";
-import userContext from "../Custom Hooks/userContext";
-import { Text } from "@nextui-org/react";
-import License from "../License/License";
-import { useQuery } from "react-query";
 
-async function getReport(org_id) {
-  const data = await fetch(
-    `https://100045.pythonanywhere.com/reports/get-backup-reports/${org_id}/`
-  );
-  const dataJson = await data.json();
-  return dataJson.data;
-}
-export default function BackupRepo() {
+import axios from "axios";
+
+function BackupRepo() {
+  const [state, dispatch] = useStateValue();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [showModal, setShowModal] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
-  const { userInfo } = useContext(userContext);
-  const [portfolio] = userInfo?.portfolio_info?.filter(
+  const [buttonPopup, setButtonPopup] = React.useState(false);
+  const [data, setData] = useState([]);
+
+  const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
+  useEffect(() => {
+    // Use useEffect to make the API call and update data state
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://100045.pythonanywhere.com/reports/get-backup-reports/${portfolio.org_id}/`
+        );
+        if (response.data.data.length === 0) {
+          setData(["empty"]);
+        } else {
+          setData(response.data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  const { isLoading, data } = useQuery(
-    ["backup-repo"],
-    () => getReport(portfolio.org_id),
-    { refetchOnMount : false,
-   }
-  );
+    fetchData(); // Call the async function
+  }, [portfolio.org_id]);
 
-  const handleTableClick = (selected) => {
-    setSelectedData(selected);
-    setShowModal(true);
-  };
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = data.slice(startIndex, endIndex);
 
-  const handleCloseModal = () => {
-    setSelectedData([]);
-    setShowModal(false);
-  };
-  console.log(data);
-  const renderTable = () => {
-    if (isLoading)
-      return (
-        <div className="loader-container">
-          {" "}
-          <Loader />
-        </div>
-      );
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentItems = data.slice(startIndex, endIndex);
-
-    return (
-      <div className="table-box">
-        <table className="table">
-          <tr>
-            <th>S.No</th>
-            <th>Repository</th>
-            <th>Zip File</th>
-            <th>Commit Message</th>
-            <th>Show More</th>
-          </tr>
-          {console.log(currentItems)}
-          {currentItems?.map((row, rowIndex) => {
-            return (
-              <tr className="tabdata" key={rowIndex}>
-                <td>{startIndex + rowIndex + 1}</td>
-                <td>{row.repository_name}</td>
-                <td>{row.zip_file_name}</td>
-                <td>{row.commit_message}</td>
-                <td>
-                  <button
-                    className="button-know-more"
-                    onClick={() => handleTableClick([row])}
-                  >
-                    Show More
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </table>
-        <div className="pagination">
-          {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
-            (item, index) => (
-              <button
-                key={index}
-                className={currentPage === index + 1 ? "active" : ""}
-                onClick={() => setCurrentPage(index + 1)}
-              >
-                {index + 1}
-              </button>
-            )
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const renderSelectedTable = () => {
-    if (selectedData.length === 0) return null;
-    const [row] = selectedData;
-
-    return (
-      <div className="modal">
-        <div className="modal-content">
-          <span className="close" onClick={handleCloseModal}>
-            &times;
-          </span>
-
-          <table className="table">
-            <tr>
-              <th>Backup Time </th>
-              <th>{row.backup_time}</th>
-            </tr>
-            <tr>
-              <td>Added Files</td>
-              <td>{row.added_file[0]}</td>
-            </tr>
-            <tr>
-              <td>Modified Files</td>
-              <td>{row.modified_file[0]}</td>
-            </tr>
-            <tr>
-              <td>Removed Files</td>
-              <td>{row.removed_file[0]}</td>
-            </tr>
-            <tr>
-              <td>Function Name</td>
-              <td>{row.function_number}</td>
-            </tr>
-            <tr>
-              <td>Created By</td>
-              <td>{row.pusher}</td>
-            </tr>
-            <tr>
-              <td>Commit URL</td>
-              <td>
-                {" "}
-                <a href={row.commit_url} target="_blank">
-                  {" "}
-                  {row.commit_url}{" "}
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>License</td>
-              <td>{<License url={row?.license?.[0]?.url} />}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    );
-  };
+  function handleClick(row) {
+    setButtonPopup(true);
+    setSelectedData(row);
+    console.log(selectedData);
+  }
 
   return (
     <div className="table-container">
-      <Text
-        h1
-        css={{
-          color: "#1976d2",
-          fontSize: "1.5rem",
-
-          "@xs": {
-            fontSize: "2rem",
-          },
-          "@sm": {
-            fontSize: "2.5rem",
-          },
-          "@md": {
-            fontSize: "3rem",
-          },
-          "@lg": {
-            fontSize: "4rem",
-          },
-          "@xl": {
-            fontSize: "5rem",
-          },
-        }}
-        weight="bold"
-      >
-        Backup Report
-      </Text>
-      {renderTable()}
-      {renderSelectedTable()}
+      <h3>Backup Report</h3>
+      <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+        <div className="content">
+          <div className="left">
+            {[
+              "Backup Time ",
+              "Added Files",
+              "Modified Files",
+              "Removed Files",
+              "Function Name",
+              "Created By",
+              "Commit URL",
+            ].map((item) => (
+              <p key={item}>{item}:</p>
+            ))}
+          </div>
+          <div className="right">
+            <p>{selectedData[0]?.backup_time}</p>
+            {selectedData[0]?.added_file &&
+              selectedData[0].added_file.length > 0 && (
+                <p>{selectedData[0].added_file[0]}</p>
+              )}
+            {selectedData[0]?.modified_file &&
+              selectedData[0].modified_file > 0 && (
+                <p>{selectedData[0].modified_file[0]}</p>
+              )}
+            {selectedData[0]?.removed_file &&
+              selectedData[0].removed_file > 0 && (
+                <p>{selectedData[0].removed_file[0]}</p>
+              )}
+            <p>{selectedData[0]?.function_number}</p>
+            <p>{selectedData[0]?.pusher}</p>
+            <p>{selectedData[0]?.commit_url}</p>
+          </div>
+        </div>
+      </Popup>
+      {currentItems.length === 0 ? (
+        <Loader />
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Repository</th>
+              <th>Zip File</th>
+              <th>Commit Message</th>
+              <th>Show More</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data[0] !== "empty" &&
+              currentItems.map((row, rowIndex) => (
+                <tr className="tabdata" key={rowIndex}>
+                  <td>{startIndex + rowIndex + 1}</td>
+                  <td>{row.repository_name}</td>
+                  <td>{row.zip_file_name}</td>
+                  <td>{row.commit_message}</td>
+                  <td>
+                    <button
+                      className="button-know-more"
+                      onClick={() => handleClick([row])}
+                    >
+                      Show More
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}
+      <div className="pagination">
+        {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
+          (item, index) => (
+            <button
+              key={index}
+              className={currentPage === index + 1 ? "active" : ""}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </button>
+          )
+        )}
+      </div>
     </div>
   );
 }
+
+export default BackupRepo;

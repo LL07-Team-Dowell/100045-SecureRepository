@@ -1,0 +1,138 @@
+// responsive
+- navbar
+-registration form
+- backup
+-repository reports
+
+import React from "react";
+import "./n.css";
+import { Link } from "react-router-dom";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import HomeIcon from "@mui/icons-material/Home";
+import BackupIcon from "@mui/icons-material/Backup";
+import SummarizeIcon from "@mui/icons-material/Summarize";
+import "bootstrap/dist/css/bootstrap.css";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Logout } from "@mui/icons-material";
+import $ from "jquery";
+
+export default function Navbar() {
+  const logoutUrl =
+    "https://100014.pythonanywhere.com/sign-out?redirect_" +
+    window.location.origin +
+    "/100045-SecureRepository";
+
+  // ---------Responsive-navbar-active-animation-----------
+  function test() {
+    var tabsNewAnim = $("#navbarSupportedContent");
+    var selectorNewAnim = $("#navbarSupportedContent").find("li").length;
+    var activeItemNewAnim = tabsNewAnim.find(".active");
+    var activeWidthNewAnimHeight = activeItemNewAnim.innerHeight();
+    var activeWidthNewAnimWidth = activeItemNewAnim.innerWidth();
+    var itemPosNewAnimTop = activeItemNewAnim.position();
+    var itemPosNewAnimLeft = activeItemNewAnim.position();
+    $(".hori-selector").css({
+      top: itemPosNewAnimTop.top + "px",
+      left: itemPosNewAnimLeft.left + "px",
+      height: activeWidthNewAnimHeight + "px",
+      width: activeWidthNewAnimWidth + "px",
+    });
+    $("#navbarSupportedContent").on("click", "li", function (e) {
+      $("#navbarSupportedContent ul li").removeClass("active");
+      $(this).addClass("active");
+      var activeWidthNewAnimHeight = $(this).innerHeight();
+      var activeWidthNewAnimWidth = $(this).innerWidth();
+      var itemPosNewAnimTop = $(this).position();
+      var itemPosNewAnimLeft = $(this).position();
+      $(".hori-selector").css({
+        top: itemPosNewAnimTop.top + "px",
+        left: itemPosNewAnimLeft.left + "px",
+        height: activeWidthNewAnimHeight + "px",
+        width: activeWidthNewAnimWidth + "px",
+      });
+    });
+  }
+  $(document).ready(function () {
+    setTimeout(function () {
+      test();
+    });
+  });
+  $(window).on("resize", function () {
+    setTimeout(function () {
+      test();
+    }, 500);
+  });
+  $(".navbar-toggler").click(function () {
+    $(".navbar-collapse").slideToggle(300);
+    setTimeout(function () {
+      test();
+    });
+  });
+
+  
+
+  return (
+    <div>
+      <nav className="navbar navbar-expand-custom navbar-mainbg">
+        <Link
+          className="navbar-logo navbar-brand"
+          style={{ padding: "15px", color: "#fff" }}
+          to="/"
+        >
+          Navbar
+        </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <MenuIcon style={{ color: "white" }} />
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav ml-auto">
+            <div className="hori-selector">
+              <div className="left"></div>
+              <div className="right"></div>
+            </div>
+            <li className="nav-item">
+              <Link className="nav-link link" to="/">
+                <HomeIcon className="icon" />
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link active link" to="/register">
+                <HowToRegIcon className="icon" />
+                Register
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link link " to="/backup">
+                <BackupIcon className="icon" />
+                Backup Repos
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link link" to="/reportrepo">
+                <SummarizeIcon className="icon" />
+                Repository reports
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link link" to={logoutUrl}>
+                <Logout className="icon" />
+                Logout
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  );
+
+}
+
+
+

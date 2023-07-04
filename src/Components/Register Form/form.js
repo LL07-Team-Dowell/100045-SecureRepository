@@ -1,152 +1,103 @@
-import React, { useState } from "react";
+import React from "react";
 import "./form.css";
-import { TextField, Button } from "@mui/material";
-import { useFormik } from "formik";
-import * as yup from "yup";
-import { Link } from "react-router-dom";
-import useGetResponse from "../Custom Hooks/useGetResponse";
-import { RotatingLines } from "react-loader-spinner";
-import Popup from "reactjs-popup";
-import "reactjs-popup/dist/index.css";
+import Popup from "../Popup/Popup";
+import axios from "axios";
 
-const validationSchema = yup.object({
-  repoURL: yup
-    .string()
-    .matches(/^https:\/\/\w/i, "Enter correct repo url")
-    .required("Please Paste Your Repository URL"),
-
-  repoName: yup
-    .string()
-    .matches(/^\d{6,}-\w/i, "must start with digits")
-    .test({
-      name: "match-substring",
-      message: "Repository Name should match with Repo Name in the URL",
-      test: function (value) {
-        const repoURL = this.parent.repoURL;
-        if (!repoURL) {
-          return false;
-        }
-        const match = repoURL.match(/\/([^/]+)\.git$/);
-        if (!match) {
-          return false;
-        }
-        const repoNameFromURL = match[1];
-        return repoNameFromURL.includes(value);
-      },
-    })
-    .required("Please Enter Your Repository Name"),
-});
-
-const RegisterForm = () => {
-  const [repoUrl, setRepoUrl] = useState(null);
-  const [repoName, setRepoName] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [getResponse, status, webHookLink] = useGetResponse();
-  const [buttonText, setButtonText] = useState("Copy WebHookLink");
-
-  const formik = useFormik({
-    initialValues: {
-      repoName: "",
-      repoURL: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      setRepoUrl(values.repoURL);
-      setRepoName(values.repoName);
-      setLoading(true);
-      getResponse(values.repoName, values.repoURL);
-    },
+export default function RegisterForm() {
+  const [formData, setFormData] = React.useState({
+    link: "",
+    name: "",
   });
+  const [buttonPopup, setButtonPopup] = React.useState(false);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(webHookLink);
-  };
+  const [status, setStatus] = React.useState(null);
+  const [webHookLink, setWebHookLink] = React.useState(null);
 
-  const loaderPopup = (
-    <Popup open={loading}>
-      <div className="popup-loader">
-        {!status && !webHookLink ? (
-          <RotatingLines
-            strokeColor="grey"
-            strokeWidth="5"
-            animationDuration="0.75"
-            width="96"
-            visible={true}
-          />
-        ) : (
-          <>
-            {console.log(status, webHookLink)}
-            <div className="response">
-              <div className="status" style={{ textAlign: "left" }}>
-                <span>{"Status : " + status}</span>
-              </div>
-              <div className="web-hook-link" style={{ textAlign: "left" }}>
-                <span>{"Web Hook Link : " + webHookLink}</span>
-              </div>
-              <button
-                className="copy-btn"
-                onClick={() => {
-                  copyToClipboard();
-                  setButtonText("Copied");
-                  setTimeout(() => {
-                    setButtonText("Copy WebHookLink");
-                  }, 3000);
-                }}
-              >
-                {buttonText}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </Popup>
-  );
+  const [error, setError] = React.useState(" ");
+  function handleChange(event) {
+    const { name, value } = event.target;
 
+    setFormData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    let re = /^https:\/\/\w/i;
+    let re2 = /^\d{6,}-\w/i;
+
+    if (!re.test(formData.link)) {
+      alert("invalid Link");
+      setError("link");
+    } else if (!re2.test(formData.name)) {
+      alert("Password Required");
+      setError("name must start with a character");
+    } else {
+      setError("");
+      console.log("no error");
+      setButtonPopup(true);
+      const data = JSON.parse(sessionStorage.getItem("userInfo"));
+      const [dataSecureRepository] = data?.portfolio_info.filter(
+        (item) => item.product === "Secure Repositories"
+      );
+
+      console.log(dataSecureRepository);
+
+      const fetchData = async () => {
+        const requestHeaders = {
+          repository_name: formData.name,
+          repository_url: formData.link,
+          org_name: dataSecureRepository?.org_name,
+          company_id: dataSecureRepository?.org_id,
+          data_type: dataSecureRepository?.data_type,
+          created_by: data?.userinfo?.username,
+        };
+        console.log(requestHeaders);
+
+        try {
+          const res = await axios.post(
+            "https://100045.pythonanywhere.com/backup/repositoryClone/",
+            requestHeaders
+          );
+          setStatus(res.data.status);
+          setWebHookLink(res.data.webhook_link);
+        } catch (error) {
+          console.error(error);
+          // Handle error
+        }
+      };
+      fetchData();
+    }
+  }
   return (
     <div className="form-container">
-      <div className="cross-btn">
-        {" "}
-        <Link to="/">
-          <i className="fa-regular fa-circle-xmark"></i>{" "}
-        </Link>
-      </div>
-
-      <form onSubmit={formik.handleSubmit}>
-        <TextField
-          fullWidth
-          id="password"
-          name="repoURL"
-          label="Repository URL"
+      <h3>Register a Secure Repository</h3>
+      <form>
+        <input
           type="text"
-          value={formik.values.repoURL}
-          onChange={formik.handleChange}
-          error={formik.touched.repoURL && Boolean(formik.errors.repoURL)}
-          helperText={formik.touched.repoURL && formik.errors.repoURL}
+          name="link"
+          placeholder="Repository URL"
+          onChange={handleChange}
+          value={formData.link}
         />
-        <TextField
-          fullWidth
-          id="email"
-          name="repoName"
-          label="Repository Name"
+        <input
           type="text"
-          value={formik.values.repoName}
-          onChange={formik.handleChange}
-          error={formik.touched.repoName && Boolean(formik.errors.repoName)}
-          helperText={formik.touched.repoName && formik.errors.repoName}
+          name="name"
+          placeholder="Repository Name"
+          value={formData.name}
+          onChange={handleChange}
         />
-        <Button
-          id="button-79"
-          color="primary"
-          variant="contained"
-          fullWidth
-          type="submit"
-        >
-          Submit
-        </Button>
+        <button onClick={handleSubmit}>Submit</button>
       </form>
-      {formik.isSubmitting ? loaderPopup : <></>}
+      <Popup trigger={buttonPopup} setTrigger={setButtonPopup} form={buttonPopup}>
+        <div className="content">
+          <p>{webHookLink}</p>
+        </div>
+      </Popup>
     </div>
   );
-};
-
-export default RegisterForm;
+}

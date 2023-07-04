@@ -1,13 +1,13 @@
-import { useContext, useEffect } from "react";
 import axios from "axios";
-import userContext from "../Custom Hooks/userContext";
+import { useStateValue } from "./../../Context/StateProvider";
+import React from "react";
 
 const dowellLoginUrl =
   "https://100014.pythonanywhere.com/?redirect_url=" +
   window.location.origin +
   "/100045-SecureRepository";
 
-const getUserInfoOther = async (session_id, setUserInfo) => {
+const getUserInfoOther = async (session_id, dispatch) => {
   const session = {
     session_id: session_id,
   };
@@ -17,10 +17,13 @@ const getUserInfoOther = async (session_id, setUserInfo) => {
     data: session,
   });
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-  setUserInfo(res.data); // Update user info in context
+   dispatch({
+     type: "SET_USER",
+     user: res.data,
+   }); // Update user info in context
 };
 
-const getUserInfo = async (session_id, setUserInfo) => {
+const getUserInfo = async (session_id, dispatch) => {
   const session = {
     session_id: session_id,
   };
@@ -31,11 +34,14 @@ const getUserInfo = async (session_id, setUserInfo) => {
     data: session,
   });
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-  setUserInfo(res.data); // Update user info in context
+   dispatch({
+     type: "SET_USER",
+     user: res.data,
+   }); // Update user info in context
 };
 
 export default function useDowellLogin() {
-  const { userInfo, setUserInfo } = useContext(userContext);
+  const [state, dispatch] = useStateValue();
 
   const queryParams = new URLSearchParams(window.location.search);
   const searchParams = queryParams.get("session_id");
@@ -48,7 +54,7 @@ export default function useDowellLogin() {
     ? sessionStorage.getItem("id")
     : null;
 
-  useEffect(() => {
+  React.useEffect(() => {
     const session_id = searchParams;
     const id = searchParams2;
 
@@ -56,9 +62,9 @@ export default function useDowellLogin() {
       sessionStorage.setItem("session_id", session_id);
       if (id || localId) {
         sessionStorage.setItem("id", id);
-        getUserInfoOther(session_id, setUserInfo);
+        getUserInfoOther(session_id, dispatch);
       } else {
-        getUserInfo(session_id, setUserInfo);
+        getUserInfo(session_id, dispatch);
       }
     }
     if (!localSession && !session_id) {

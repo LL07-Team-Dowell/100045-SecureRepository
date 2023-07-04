@@ -1,77 +1,99 @@
 import React, { useState, useEffect } from "react";
 import "./Table.css";
+import { useStateValue } from "../../Context/StateProvider";
+import Popup from "../Popup/Popup";
 import Loader from "../Loader/Loader";
-import { useContext } from "react";
-import userContext from "../Custom Hooks/userContext";
-import { Text } from "@nextui-org/react";
-import { useQuery } from "react-query";
-async function getReport(org_id) {
-  const data = await fetch(
-    `https://100045.pythonanywhere.com/reports/get-respository-reports/${org_id}/`
-  );
-  const dataJson = await data.json();
- 
-  console.log(data)
-  return dataJson.data;
-}
+
+import axios from "axios";
+
 function ReportRepo() {
-  
+  const [state, dispatch] = useStateValue();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const [showModal, setShowModal] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
-  const { userInfo } = useContext(userContext);
-  const [portfolio] = userInfo?.portfolio_info?.filter(
+  const [buttonPopup, setButtonPopup] = React.useState(false);
+  const [data, setData] = useState([]);
+
+  const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
+  useEffect(() => {
+    // Use useEffect to make the API call and update data state
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://100045.pythonanywhere.com/reports/get-respository-reports/${portfolio.org_id}/`
+        );
+        if (response.data.data.length === 0) {
+          setData(["empty"]);
+        } else {
+          setData(response.data.data);
+        }
+      } catch (error) {
+        console.error(error);
+        // Handle the error
+      }
+    };
 
+    fetchData(); // Call the async function
+  }, [portfolio.org_id]);
 
+  // console.log(`data ${JSON.stringify(data)}`);
 
-  const { isLoading, isError, data, error, isFetching } = useQuery(
-    ["get-reports"],
-    ()=> getReport(portfolio.org_id),
-    { refetchOnMount : false}
-  );
-  console.log(data);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = data.slice(startIndex, endIndex);
 
-  
+  function handleClick(row) {
+    setButtonPopup(true);
+    setSelectedData(row);
+    console.log(selectedData);
+  }
 
-  const handleTableClick = (selected) => {
-    setSelectedData(selected);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedData([]);
-    setShowModal(false);
-  };
-
-  const renderTable = () => {
-    if (isLoading) {
-      return (
-        <div className="loader-container">
-          <Loader />
+  return (
+    <div className="table-container">
+      <h3>Repository Reports</h3>
+      <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+        <div className="content">
+          <div className="left">
+            {[
+              "Repository Name",
+              "Repository url",
+              "Created_by",
+              "Date of Registration",
+              "Time of Registration",
+              "Web Hook Link",
+              "Data Type",
+            ].map((item) => (
+              <p key={item}>{item}:</p>
+            ))}
+          </div>
+          <div className="right">
+            <p>{selectedData[0]?.repository_name}</p>
+            <p>{selectedData[0]?.repository_url}</p>
+            <p>{selectedData[0]?.created_by}</p>
+            <p>{selectedData[0]?.date_of_registration}</p>
+            <p>{selectedData[0]?.time_of_registration}</p>
+            <p>{selectedData[0]?.webhook_link}</p>
+            <p>{selectedData[0]?.data_type}</p>
+          </div>
         </div>
-      );
-    } else {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const currentItems = data.slice(startIndex, endIndex);
-
-      return (
-        <div className="table-box">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>S.No</th>
-                <th>Date of Registration</th>
-                <th>Repository Name</th>
-                <th>Show More</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((row, rowIndex) => (
+      </Popup>
+      {data.length === 0 ? (
+        <Loader />
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Date of Registration</th>
+              <th>Repository Name</th>
+              <th>Show More</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data[0] !== "empty" &&
+              currentItems.map((row, rowIndex) => (
                 <tr className="tabdata" key={rowIndex}>
                   <td>{startIndex + rowIndex + 1}</td>
                   <td>{row.date_of_registration}</td>
@@ -79,114 +101,31 @@ function ReportRepo() {
                   <td>
                     <button
                       className="button-know-more"
-                      onClick={() => handleTableClick([row])}
+                      onClick={() => handleClick([row])}
                     >
                       Show More
                     </button>
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
-          <div className="pagination">
-            {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
-              (item, index) => (
-                <button
-                  key={index}
-                  className={currentPage === index + 1 ? "active" : ""}
-                  onClick={() => setCurrentPage(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              )
-            )}
-          </div>
-        </div>
-      );
-    }
-  };
-
-  const renderSelectedTable = () => {
-    if (selectedData.length === 0) return null;
-
-    const [row] = selectedData;
-
-    return (
-      <div className="modal">
-        <div className="modal-content">
-          <span className="close" onClick={handleCloseModal}>
-            &times;
-          </span>
-
-          <table className="table">
-            <tr>
-              <th>Repository Name </th>
-              <th>{row.repository_name}</th>
-            </tr>
-            <tr>
-              <td>Created By</td>
-              <td>{row.created_by}</td>
-            </tr>
-            <tr>
-              <td>Repository URL</td>
-              <td>{row.repository_url}</td>
-            </tr>
-            <tr>
-              <td>Date of Registration</td>
-              <td>{row.date_of_registration}</td>
-            </tr>
-            <tr>
-              <td>Time of Registration</td>
-              <td>{row.time_of_registration}</td>
-            </tr>
-            <tr>
-              <td>Web Hook Link</td>
-              <td>{row.webhook_link}</td>
-            </tr>
-
-            <tr>
-              <td>Data Type</td>
-              <td>{row.data_type}</td>
-            </tr>
-          </table>
-        </div>
+          </tbody>
+        </table>
+      )}
+      <div className="pagination">
+        {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
+          (item, index) => (
+            <button
+              key={index}
+              className={currentPage === index + 1 ? "active" : ""}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </button>
+          )
+        )}
       </div>
-    );
-  };
-
-  return (
-    <div className="table-container">
-      <Text
-        h1
-        css={{
-          color: "#1976d2",
-          fontSize: "1.5rem",
-
-          "@xs": {
-            fontSize: "2rem",
-          },
-          "@sm": {
-            fontSize: "2.5rem",
-          },
-          "@md": {
-            fontSize: "3rem",
-          },
-          "@lg": {
-            fontSize: "4rem",
-          },
-          "@xl": {
-            fontSize: "5rem",
-          },
-        }}
-        weight="bold"
-      >
-        Repository Reports
-      </Text>
-      {renderTable()}
-      {renderSelectedTable()}
     </div>
   );
 }
 
 export default ReportRepo;
-

@@ -1,134 +1,89 @@
-#loader-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
+:root {
+  --green: #008744;
+  --blue: #0057e7;
+  --red: #d62d20;
+  --yellow: #ffa700;
+  --white: #fff;
 }
 
-.cssload-loader {
-  font-size: 3rem;
-  width: 244px;
-  height: 49px;
-  line-height: 49px;
-  text-align: center;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  font-family: helvetica, arial, sans-serif;
-  text-transform: uppercase;
-  font-weight: 900;
-  font-size: 22px;
-  color: #1976d2;
-  letter-spacing: 0.1em;
+/* Scaling... any units */
+:root {
+  --width: 100px;
 }
-.cssload-loader::before,
-.cssload-loader::after {
-  content: "";
+
+.loader {
+  position: relative;
+  margin: 0 auto;
+  width: var(--width);
+}
+
+.loader:before {
+  content: '';
   display: block;
-  width: 15px;
-  height: 15px;
-  background: #1976d2;
+  padding-top: 100%;
+}
+
+.circular {
+  animation: rotate 2s linear infinite;
+  height: 100%;
+  transform-origin: center center;
+  width: 100%;
   position: absolute;
-  animation: cssload-load 0.81s infinite alternate ease-in-out;
-  -o-animation: cssload-load 0.81s infinite alternate ease-in-out;
-  -ms-animation: cssload-load 0.81s infinite alternate ease-in-out;
-  -webkit-animation: cssload-load 0.81s infinite alternate ease-in-out;
-  -moz-animation: cssload-load 0.81s infinite alternate ease-in-out;
-}
-.cssload-loader::before {
   top: 0;
-}
-.cssload-loader::after {
   bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 150px auto;
 }
 
-@keyframes cssload-load {
-  0% {
-    left: 0;
-    height: 29px;
-    width: 15px;
-  }
-  50% {
-    height: 8px;
-    width: 39px;
-  }
-  100% {
-    left: 229px;
-    height: 29px;
-    width: 15px;
-  }
+.path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  stroke-linecap: round;
 }
 
-@-o-keyframes cssload-load {
-  0% {
-    left: 0;
-    height: 29px;
-    width: 15px;
-  }
-  50% {
-    height: 8px;
-    width: 39px;
-  }
+@keyframes rotate {
   100% {
-    left: 229px;
-    height: 29px;
-    width: 15px;
+    transform: rotate(360deg);
   }
 }
 
-@-ms-keyframes cssload-load {
+@keyframes dash {
   0% {
-    left: 0;
-    height: 29px;
-    width: 15px;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
   }
   50% {
-    height: 8px;
-    width: 39px;
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
   }
   100% {
-    left: 229px;
-    height: 29px;
-    width: 15px;
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
   }
 }
 
-@-webkit-keyframes cssload-load {
-  0% {
-    left: 0;
-    height: 29px;
-    width: 15px;
+@keyframes color {
+  100%, 0% {
+    stroke: var(--red);
   }
-  50% {
-    height: 8px;
-    width: 39px;
+  40% {
+    stroke: var(--blue);
   }
-  100% {
-    left: 229px;
-    height: 29px;
-    width: 15px;
+  66% {
+    stroke: var(--green);
+  }
+  80%, 90% {
+    stroke: var(--yellow);
   }
 }
 
-@-moz-keyframes cssload-load {
-  0% {
-    left: 0;
-    height: 29px;
-    width: 15px;
-  }
-  50% {
-    height: 8px;
-    width: 39px;
-  }
-  100% {
-    left: 229px;
-    height: 29px;
-    width: 15px;
-  }
+.showbox {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5%;
 }

@@ -1,52 +1,44 @@
-import { Route } from "react-router-dom";
-import { Routes } from "react-router-dom";
-import Home from "./Components/Home/Home.js";
-import RegisterForm from "./Components/Register Form/form";
+import './App.css';
+import { useStateValue } from "./Context/StateProvider";
 import DowellLogin from "./Components/Dowell Login/dowellLogin";
-import { useState } from "react";
-import userContext from "./Components/Custom Hooks/userContext";
-import CreatePortfolio from "./Components/Create Portfolio/createPortfolio";
-import Navbar from "./Components/Navbar/Navbar.js";
 import Loader from "./Components/Loader/Loader";
-import BackupRepo from "./Components/Report/BackupRepo.js";
-import ReportRepo from "./Components/Report/ReportRepo.js";
+import CreatePortfolio from "./Components/Create Portfolio/createPortfolio";
+import Navbar from './Components/Navbar/Navbar';
+import { Routes, Route, Link } from 'react-router-dom';
+import RegisterForm from "./Components/Register Form/form";
+import ReportRepo from './Components/Report/ReportRepo';
+import BackupRepo from "./Components/Report/BackupRepo";
+import Home from './Components/Home/Home';
+
+
 
 function App() {
-  const [userInfo, setUserInfo] = useState({
-    userInfo: [{ userInfo: "test" }],
-  });
+  const [state, dispatch] = useStateValue();  
   const queryParams = new URLSearchParams(window.location.search);
   const searchParams = queryParams.get("session_id");
-  if (userInfo?.userInfo?.[0]?.userInfo === "test") {
+  if (state.user === null) {
     return (
       <>
-        <userContext.Provider
-          value={{ userInfo: userInfo, setUserInfo: setUserInfo }}
-        >
           {<DowellLogin />}
-          {searchParams ? <Loader /> : null}
-        </userContext.Provider>
+          {searchParams ? <Loader /> : null}       
       </>
     );
-  } else {
+  }
+   else {
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
     const portfolioInfo = userInfo.portfolio_info?.filter(
       (info) => info.product === "Secure Repositories"
     );
-
     return portfolioInfo?.length ? (
       <>
-        <userContext.Provider
-          value={{ userInfo: userInfo, setUserInfo: setUserInfo }}
-        >
-          <Navbar />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/register" element={<RegisterForm />} />
-            <Route exact path="/repo reports" element={<ReportRepo />} />
-            <Route exact path="/backup repo" element={<BackupRepo />} />
-          </Routes>
-        </userContext.Provider>
+        <Navbar />
+
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/register" element={<RegisterForm />} />
+          <Route exact path="/backup" element={<BackupRepo />} />
+          <Route exact path="/reportrepo" element={<ReportRepo />} />
+        </Routes>
       </>
     ) : (
       <CreatePortfolio />
@@ -54,3 +46,5 @@ function App() {
   }
 }
 export default App;
+
+

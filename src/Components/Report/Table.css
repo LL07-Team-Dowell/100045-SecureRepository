@@ -1,13 +1,15 @@
 .table-container {
-  margin-top: 5rem;
+  /* margin-top: 5rem; */
+  margin: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 2rem;
   padding: 1rem 1.5rem;
-  width: 100%;
   min-height: 90vh;
+  border: 0.2px solid #e6e4e3;
+  border-radius: 10px;
 }
 
 .loader-container {
@@ -16,31 +18,24 @@
   justify-content: center;
   align-items: center;
 }
+
 table {
   width: 100%;
-  border-style: none;
+  border: 0.2px solid #e6e4e3;
   border-spacing: 0;
   border-collapse: collapse;
   text-align: center;
   padding: 12px;
   cursor: pointer;
-  z-index: 3;
   border-radius: 30px;
 }
 tr th {
-  background-color: #1b43a1;
+  background-color: #333;
   padding: 1rem 0.5rem;
   color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.mobname {
-  background-color: greenyellow;
-  color: black;
-}
-h1 {
-  text-align: center;
-}
 tr td {
   margin: 9px 0px;
   padding: 9px;
@@ -48,24 +43,23 @@ tr td {
   word-break: break-all;
   font-size: 1.1rem;
 }
-.row {
-  background-color: rgba(51, 172, 131, 0.74);
-  color: white;
+
+.tabdata:nth-child(even) {
+  background-color: #ffffff;
 }
 
 .tabdata {
-  background-color: rgb(187, 195, 202);
+  background-color: #F0EEED;
   font-weight: 700;
-  background-color: #abb3b1;
   color: #100f0f;
 }
 
 .button-know-more {
-  background-color: #222;
+  background-color: #fff;
   border-radius: 4px;
-  border-style: none;
+  border: .1px solid #222;
   box-sizing: border-box;
-  color: #fff;
+  color: #222;
   cursor: pointer;
   display: inline-block;
   font-family: "Farfetch Basis", "Helvetica Neue", Arial, sans-serif;
@@ -93,11 +87,12 @@ tr td {
 }
 
 @media screen and (max-width: 700px) {
-  tr th {
+  tr th, tbody tr td {
     font-size: 0.8rem;
   }
+
   .tabdata {
-    font-size: 0.7rem;
+    font-size: 1rem;
   }
   .table-container {
     padding: 1rem 0.3rem;
@@ -107,26 +102,14 @@ tr td {
     min-height: 30px;
     width: 100%;
   }
+
+  .table-container {
+  margin: 1.5rem;
+  padding: 1rem 1.5rem;
+}
 }
 
-.modal {
-  position: fixed;
-  top: 20%;
-  left: 5%;
-  z-index: 999;
-  background: #181515ee;
-  width: 90vw;
-  height: 90vh;
-  color: white;
-  border-radius: 7px;
-}
 
-.close {
-  padding: 1rem 2rem;
-  cursor: pointer;
-  color: white;
-  font-size: 3rem;
-}
 
 .pagination {
   display: flex;
@@ -138,7 +121,7 @@ tr td {
   margin: 0 0.5rem;
   border: none;
   background-color: #fff;
-  color: #1976d2;
+  color: #222;
   font-size: 1rem;
   cursor: pointer;
   padding: 0.5rem;
@@ -147,16 +130,13 @@ tr td {
 }
 
 .pagination button:hover {
-  background-color: #1976d2;
+  background-color: #222;
   color: #fff;
 }
 
 .pagination button.active {
-  background-color: #1976d2;
+  background-color: #222;
   color: #fff;
-}
-.table-box {
-  width: 100%;
 }
 
 a {
