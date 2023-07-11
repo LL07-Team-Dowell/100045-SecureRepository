@@ -9,6 +9,7 @@ import RegisterForm from "./Components/Register Form/form";
 import ReportRepo from './Components/Report/ReportRepo';
 import BackupRepo from "./Components/Report/BackupRepo";
 import Home from './Components/Home/home';
+import Profile from './Components/Home/profile';
 
 
 
@@ -35,6 +36,7 @@ function App() {
 
         <Routes>
           <Route exact path="/" element={<Home />} />
+          <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/register" element={<RegisterForm />} />
           <Route exact path="/backup" element={<BackupRepo />} />
           <Route exact path="/reportrepo" element={<ReportRepo />} />

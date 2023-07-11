@@ -62,7 +62,7 @@ function ReportRepo() {
             "_id": "649ebbb970e608774bacfa22",
             "eventId": "FB1010000000000000000000003004",
             "function_number": "123456",
-            "repository_name": "3-example-repo",
+            "repository_name": "3-example-repos",
             "repository_url": "https://github.com/Halima-Ali/123456-example-repo.git",
             "organisation_name": "HalimaAliWario",
             "company_id": "6458e0dc872f46db5b4e113b",
@@ -127,8 +127,6 @@ function ReportRepo() {
     const {value } = event.target;
 
     setSearchInput((prev) => value);
-
-    console.log(searchInput)
   }
 
   return (
@@ -167,7 +165,7 @@ function ReportRepo() {
           <form>
             <input
               className="searchbar"
-              placeholder="search repository"
+              placeholder="search repository Name"
               onChange={handleChange}
               name="searchInput"
               value={searchInput}

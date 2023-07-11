@@ -5,6 +5,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import HomeIcon from "@mui/icons-material/Home";
 import BackupIcon from "@mui/icons-material/Backup";
 import SummarizeIcon from "@mui/icons-material/Summarize";
+import { Person } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Logout } from "@mui/icons-material";
 import  logo  from "../../Images/logo.png"
@@ -38,6 +39,17 @@ function Navbar() {
               >
                 <HomeIcon className="icon" />
                 Home
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="profile"
+                activeClassName="active"
+                className="nav-links"
+                onClick={click ? handleClick : null}
+              >
+                <Person className="icon" />
+               Profile
               </NavLink>
             </li>
             <li className="nav-item">
