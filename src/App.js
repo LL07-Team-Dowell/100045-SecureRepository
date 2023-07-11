@@ -8,7 +8,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import RegisterForm from "./Components/Register Form/form";
 import ReportRepo from './Components/Report/ReportRepo';
 import BackupRepo from "./Components/Report/BackupRepo";
-import Home from './Components/Home/Home';
+import Home from './Components/Home/home';
 
 
 

@@ -20,7 +20,7 @@ export default function Home() {
           <button className="register-button">Register</button>
         </Link>
       </div>
-      <div className="profile-container">
+      {/* <div className="profile-container">
         <p className="title">
           <span>
             <FaceIcon className="title-icon" />
@@ -55,7 +55,7 @@ export default function Home() {
           <p className="left">Organization Name :</p>
           <p className="right">{portfolio.org_name}</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -12,6 +12,10 @@
   border-radius: 10px;
 }
 
+form{
+  width: 100%;
+}
+
 .loader-container {
   height: 50vh;
   display: flex;
