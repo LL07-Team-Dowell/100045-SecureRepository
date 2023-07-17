@@ -26,15 +26,16 @@
 
 .nav-logo {
   color: #999;
-  align-items: start;
   cursor: pointer;
   text-decoration: none;
   font-size: 2rem;
   flex-grow: 1;
+  display: flex;
+  align-items:center;
 }
 
 .nav-logo span{
-  padding-bottom: 20px;
+  padding-left: 10px;
 }
 
 .nav-menu {
