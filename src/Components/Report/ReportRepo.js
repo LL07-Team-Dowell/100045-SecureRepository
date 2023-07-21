@@ -28,79 +28,7 @@ function ReportRepo() {
         if (response.data.data.length === 0) {
           setData(["empty"]);
         } else {
-          // setData(response.data.data);
-          setData([
-        {
-            "_id": "649865ebe980cfedbc42c7b7",
-            "eventId": "FB1010000000000000000000003004",
-            "function_number": "123456",
-            "repository_name": "1-example-repo",
-            "repository_url": "https://github.com/Halima-Ali/123456-example-repo.git",
-            "organisation_name": "HalimaAliWario",
-            "company_id": "6458e0dc872f46db5b4e113b",
-            "data_type": "Real_Data",
-            "created_by": "HalimaAliWario",
-            "date_of_registration": "25-06-2023",
-            "time_of_registration": "21:36:03",
-            "webhook_link": "https://100045.pythonanywhere.com/backup/6458e0dc872f46db5b4e113b/123456-example-repo/"
-        },
-        {
-            "_id": "6498661154a26620563d30b1",
-            "eventId": "FB1010000000000000000000003004",
-            "function_number": "123456",
-            "repository_name": "2-example-repo",
-            "repository_url": "https://github.com/Halima-Ali/123456-example-repo.git",
-            "organisation_name": "HalimaAliWario",
-            "company_id": "6458e0dc872f46db5b4e113b",
-            "data_type": "Real_Data",
-            "created_by": "HalimaAliWario",
-            "date_of_registration": "25-06-2023",
-            "time_of_registration": "21:36:41",
-            "webhook_link": "https://100045.pythonanywhere.com/backup/6458e0dc872f46db5b4e113b/123456-example-repo/"
-        },
-        {
-            "_id": "649ebbb970e608774bacfa22",
-            "eventId": "FB1010000000000000000000003004",
-            "function_number": "123456",
-            "repository_name": "3-example-repos",
-            "repository_url": "https://github.com/Halima-Ali/123456-example-repo.git",
-            "organisation_name": "HalimaAliWario",
-            "company_id": "6458e0dc872f46db5b4e113b",
-            "data_type": "Real_Data",
-            "created_by": "HalimaAliWario",
-            "date_of_registration": "30-06-2023",
-            "time_of_registration": "16:55:45",
-            "webhook_link": "https://100045.pythonanywhere.com/backup/6458e0dc872f46db5b4e113b/123456-example-repo/"
-        },
-        {
-            "_id": "64a17b03275cce369adb6d17",
-            "eventId": "FB1010000000000000000000003004",
-            "function_number": "123456",
-            "repository_name": "4-example-repo",
-            "repository_url": "https://github.com/Halima-Ali/123456-example-repo.git",
-            "organisation_name": "HalimaAliWario",
-            "company_id": "6458e0dc872f46db5b4e113b",
-            "data_type": "Real_Data",
-            "created_by": "HalimaAliWario",
-            "date_of_registration": "02-07-2023",
-            "time_of_registration": "18:56:27",
-            "webhook_link": "https://100045.pythonanywhere.com/backup/6458e0dc872f46db5b4e113b/123456-example-repo/"
-        },
-        {
-            "_id": "64a5653ae63718e644c1dda1",
-            "eventId": "FB1010000000000000000000003004",
-            "function_number": "123456",
-            "repository_name": "5-example-repo",
-            "repository_url": "https://github.com/Halima-Ali/123456-example-repo.git",
-            "organisation_name": "HalimaAliWario",
-            "company_id": "6458e0dc872f46db5b4e113b",
-            "data_type": "Real_Data",
-            "created_by": "HalimaAliWario",
-            "date_of_registration": "05-07-2023",
-            "time_of_registration": "18:12:34",
-            "webhook_link": "https://100045.pythonanywhere.com/backup/6458e0dc872f46db5b4e113b/123456-example-repo/"
-        }
-    ])
+          setData(response.data.data);
         }
       } catch (error) {
         console.error(error);
@@ -132,31 +60,38 @@ function ReportRepo() {
   return (
     <div className="table-container">
       <h3>Repository Reports</h3>
-      <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+      <input className="pagecontrol" placeholder="rows" type="number" max={10} min={4} value={itemsPerPage} name="itemsPerPage" onChange={(event) => itemsPerPage && setItemsPerPage(event.target.value)}/>
+      <Popup trigger={buttonPopup} setTrigger={setButtonPopup} copy={false}>
         <div className="content">
-          <div className="left">
-            {[
-              "Repository Name",
-              "Repository url",
-              "Created_by",
-              "Date of Registration",
-              "Time of Registration",
-              "Web Hook Link",
-              "Data Type",
-            ].map((item) => (
-              <p key={item}>{item}:</p>
-            ))}
-          </div>
-          <div className="right">
+          <div className="row">
+            <h3>Repository Name</h3>
             <p>{selectedData[0]?.repository_name}</p>
+          </div>
+          <div className="row">
+            <h3>Repository url</h3>
             <p>{selectedData[0]?.repository_url}</p>
+          </div>
+          <div className="row">
+            <h3>Created_by</h3>
             <p>{selectedData[0]?.created_by}</p>
+          </div>
+          <div className="row">
+            <h3>Date of Registration</h3>
             <p>{selectedData[0]?.date_of_registration}</p>
+          </div>
+          <div className="row">
+            <h3>Time of Registration</h3>
             <p>{selectedData[0]?.time_of_registration}</p>
+          </div>
+          <div className="row">
+            <h3>Web Hook Link</h3>
             <p>{selectedData[0]?.webhook_link}</p>
+          </div>
+          <div className="row">
+            <h3>Data Type</h3>
             <p>{selectedData[0]?.data_type}</p>
           </div>
-        </div>
+          </div>
       </Popup>
       {data.length === 0 ? (
         <Loader />
@@ -186,9 +121,9 @@ function ReportRepo() {
                   .filter((item) => {
                     return searchInput.toLowerCase() === ""
                       ? item
-                      : item.repository_name.toLowerCase().includes(
-                          searchInput
-                        );
+                      : item.repository_name
+                          .toLowerCase()
+                          .includes(searchInput);
                   })
                   .map((row, rowIndex) => (
                     <tr className="tabdata" key={rowIndex}>

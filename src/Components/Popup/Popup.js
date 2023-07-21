@@ -1,6 +1,7 @@
 import React from "react";
 import "./popup.css";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Popup(props) {
   const [isCopied, setIsCopied] = React.useState(false);
@@ -29,7 +30,7 @@ export default function Popup(props) {
           text={extractTextFromChildren(props.children)}
           onCopy={handleCopy}
         >
-          <button className="copy-btn">{isCopied ? "Copied" : "Copy"}</button>
+          {props.copy ? <button className="copy-btn">{isCopied ? "Copied" : "Copy"}</button>:<p></p>}
         </CopyToClipboard>
         <button
           className="close-btn"
@@ -38,7 +39,7 @@ export default function Popup(props) {
             setIsCopied(false);
           }}
         >
-          Close
+         < CloseIcon/>
         </button>
         <div>{props.children}</div>
       </div>

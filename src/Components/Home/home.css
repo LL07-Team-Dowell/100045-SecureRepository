@@ -1,9 +1,19 @@
 .home-text-container {
   margin: 150px auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+}
+
+.home-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.left, .right{
+  flex-basis: 50%;
 }
 
 .container,
@@ -12,8 +22,12 @@
   padding: 40px;
   border-radius: 10px;
   text-align: center;
-  width: 40%;
-  margin-top: 20px;
+  width: 90%;
+  margin: 20px;
+}
+
+.profile-container{
+  max-width: 600px;
 }
 
 .title {
@@ -74,6 +88,11 @@
     margin: 20px auto;
   }
 
+  .home-container{
+    flex-direction: column;
+    gap: 0;
+  }
+
   .container , .profile-container{
     padding: 20px;
     width: 90%;
@@ -95,4 +114,14 @@
   font-size: 13px;
 }
 
+}
+
+.select{
+  display: block;
+  outline: none;
+  border: 0.2px solid #c8c5c4;
+  width: 90%;
+  padding: 10px;
+  margin: 10px auto;
+  border-radius: 10px;
 }

@@ -5,6 +5,7 @@ import Popup from "../Popup/Popup";
 import Loader from "../Loader/Loader";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import fileDownload from "js-file-download";
 
 function BackupRepo() {
   const [state, dispatch] = useStateValue();
@@ -65,20 +66,13 @@ function BackupRepo() {
   }
 
   function handleDownload(row) {
-    console.log(row);
-    const fileUrl = row[0].file_url;
-    const download = async (fileUrl) => {
-      const response = await fetch(fileUrl);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "backup.zip");
-      document.body.appendChild(link);
-      link.click();
-    };
-
-    download();
+    axios
+      .get(row[0].file_url, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        fileDownload(res.data, `${row[0].zip_file_name}.zip`);
+      });
   }
 
   const squareli = [];
@@ -91,22 +85,30 @@ function BackupRepo() {
     <>
       <div className="table-container">
         <h3>Backup Report</h3>
-        <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+        <input
+          className="pagecontrol"
+          placeholder="rows"
+          type="number"
+          max={10}
+          min={4}
+          value={itemsPerPage}
+          name="itemsPerPage"
+          onChange={(event) =>
+            itemsPerPage && setItemsPerPage(event.target.value)
+          }
+        />
+        <Popup trigger={buttonPopup} setTrigger={setButtonPopup} copy={false}>
           <div className="content">
-            <div className="left">
-              {[
-                "Backup Time ",
-                "Added Files",
-                "Modified Files",
-                "Removed Files",
-                "Created By",
-                "Commit URL",
-              ].map((item) => (
-                <p key={item}>{item}:</p>
-              ))}
+            <div className="row">
+              <h3>Repository Name</h3>
+              <p>{selectedData[0]?.repository_name}</p>
             </div>
-            <div className="right">
+            <div className="row">
+              <h3>Backup Time</h3>
               <p>{selectedData[0]?.backup_time}</p>
+            </div>
+            <div className="row">
+              <h3>Added Files</h3>
               {selectedData[0]?.added_file &&
               selectedData[0].added_file.length > 0 ? (
                 // selectedData[0].added_file.map(item => <p>{item}</p>)
@@ -114,19 +116,31 @@ function BackupRepo() {
               ) : (
                 <p>No Added Files</p>
               )}
+            </div>
+            <div className="row">
+              <h3>Modified Files</h3>
               {selectedData[0]?.modified_file &&
               selectedData[0].modified_file.length > 0 ? (
                 <p>{selectedData[0].modified_file[0]}</p>
               ) : (
                 <p>No modified Files</p>
               )}
+            </div>
+            <div className="row">
+              <h3>Removed Files</h3>
               {selectedData[0]?.removed_file &&
               selectedData[0].removed_file.length > 0 ? (
                 <p>{selectedData[0].removed_file[0]}</p>
               ) : (
                 <p>No Deleted Files</p>
               )}
+            </div>
+            <div className="row">
+              <h3>Created By</h3>
               <p>{selectedData[0]?.pusher}</p>
+            </div>
+            <div className="row">
+              <h3>Commit URL</h3>
               <p>{selectedData[0]?.commit_url}</p>
             </div>
           </div>
@@ -232,7 +246,7 @@ function BackupRepo() {
             <li>Fri</li>
             <li>Sat</li>
           </ul>
-          <ul className="squares">{ squareli}</ul>
+          <ul className="squares">{squareli}</ul>
         </div>
       </div>
     </>

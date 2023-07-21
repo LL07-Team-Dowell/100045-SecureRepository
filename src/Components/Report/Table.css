@@ -223,3 +223,14 @@ a {
 .squares li[data-level="3"] {
   background-color: #196127;
 }
+
+.pagecontrol{
+  align-self: flex-end;
+  margin-right: 30px;
+  padding: 5px;
+  border-radius: 10px;
+  outline: 0;
+  border: 0;
+  text-align: center;
+  background-color:#e1e4e8 ;
+}

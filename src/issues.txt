@@ -1,138 +1,54 @@
-// responsive
-- navbar
--registration form
-- backup
--repository reports
-
-import React from "react";
-import "./n.css";
-import { Link } from "react-router-dom";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
-import HomeIcon from "@mui/icons-material/Home";
-import BackupIcon from "@mui/icons-material/Backup";
-import SummarizeIcon from "@mui/icons-material/Summarize";
-import "bootstrap/dist/css/bootstrap.css";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Logout } from "@mui/icons-material";
-import $ from "jquery";
-
-export default function Navbar() {
-  const logoutUrl =
-    "https://100014.pythonanywhere.com/sign-out?redirect_" +
-    window.location.origin +
-    "/100045-SecureRepository";
-
-  // ---------Responsive-navbar-active-animation-----------
-  function test() {
-    var tabsNewAnim = $("#navbarSupportedContent");
-    var selectorNewAnim = $("#navbarSupportedContent").find("li").length;
-    var activeItemNewAnim = tabsNewAnim.find(".active");
-    var activeWidthNewAnimHeight = activeItemNewAnim.innerHeight();
-    var activeWidthNewAnimWidth = activeItemNewAnim.innerWidth();
-    var itemPosNewAnimTop = activeItemNewAnim.position();
-    var itemPosNewAnimLeft = activeItemNewAnim.position();
-    $(".hori-selector").css({
-      top: itemPosNewAnimTop.top + "px",
-      left: itemPosNewAnimLeft.left + "px",
-      height: activeWidthNewAnimHeight + "px",
-      width: activeWidthNewAnimWidth + "px",
-    });
-    $("#navbarSupportedContent").on("click", "li", function (e) {
-      $("#navbarSupportedContent ul li").removeClass("active");
-      $(this).addClass("active");
-      var activeWidthNewAnimHeight = $(this).innerHeight();
-      var activeWidthNewAnimWidth = $(this).innerWidth();
-      var itemPosNewAnimTop = $(this).position();
-      var itemPosNewAnimLeft = $(this).position();
-      $(".hori-selector").css({
-        top: itemPosNewAnimTop.top + "px",
-        left: itemPosNewAnimLeft.left + "px",
-        height: activeWidthNewAnimHeight + "px",
-        width: activeWidthNewAnimWidth + "px",
-      });
-    });
-  }
-  $(document).ready(function () {
-    setTimeout(function () {
-      test();
-    });
-  });
-  $(window).on("resize", function () {
-    setTimeout(function () {
-      test();
-    }, 500);
-  });
-  $(".navbar-toggler").click(function () {
-    $(".navbar-collapse").slideToggle(300);
-    setTimeout(function () {
-      test();
-    });
-  });
-
-  
-
-  return (
-    <div>
-      <nav className="navbar navbar-expand-custom navbar-mainbg">
-        <Link
-          className="navbar-logo navbar-brand"
-          style={{ padding: "15px", color: "#fff" }}
-          to="/"
-        >
-          Navbar
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <MenuIcon style={{ color: "white" }} />
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ml-auto">
-            <div className="hori-selector">
-              <div className="left"></div>
-              <div className="right"></div>
-            </div>
-            <li className="nav-item">
-              <Link className="nav-link link" to="/">
-                <HomeIcon className="icon" />
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active link" to="/register">
-                <HowToRegIcon className="icon" />
-                Register
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link link " to="/backup">
-                <BackupIcon className="icon" />
-                Backup Repos
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link link" to="/reportrepo">
-                <SummarizeIcon className="icon" />
-                Repository reports
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link link" to={logoutUrl}>
-                <Logout className="icon" />
-                Logout
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-  );
-
-}
-
-
-
+[
+    {
+        "_id": "64acf4427e2eefd0dbef2771",
+        "eventId": "FB1010000000000000000000003004",
+        "zip_file_name": "123456-example-repo_27e06d00dcc397e35cc9c35eaa44e026772fce4b",
+        "company_id": "6458e0dc872f46db5b4e113b",
+        "backup_time": "2023-07-11T09:18:39+03:00",
+        "pusher": "Halima-Ali",
+        "repository_name": "123456-example-repo",
+        "license": [
+            null
+        ],
+        "commit_id": "27e06d00dcc397e35cc9c35eaa44e026772fce4b",
+        "commit_message": "Trial no 2",
+        "added_file": [
+            "README.md",
+            "src/Components/Create Portfolio/createPorfolio.css",
+            "src/Components/Create Portfolio/createPortfolio.js",
+            "src/Components/Custom Hooks/useGetResponse.js",
+            "src/Components/Custom Hooks/userContext.js",
+            "src/Components/Dowell Login/dowellLogin.js",
+            "src/Components/Home/home.css",
+            "src/Components/Home/home.js",
+            "src/Components/Loader/Loader.css",
+            "src/Components/Loader/Loader.js",
+            "src/Components/Navbar/Navbar.css",
+            "src/Components/Navbar/Navbar.js",
+            "src/Components/Navbar/n.css",
+            "src/Components/Popup/Popup.js",
+            "src/Components/Popup/popup.css",
+            "src/Components/Register Form/form.css",
+            "src/Components/Register Form/form.js",
+            "src/Components/Report/BackupRepo.js",
+            "src/Components/Report/ReportRepo.js",
+            "src/Components/Report/Table.css",
+            "src/Images/logo.png",
+            "src/issues.txt"
+        ],
+        "removed_file": [],
+        "modified_file": [
+            "package-lock.json",
+            "package.json",
+            "public/index.html",
+            "public/manifest.json",
+            "public/robots.txt",
+            "src/App.js",
+            "src/Context/Reducer.js",
+            "src/index.css",
+            "src/index.js"
+        ],
+        "commit_url": "https://github.com/Halima-Ali/123456-example-repo/commit/27e06d00dcc397e35cc9c35eaa44e026772fce4b",
+        "file_url": "http://67.217.61.253/uploadfiles/secure-repo-download-file/123456-example-repo_27e06d00dcc397e35cc9c35eaa44e026772fce4b.zip"
+    }
+]

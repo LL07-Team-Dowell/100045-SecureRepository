@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(2px);
 }
 
 .popup-inner {
@@ -17,6 +18,7 @@
   width: 100%;
   max-width: 640px;
   background-color: white;
+  border-radius: 10px;
 }
 
 .popup-inner h2{
@@ -29,6 +31,7 @@
   top: 16px;
   right: 16px;
   width: 150px;
+  padding: 5px;
 }
 
 .popup-inner .copy-btn {
@@ -42,18 +45,19 @@
 .popup .content {
   margin-top: 60px;
   width: 100%;
+}
+
+.popup .content .row{
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: .1px solid #f4f4f4;
 }
-
-.popup .content .left {
-  font-weight: bold;
-}
-
-.popup .content .right {
-  max-width: 400px;
+.popup .content .row p{
+  width: 60%;
   word-wrap: break-word;
-  margin-left: 15px;
 }
 
 @media screen and (max-width: 700px) {
@@ -71,13 +75,5 @@
     font-size: 14px;
   }
 
-  .popup .content .left {
-    font-weight: bold;
-    flex-basis: 50%;
-  }
-
-  .popup .content .right {
-    max-width: 150px;
-    flex-basis: 50%;
-  }
+ 
 }

@@ -2,6 +2,7 @@ import React from "react";
 import "./form.css";
 import Popup from "../Popup/Popup";
 import axios from "axios";
+import Loader from "../Loader/Loader";
 
 export default function RegisterForm() {
   const [formData, setFormData] = React.useState({
@@ -11,7 +12,7 @@ export default function RegisterForm() {
   const [buttonPopup, setButtonPopup] = React.useState(false);
 
   const [status, setStatus] = React.useState(null);
-  const [webHookLink, setWebHookLink] = React.useState(null);
+  const [webHookLink, setWebHookLink] = React.useState(false);
 
   const [error, setError] = React.useState(" ");
   function handleChange(event) {
@@ -93,11 +94,17 @@ export default function RegisterForm() {
         />
         <button onClick={handleSubmit}>Submit</button>
       </form>
-      <Popup trigger={buttonPopup} setTrigger={setButtonPopup} form={buttonPopup}>
-        <div className="content">
-          <p>{webHookLink}</p>
-        </div>
-      </Popup>
+      {/* loader after submit - popup after request is finished */}
+        <Popup
+          trigger={buttonPopup}
+          setTrigger={setButtonPopup}
+          form={buttonPopup}
+          copy={true}
+        >
+          <div className="content">
+            <p>{webHookLink}</p>
+          </div>
+        </Popup>
     </div>
   );
 }
