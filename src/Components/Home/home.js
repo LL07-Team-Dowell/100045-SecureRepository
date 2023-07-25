@@ -1,5 +1,8 @@
+import React, { useState } from "react";
+import axios from "axios";
 import { Link, json } from "react-router-dom";
 import "./home.css";
+import { useStateValue } from "../../Context/StateProvider";
 import {
   PieChart,
   Pie,
@@ -9,15 +12,78 @@ import {
   YAxis,
   Legend,
   CartesianGrid,
-  Bar, ScatterChart, Scatter
+  Bar,
+  ScatterChart,
+  Scatter,
 } from "recharts";
-import { useStateValue } from "../../Context/StateProvider";
 
 export default function Home() {
-  const [state] = useStateValue();
+  const [state, dispatch] = useStateValue();
+  const [repositoryData, setRepositoryData] = useState([]);
+  const [selectedRepository, setSelectedRepository] = useState("");
+  const [repositoryNames, setRepositoryNames] = useState([]);
+  const [datas, setData] = useState();
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
+
+  React.useEffect(() => {
+    // Use useEffect to make the API call and update data state
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://100045.pythonanywhere.com/reports/get-backup-reports/${portfolio.org_id}/`
+        );
+        if (response.data.data.length === 0) {
+        } else {
+          setData(response.data.data);
+          const pusherCommits = {};
+          response.data.data.filter(item=>item.repository_name === selectedRepository).forEach((item) => {
+            const { pusher } = item;
+            if (pusherCommits[pusher]) {
+              pusherCommits[pusher]++;
+            } else {
+              pusherCommits[pusher] = 1;
+            }
+          });
+
+          const newData = Object.keys(pusherCommits).map((pusher) => ({
+            name:pusher,
+            value: pusherCommits[pusher],
+          }));
+
+          setRepositoryData(newData);
+
+          // Get all unique repository names for select input options
+          const uniqueRepositoryNames = Array.from(
+            new Set(response.data.data.map((item) => item.repository_name))
+          );
+          setRepositoryNames(uniqueRepositoryNames);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      // Call the async function
+    };
+    fetchData();
+  }, [portfolio.org_id, selectedRepository]);
+
+  const handleSelectChange = (event) => {
+    setSelectedRepository(event.target.value);
+  };
+
+  const getCommitsForRepository = (pusherName, repoName) => {
+    let commits = 0;
+
+    datas.forEach((item) => {
+      const { name, repository_name } = item;
+      if (name === pusherName && repository_name === repoName) {
+        commits++;
+      }
+    });
+
+    return commits;
+  };
 
   const data = [
     {
@@ -58,23 +124,16 @@ export default function Home() {
     },
   ];
 
-  const data01 = [
-    { name: "user A", value: 4 },
-    { name: "user B", value: 3 },
-    { name: "user C", value: 3 },
-    { name: "user D", value: 2 },
-    { name: "user E", value: 2 },
-    { name: "user F", value: 1 },
-  ];
-
   const Sdata = [
     { x: 10, y: 2, z: 20 },
-    { x: 12, y: 1, z: 26},
+    { x: 12, y: 1, z: 26 },
     { x: 17, y: 3, z: 40 },
     { x: 14, y: 2, z: 28 },
     { x: 15, y: 4, z: 50 },
     { x: 11, y: 2, z: 20 },
   ];
+
+  console.log(`repos: ${JSON.stringify(repositoryData)}`);
 
   return (
     <div className="home-container">
@@ -88,22 +147,37 @@ export default function Home() {
             <button className="register-button">Register</button>
           </Link>
         </div>
+
         <div className="container">
           <h3>Please select Repository to view Insights On</h3>
           <label htmlFor="repository">Choose a repository: </label>
-          <select className="select" id="repository">
-            <option value="volvo">repository 1</option>
-            <option value="saab">Repository 2</option>
-            <option value="mercedes">Repository 3</option>
-            <option value="audi">Repository 4</option>
+          <select value={selectedRepository} onChange={handleSelectChange}>
+            <option value="">Select a repository</option>
+            {repositoryNames.map((repoName) => (
+              <option key={repoName} value={repoName}>
+                {repoName}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="container">
-          <h3>No of Commits</h3>
-          <p>
-            No of Commits recorded:<b>3</b>
-          </p>
+          {selectedRepository ? (
+            <div>
+              <h3>Commit Data for {selectedRepository}</h3>
+              {repositoryData.map((item) => (
+                <div key={item.pusher}>
+                  <p>
+                    {item.pusher} committed{" "}
+                    {selectedRepository === item.pusher
+                      ? getCommitsForRepository(item.pusher, selectedRepository)
+                      : item.value}{" "}
+                    times
+                  </p>
+                </div>
+              ))}
+            </div>
+          ): <p>Please select a repository</p>}
         </div>
       </div>
       <div className="right">
@@ -113,7 +187,7 @@ export default function Home() {
             <Pie
               dataKey="value"
               isAnimationActive={false}
-              data={data01}
+              data={repositoryData}
               cx="50%"
               cy="50%"
               outerRadius={80}

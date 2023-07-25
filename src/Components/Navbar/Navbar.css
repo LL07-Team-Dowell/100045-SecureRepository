@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  /* position: fixed; */
 }
 
 .nav-container {
@@ -146,3 +147,4 @@
   }
 }
 
+/* .nav-logo{} */

@@ -27,7 +27,7 @@ function Navbar() {
         <div className="nav-container">
           <NavLink to="/" className="nav-logo">
             <img src={logo} alt="logo" style={{ width: "70px" }} />
-            <span> Secure Repositories</span>
+            <span style={{color: "#fff"}}> Secure Repositories</span>
           </NavLink>
           <ul className={click ? "nav-menu active" : "nav-menu"}>
             <li className="nav-item">
