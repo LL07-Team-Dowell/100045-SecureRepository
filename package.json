@@ -1,7 +1,7 @@
 {
   "name": "secure-repository",
   "version": "0.1.0",
-  "homepage": "/100045-SecureRepository",
+  "homepage": "https://ll07-team-dowell.github.io/100045-SecureRepository",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.1",

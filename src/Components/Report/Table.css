@@ -37,13 +37,11 @@ tr th {
   background-color: #333;
   padding: 1rem 0.5rem;
   color: white;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 tr td {
   margin: 9px 0px;
   padding: 9px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   word-break: break-all;
   font-size: 1.1rem;
 }
@@ -66,7 +64,6 @@ tr td {
   color: #222;
   cursor: pointer;
   display: inline-block;
-  font-family: "Farfetch Basis", "Helvetica Neue", Arial, sans-serif;
   font-size: 12px;
   font-weight: 700;
   line-height: 1.5;

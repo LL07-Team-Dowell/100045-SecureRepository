@@ -150,7 +150,7 @@ export default function Home() {
         </div>
       </div>
       <div className="right">
-        <div className="container">
+        <div className="container-pie">
           <h3>Pie Chart showing pushers in this repository</h3>
           <PieChart
             width={500}
@@ -168,7 +168,7 @@ export default function Home() {
               label
             />
             <Tooltip />
-            <Legend layout="vertical" verticalAlign="top" align="right"/>
+            <Legend layout="vertical" verticalAlign="middle" align="right"/>
           </PieChart>
         </div>
         <div className="container">
