@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link, json } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./home.css";
 import { useStateValue } from "../../Context/StateProvider";
 import {
@@ -18,7 +18,7 @@ import {
 } from "recharts";
 
 export default function Home() {
-  const [state, dispatch] = useStateValue();
+  const [state] = useStateValue();
   const [repositoryData, setRepositoryData] = useState([]);
   const [selectedRepository, setSelectedRepository] = useState("");
   const [repositoryNames, setRepositoryNames] = useState([]);
@@ -38,18 +38,21 @@ export default function Home() {
         } else {
           setData(response.data.data);
           const pusherCommits = {};
-          response.data.data.filter(item=>item.repository_name === selectedRepository).forEach((item) => {
-            const { pusher } = item;
-            if (pusherCommits[pusher]) {
-              pusherCommits[pusher]++;
-            } else {
-              pusherCommits[pusher] = 1;
-            }
-          });
+          response.data.data
+            .filter((item) => item.repository_name === selectedRepository)
+            .forEach((item) => {
+              const { pusher } = item;
+              if (pusherCommits[pusher]) {
+                pusherCommits[pusher]++;
+              } else {
+                pusherCommits[pusher] = 1;
+              }
+            });
 
           const newData = Object.keys(pusherCommits).map((pusher) => ({
-            name:pusher,
+            name: pusher,
             value: pusherCommits[pusher],
+            fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
           }));
 
           setRepositoryData(newData);
@@ -85,6 +88,9 @@ export default function Home() {
     return commits;
   };
 
+  const option = [];
+
+
   const data = [
     {
       name: "User A",
@@ -92,48 +98,9 @@ export default function Home() {
       commits: 4,
       amt: 2400,
     },
-    {
-      name: "User B",
-      uv: 3000,
-      commits: 3,
-      amt: 2210,
-    },
-    {
-      name: "User C",
-      uv: 2000,
-      commits: 3,
-      amt: 2290,
-    },
-    {
-      name: "User D",
-      uv: 2780,
-      commits: 2,
-      amt: 2000,
-    },
-    {
-      name: "User E",
-      uv: 1890,
-      commits: 2,
-      amt: 2181,
-    },
-    {
-      name: "User F",
-      uv: 2390,
-      commits: 1,
-      amt: 2500,
-    },
   ];
 
-  const Sdata = [
-    { x: 10, y: 2, z: 20 },
-    { x: 12, y: 1, z: 26 },
-    { x: 17, y: 3, z: 40 },
-    { x: 14, y: 2, z: 28 },
-    { x: 15, y: 4, z: 50 },
-    { x: 11, y: 2, z: 20 },
-  ];
-
-  console.log(`repos: ${JSON.stringify(repositoryData)}`);
+  const Sdata = [{ x: 10, y: 2, z: 20 }];
 
   return (
     <div className="home-container">
@@ -152,7 +119,7 @@ export default function Home() {
           <h3>Please select Repository to view Insights On</h3>
           <label htmlFor="repository">Choose a repository: </label>
           <select value={selectedRepository} onChange={handleSelectChange}>
-            <option value="">Select a repository</option>
+            <option value="">select a repository</option>
             {repositoryNames.map((repoName) => (
               <option key={repoName} value={repoName}>
                 {repoName}
@@ -177,13 +144,19 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          ): <p>Please select a repository</p>}
+          ) : (
+            <p>Please select a repository</p>
+          )}
         </div>
       </div>
       <div className="right">
         <div className="container">
           <h3>Pie Chart showing pushers in this repository</h3>
-          <PieChart width={300} height={300}>
+          <PieChart
+            width={500}
+            height={300}
+            style={{position: "relative" }}
+          >
             <Pie
               dataKey="value"
               isAnimationActive={false}
@@ -195,7 +168,7 @@ export default function Home() {
               label
             />
             <Tooltip />
-            <Legend />
+            <Legend layout="vertical" verticalAlign="top" align="right"/>
           </PieChart>
         </div>
         <div className="container">

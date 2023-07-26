@@ -12,6 +12,7 @@ export default function RegisterForm() {
   const [buttonPopup, setButtonPopup] = React.useState(false);
 
   const [status, setStatus] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
   const [webHookLink, setWebHookLink] = React.useState(false);
 
   const [error, setError] = React.useState(" ");
@@ -40,7 +41,8 @@ export default function RegisterForm() {
     } else {
       setError("");
       console.log("no error");
-      setButtonPopup(true);
+      setLoading(true);
+
       const data = JSON.parse(sessionStorage.getItem("userInfo"));
       const [dataSecureRepository] = data?.portfolio_info.filter(
         (item) => item.product === "Secure Repositories"
@@ -66,6 +68,8 @@ export default function RegisterForm() {
           );
           setStatus(res.data.status);
           setWebHookLink(res.data.webhook_link);
+          setButtonPopup(true);
+          setLoading(false);
         } catch (error) {
           console.error(error);
           // Handle error
@@ -105,6 +109,7 @@ export default function RegisterForm() {
             <p>{webHookLink}</p>
           </div>
         </Popup>
+    {loading && <Loader />}
     </div>
   );
 }
