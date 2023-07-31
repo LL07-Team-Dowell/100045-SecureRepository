@@ -16,6 +16,7 @@ import {
   ScatterChart,
   Scatter,
 } from "recharts";
+import moment from "moment";
 
 export default function Home() {
   const [state] = useStateValue();
@@ -26,6 +27,7 @@ export default function Home() {
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
+  const [chartData, setChartData] = React.useState([]);
 
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
@@ -37,6 +39,7 @@ export default function Home() {
         if (response.data.data.length === 0) {
         } else {
           setData(response.data.data);
+
           const pusherCommits = {};
           response.data.data
             .filter((item) => item.repository_name === selectedRepository)
@@ -88,17 +91,45 @@ export default function Home() {
     return commits;
   };
 
-  const option = [];
+  // bar chart data
+    // State to store the commits per month data
+  React.useEffect(() => {
+       if (!datas) return; 
+         const currentYear = new Date().getFullYear();
 
+         // Filter data to include only commits from the current year
+         const commitsThisYear = datas.filter((item) => {
+           const itemYear = moment(item.backup_time).year();
+           return itemYear === currentYear;
+         });
 
-  const data = [
-    {
-      name: "User A",
-      uv: 4000,
-      commits: 4,
-      amt: 2400,
-    },
-  ];
+         // Count the number of commits per month
+         const commitsPerMonth = Array(12).fill(0);
+         commitsThisYear.forEach((item) => {
+           const month = moment(item.backup_time).month();
+           commitsPerMonth[month]++;
+         });
+
+         // Prepare the data for the bar chart
+         const chartData = [
+           { name: "January", pv: commitsPerMonth[0] },
+           { name: "February", pv: commitsPerMonth[1] },
+           { name: "March", pv: commitsPerMonth[2] },
+           { name: "April", pv: commitsPerMonth[3] },
+           { name: "May", pv: commitsPerMonth[4] },
+           { name: "June", pv: commitsPerMonth[5] },
+           { name: "July", pv: commitsPerMonth[6] },
+           { name: "August", pv: commitsPerMonth[7] },
+           { name: "September", pv: commitsPerMonth[8] },
+           { name: "October", pv: commitsPerMonth[9] },
+           { name: "November", pv: commitsPerMonth[10] },
+           { name: "December", pv: commitsPerMonth[11] },
+    ];
+    
+    console.log(chartData)
+
+         setChartData(chartData);
+    }, [datas]);
 
   const Sdata = [{ x: 10, y: 2, z: 20 }];
 
@@ -128,35 +159,9 @@ export default function Home() {
           </select>
         </div>
 
-        <div className="container">
-          {selectedRepository ? (
-            <div>
-              <h3>Commit Data for {selectedRepository}</h3>
-              {repositoryData.map((item) => (
-                <div key={item.pusher}>
-                  <p>
-                    {item.pusher} committed{" "}
-                    {selectedRepository === item.pusher
-                      ? getCommitsForRepository(item.pusher, selectedRepository)
-                      : item.value}{" "}
-                    times
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>Please select a repository</p>
-          )}
-        </div>
-      </div>
-      <div className="right">
         <div className="container-pie">
           <h3>Pie Chart showing pushers in this repository</h3>
-          <PieChart
-            width={500}
-            height={300}
-            style={{position: "relative" }}
-          >
+          <PieChart width={500} height={300} style={{ position: "relative" }}>
             <Pie
               dataKey="value"
               isAnimationActive={false}
@@ -168,15 +173,17 @@ export default function Home() {
               label
             />
             <Tooltip />
-            <Legend layout="vertical" verticalAlign="middle" align="right"/>
+            <Legend layout="vertical" verticalAlign="middle" align="right" />
           </PieChart>
         </div>
+      </div>
+      <div className="right">
         <div className="container">
           <h3>Bar chart showing commits by different contributors</h3>
           <BarChart
             width={500}
             height={300}
-            data={data}
+            data={chartData}
             margin={{
               top: 5,
               right: 30,
@@ -195,7 +202,7 @@ export default function Home() {
             <Legend />
             <CartesianGrid strokeDasharray="3 3" />
             <Bar
-              dataKey="commits"
+              dataKey="pv"
               fill="#164B60"
               background={{ fill: "#eee" }}
             />

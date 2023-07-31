@@ -163,7 +163,6 @@ function BackupRepo() {
                 <tr>
                   <th>S.No</th>
                   <th>Repository</th>
-                  <th>Zip File</th>
                   <th>Commit Message</th>
                   <th>Show More</th>
                   <th>Download</th>
@@ -183,7 +182,6 @@ function BackupRepo() {
                       <tr className="tabdata" key={rowIndex}>
                         <td>{startIndex + rowIndex + 1}</td>
                         <td>{row.repository_name}</td>
-                        <td>{row.zip_file_name}</td>
                         <td>{row.commit_message}</td>
                         <td>
                           <button
@@ -221,7 +219,7 @@ function BackupRepo() {
           )}
         </div>
       </div>
-      <div className="table-container">
+      {/* <div className="table-container">
         <div className="graph">
           <ul className="months">
             <li>Jan</li>
@@ -248,7 +246,7 @@ function BackupRepo() {
           </ul>
           <ul className="squares">{squareli}</ul>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
