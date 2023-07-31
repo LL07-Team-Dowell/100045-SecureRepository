@@ -28,6 +28,7 @@ export default function Home() {
     (item) => item?.product === "Secure Repositories"
   );
   const [chartData, setChartData] = React.useState([]);
+  const [histogram, setHistogram] = React.useState([]);
 
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
@@ -65,6 +66,39 @@ export default function Home() {
             new Set(response.data.data.map((item) => item.repository_name))
           );
           setRepositoryNames(uniqueRepositoryNames);
+          // histogram logic
+          const commitsByMonth = datas?.reduce((acc, commit) => {
+            const month = new Date(commit.backup_time).toLocaleString(
+              "default",
+              {
+                month: "long",
+              }
+            );
+            acc[month] = acc[month] || [];
+            acc[month].push(commit);
+            return acc;
+          }, {});
+
+          // Calculate the number of added, modified, and deleted files for each month
+          const processedData = (commitsByMonth !== null && commitsByMonth !== undefined) && Object.entries(commitsByMonth).map(
+            ([month, commits]) => ({
+              name: month,
+              uv: commits.reduce(
+                (total, commit) => total + commit.added_file.length,
+                0
+              ),
+              pv: commits.reduce(
+                (total, commit) => total + commit.modified_file.length,
+                0
+              ),
+              qv: commits.reduce(
+                (total, commit) => total + commit.removed_file.length,
+                0
+              ),
+            })
+          );
+
+          setHistogram(processedData);
         }
       } catch (error) {
         console.error(error);
@@ -72,7 +106,7 @@ export default function Home() {
       // Call the async function
     };
     fetchData();
-  }, [portfolio.org_id, selectedRepository]);
+  }, [portfolio.org_id, selectedRepository,datas]);
 
   const handleSelectChange = (event) => {
     setSelectedRepository(event.target.value);
@@ -112,27 +146,24 @@ export default function Home() {
 
          // Prepare the data for the bar chart
          const chartData = [
-           { name: "January", pv: commitsPerMonth[0] },
-           { name: "February", pv: commitsPerMonth[1] },
-           { name: "March", pv: commitsPerMonth[2] },
-           { name: "April", pv: commitsPerMonth[3] },
-           { name: "May", pv: commitsPerMonth[4] },
-           { name: "June", pv: commitsPerMonth[5] },
-           { name: "July", pv: commitsPerMonth[6] },
-           { name: "August", pv: commitsPerMonth[7] },
-           { name: "September", pv: commitsPerMonth[8] },
-           { name: "October", pv: commitsPerMonth[9] },
-           { name: "November", pv: commitsPerMonth[10] },
-           { name: "December", pv: commitsPerMonth[11] },
+           { name: "January", commits: commitsPerMonth[0] },
+           { name: "February", commits: commitsPerMonth[1] },
+           { name: "March", commits: commitsPerMonth[2] },
+           { name: "April", commits: commitsPerMonth[3] },
+           { name: "May", commits: commitsPerMonth[4] },
+           { name: "June", commits: commitsPerMonth[5] },
+           { name: "July", commits: commitsPerMonth[6] },
+           { name: "August", commits: commitsPerMonth[7] },
+           { name: "September", commits: commitsPerMonth[8] },
+           { name: "October", commits: commitsPerMonth[9] },
+           { name: "November", commits: commitsPerMonth[10] },
+           { name: "December", commits: commitsPerMonth[11] },
     ];
-    
-    console.log(chartData)
-
          setChartData(chartData);
     }, [datas]);
 
-  const Sdata = [{ x: 10, y: 2, z: 20 }];
-
+ 
+  
   return (
     <div className="home-container">
       <div className="left">
@@ -202,40 +233,40 @@ export default function Home() {
             <Legend />
             <CartesianGrid strokeDasharray="3 3" />
             <Bar
-              dataKey="pv"
+              dataKey="commits"
               fill="#164B60"
               background={{ fill: "#eee" }}
             />
           </BarChart>
         </div>
         <div className="container">
-          <h3>Scatter plot showing commit size vs commit frequency</h3>
-          <ScatterChart
+          <h3>
+            Histogram - commit sizes vs distribution of commits across time
+            periods
+          </h3>
+          <BarChart
             width={500}
             height={300}
+            data={histogram}
             margin={{
-              top: 20,
-              right: 20,
-              bottom: 20,
+              top: 5,
+              right: 30,
               left: 20,
+              bottom: 5,
             }}
+            barSize={20}
           >
-            <CartesianGrid />
-            <XAxis type="number" dataKey="x" name="stature" unit="files" />
-            <YAxis type="number" dataKey="y" name="weight" unit="times" />
-            <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
             <Legend />
-            <Scatter
-              name="commit size vs commit frequency"
-              data={Sdata}
-              fill="#164B60"
-            />
-          </ScatterChart>
+            <Bar dataKey="uv" fill="#164B60" name="Added Files" />
+            <Bar dataKey="pv" fill="orange" name="Modified Files" />
+            <Bar dataKey="qv" fill="red" name="Deleted Files" />
+          </BarChart>
         </div>
-        <p>
-          Histogram - commit sizes vs distrobution of commits across time
-          periods
-        </p>
+
         <p>Stacked Bar chart - features vs contributors</p>
         <p>Heat Map present</p>
         <p>
