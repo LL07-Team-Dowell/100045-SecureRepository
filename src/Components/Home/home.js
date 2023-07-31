@@ -67,38 +67,6 @@ export default function Home() {
           );
           setRepositoryNames(uniqueRepositoryNames);
           // histogram logic
-          const commitsByMonth = datas?.reduce((acc, commit) => {
-            const month = new Date(commit.backup_time).toLocaleString(
-              "default",
-              {
-                month: "long",
-              }
-            );
-            acc[month] = acc[month] || [];
-            acc[month].push(commit);
-            return acc;
-          }, {});
-
-          // Calculate the number of added, modified, and deleted files for each month
-          const processedData = (commitsByMonth !== null && commitsByMonth !== undefined) && Object.entries(commitsByMonth).map(
-            ([month, commits]) => ({
-              name: month,
-              uv: commits.reduce(
-                (total, commit) => total + commit.added_file.length,
-                0
-              ),
-              pv: commits.reduce(
-                (total, commit) => total + commit.modified_file.length,
-                0
-              ),
-              qv: commits.reduce(
-                (total, commit) => total + commit.removed_file.length,
-                0
-              ),
-            })
-          );
-
-          setHistogram(processedData);
         }
       } catch (error) {
         console.error(error);
@@ -106,7 +74,7 @@ export default function Home() {
       // Call the async function
     };
     fetchData();
-  }, [portfolio.org_id, selectedRepository,datas]);
+  }, [portfolio.org_id, selectedRepository]);
 
   const handleSelectChange = (event) => {
     setSelectedRepository(event.target.value);
@@ -126,44 +94,73 @@ export default function Home() {
   };
 
   // bar chart data
-    // State to store the commits per month data
+  // State to store the commits per month data
   React.useEffect(() => {
-       if (!datas) return; 
-         const currentYear = new Date().getFullYear();
+    if (!datas) return;
+    const currentYear = new Date().getFullYear();
 
-         // Filter data to include only commits from the current year
-         const commitsThisYear = datas.filter((item) => {
-           const itemYear = moment(item.backup_time).year();
-           return itemYear === currentYear;
-         });
+    // Filter data to include only commits from the current year
+    const commitsThisYear = datas.filter((item) => {
+      const itemYear = moment(item.backup_time).year();
+      return itemYear === currentYear;
+    });
 
-         // Count the number of commits per month
-         const commitsPerMonth = Array(12).fill(0);
-         commitsThisYear.forEach((item) => {
-           const month = moment(item.backup_time).month();
-           commitsPerMonth[month]++;
-         });
+    // Count the number of commits per month
+    const commitsPerMonth = Array(12).fill(0);
+    commitsThisYear.forEach((item) => {
+      const month = moment(item.backup_time).month();
+      commitsPerMonth[month]++;
+    });
 
-         // Prepare the data for the bar chart
-         const chartData = [
-           { name: "January", commits: commitsPerMonth[0] },
-           { name: "February", commits: commitsPerMonth[1] },
-           { name: "March", commits: commitsPerMonth[2] },
-           { name: "April", commits: commitsPerMonth[3] },
-           { name: "May", commits: commitsPerMonth[4] },
-           { name: "June", commits: commitsPerMonth[5] },
-           { name: "July", commits: commitsPerMonth[6] },
-           { name: "August", commits: commitsPerMonth[7] },
-           { name: "September", commits: commitsPerMonth[8] },
-           { name: "October", commits: commitsPerMonth[9] },
-           { name: "November", commits: commitsPerMonth[10] },
-           { name: "December", commits: commitsPerMonth[11] },
+    // Prepare the data for the bar chart
+    const chartData = [
+      { name: "January", commits: commitsPerMonth[0] },
+      { name: "February", commits: commitsPerMonth[1] },
+      { name: "March", commits: commitsPerMonth[2] },
+      { name: "April", commits: commitsPerMonth[3] },
+      { name: "May", commits: commitsPerMonth[4] },
+      { name: "June", commits: commitsPerMonth[5] },
+      { name: "July", commits: commitsPerMonth[6] },
+      { name: "August", commits: commitsPerMonth[7] },
+      { name: "September", commits: commitsPerMonth[8] },
+      { name: "October", commits: commitsPerMonth[9] },
+      { name: "November", commits: commitsPerMonth[10] },
+      { name: "December", commits: commitsPerMonth[11] },
     ];
-         setChartData(chartData);
-    }, [datas]);
+    setChartData(chartData);
 
- 
-  
+    const commitsByMonth = datas?.reduce((acc, commit) => {
+      const month = new Date(commit.backup_time).toLocaleString("default", {
+        month: "long",
+      });
+      acc[month] = acc[month] || [];
+      acc[month].push(commit);
+      return acc;
+    }, {});
+
+    // Calculate the number of added, modified, and deleted files for each month
+    const processedData =
+      commitsByMonth !== null &&
+      commitsByMonth !== undefined &&
+      Object.entries(commitsByMonth).map(([month, commits]) => ({
+        name: month,
+        uv: commits.reduce(
+          (total, commit) => total + commit.added_file.length,
+          0
+        ),
+        pv: commits.reduce(
+          (total, commit) => total + commit.modified_file.length,
+          0
+        ),
+        qv: commits.reduce(
+          (total, commit) => total + commit.removed_file.length,
+          0
+        ),
+      }));
+
+    setHistogram(processedData);
+  }, [datas]);
+
   return (
     <div className="home-container">
       <div className="left">
@@ -260,7 +257,7 @@ export default function Home() {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Legend />
+            <Legend layout="horizontal" align="center" verticalAlign="bottom" />
             <Bar dataKey="uv" fill="#164B60" name="Added Files" />
             <Bar dataKey="pv" fill="orange" name="Modified Files" />
             <Bar dataKey="qv" fill="red" name="Deleted Files" />
