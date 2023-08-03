@@ -15,6 +15,7 @@ import {
   Bar,
   ScatterChart,
   Scatter,
+  ResponsiveContainer,
 } from "recharts";
 import moment from "moment";
 
@@ -187,89 +188,97 @@ export default function Home() {
           </select>
         </div>
 
-        <div className="container-pie">
+        <div className="container-pie bar">
           <h3>Pie Chart showing pushers in this repository</h3>
-          <PieChart width={500} height={300} style={{ position: "relative" }}>
-            <Pie
-              dataKey="value"
-              isAnimationActive={false}
-              data={repositoryData}
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#164B60"
-              label
-            />
-            <Tooltip />
-            <Legend layout="vertical" verticalAlign="middle" align="right" />
-          </PieChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart style={{ position: "relative" }}>
+              <Pie
+                dataKey="value"
+                isAnimationActive={false}
+                data={repositoryData}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#164B60"
+                label
+              />
+              <Tooltip />
+              <Legend layout="vertical" verticalAlign="middle" align="right" />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
       </div>
       <div className="right">
-        <div className="container">
+        <div className="container bar">
           <h3>Bar chart showing commits by different contributors</h3>
-          <BarChart
-            width={500}
-            height={300}
-            data={chartData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-            barSize={20}
-          >
-            <XAxis
-              dataKey="name"
-              scale="point"
-              padding={{ left: 10, right: 10 }}
-            />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Bar
-              dataKey="commits"
-              fill="#164B60"
-              background={{ fill: "#eee" }}
-            />
-          </BarChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={chartData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              barSize={20}
+            >
+              <XAxis
+                dataKey="name"
+                scale="point"
+                padding={{ left: 10, right: 10 }}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Bar
+                dataKey="commits"
+                fill="#164B60"
+                background={{ fill: "#eee" }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-        <div className="container">
+        <div className="container bar">
           <h3>
             Histogram - commit sizes vs distribution of commits across time
             periods
           </h3>
-          <BarChart
-            width={500}
-            height={300}
-            data={histogram}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-            barSize={20}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend layout="horizontal" align="center" verticalAlign="bottom" />
-            <Bar dataKey="uv" fill="#164B60" name="Added Files" />
-            <Bar dataKey="pv" fill="orange" name="Modified Files" />
-            <Bar dataKey="qv" fill="red" name="Deleted Files" />
-          </BarChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              width={500}
+              height={300}
+              data={histogram}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              barSize={20}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend
+                layout="horizontal"
+                align="center"
+                verticalAlign="bottom"
+              />
+              <Bar dataKey="uv" fill="#164B60" name="Added Files" />
+              <Bar dataKey="pv" fill="orange" name="Modified Files" />
+              <Bar dataKey="qv" fill="red" name="Deleted Files" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
-        <p>Stacked Bar chart - features vs contributors</p>
+        {/* <p>Stacked Bar chart - features vs contributors</p>
         <p>Heat Map present</p>
         <p>
           {" "}
           Bubble chart- Visualize commit activity (number and size) vs time made
-        </p>
+        </p> */}
       </div>
     </div>
   );

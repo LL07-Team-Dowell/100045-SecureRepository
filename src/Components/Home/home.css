@@ -26,6 +26,11 @@
   margin: 20px;
 }
 
+.bar{
+  /* width: 500px; */
+  width: calc(100%-80px);
+}
+
 .container-pie {
   border: 0.2px solid #e6e4e3;
   padding: 40px;
@@ -127,8 +132,19 @@
   font-size: 13px;
 }
 
+.bar{
+  width:calc(100%-80px);
 }
 
+}
+
+@media screen and (max-width: 400px) {
+.bar{
+  width:calc(100%-80px);
+}
+
+
+}
 select{
   display: block;
   outline: none;
@@ -139,10 +155,6 @@ select{
   border-radius: 10px;
 }
 
-.recharts-default-legend{
-  display: flex;
-  flex-direction: column;
-}
 
 .recharts-wrapper{
    display: flex;
