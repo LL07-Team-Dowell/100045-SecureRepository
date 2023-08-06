@@ -27,8 +27,7 @@
 }
 
 .bar{
-  /* width: 500px; */
-  width: calc(100%-10px);
+  width:calc(100%-80px);
 }
 
 .container-pie {
