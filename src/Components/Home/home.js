@@ -22,9 +22,9 @@ import moment from "moment";
 export default function Home() {
   const [state] = useStateValue();
   const [repositoryData, setRepositoryData] = useState([]);
-  const [selectedRepository, setSelectedRepository] = useState("");
-  const [repositoryNames, setRepositoryNames] = useState([]);
   const [datas, setData] = useState();
+  const [repositoryNames, setRepositoryNames] = useState([]);
+  const [selectedRepository, setSelectedRepository] = useState("");
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
@@ -67,6 +67,8 @@ export default function Home() {
             new Set(response.data.data.map((item) => item.repository_name))
           );
           setRepositoryNames(uniqueRepositoryNames);
+          setSelectedRepository(repositoryNames[0]);
+
           // histogram logic
         }
       } catch (error) {
@@ -179,7 +181,7 @@ export default function Home() {
           <h3>Please select Repository to view Insights On</h3>
           <label htmlFor="repository">Choose a repository: </label>
           <select value={selectedRepository} onChange={handleSelectChange}>
-            <option value="">select a repository</option>
+            {/* <option value="">select a repository</option> */}
             {repositoryNames.map((repoName) => (
               <option key={repoName} value={repoName}>
                 {repoName}
