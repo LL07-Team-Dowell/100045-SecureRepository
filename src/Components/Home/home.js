@@ -30,6 +30,7 @@ export default function Home() {
   );
   const [chartData, setChartData] = React.useState([]);
   const [histogram, setHistogram] = React.useState([]);
+  const [commitsByMonth, setCommitsByMonth] = useState({});
 
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
@@ -67,8 +68,6 @@ export default function Home() {
             new Set(response.data.data.map((item) => item.repository_name))
           );
           setRepositoryNames(uniqueRepositoryNames);
-          setSelectedRepository(repositoryNames[0]);
-
           // histogram logic
         }
       } catch (error) {
@@ -105,7 +104,9 @@ export default function Home() {
     // Filter data to include only commits from the current year
     const commitsThisYear = datas.filter((item) => {
       const itemYear = moment(item.backup_time).year();
-      return itemYear === currentYear;
+      return (
+        itemYear === currentYear && item.repository_name === selectedRepository
+      );
     });
 
     // Count the number of commits per month
@@ -142,27 +143,29 @@ export default function Home() {
     }, {});
 
     // Calculate the number of added, modified, and deleted files for each month
-    const processedData =
-      commitsByMonth !== null &&
-      commitsByMonth !== undefined &&
-      Object.entries(commitsByMonth).map(([month, commits]) => ({
-        name: month,
-        uv: commits.reduce(
-          (total, commit) => total + commit.added_file.length,
-          0
-        ),
-        pv: commits.reduce(
-          (total, commit) => total + commit.modified_file.length,
-          0
-        ),
-        qv: commits.reduce(
-          (total, commit) => total + commit.removed_file.length,
-          0
-        ),
-      }));
+      const processedData =
+        commitsByMonth !== null &&
+        commitsByMonth !== undefined &&
+        Object.entries(commitsByMonth).map(([month, commits]) => ({
+          name: month,
+          uv: commits.reduce(
+            (total, commit) => total + commit.added_file.length,
+            0
+          ),
+          pv: commits.reduce(
+            (total, commit) => total + commit.modified_file.length,
+            0
+          ),
+          qv: commits.reduce(
+            (total, commit) => total + commit.removed_file.length,
+            0
+          ),
+        }));
 
     setHistogram(processedData);
-  }, [datas]);
+    console.log(histogram);
+    }, [datas, selectedRepository]);
+    
 
   return (
     <div className="home-container">
@@ -285,3 +288,6 @@ export default function Home() {
     </div>
   );
 }
+
+
+
