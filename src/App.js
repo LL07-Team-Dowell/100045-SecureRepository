@@ -33,14 +33,16 @@ function App() {
     return portfolioInfo?.length ? (
       <>
         <Navbar />
-
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/profile" element={<Profile />} />
-          <Route exact path="/register" element={<RegisterForm />} />
-          <Route exact path="/backup" element={<BackupRepo />} />
-          <Route exact path="/reportrepo" element={<ReportRepo />} />
-        </Routes>
+        <div style={{
+          position: "relative", top: "100px"}}>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/register" element={<RegisterForm />} />
+            <Route exact path="/backup" element={<BackupRepo />} />
+            <Route exact path="/reportrepo" element={<ReportRepo />} />
+          </Routes>
+        </div>
       </>
     ) : (
       <CreatePortfolio />
