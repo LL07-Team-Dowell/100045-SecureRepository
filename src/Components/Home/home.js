@@ -13,8 +13,6 @@ import {
   Legend,
   CartesianGrid,
   Bar,
-  ScatterChart,
-  Scatter,
   ResponsiveContainer,
 } from "recharts";
 import moment from "moment";
@@ -30,7 +28,7 @@ export default function Home() {
   );
   const [chartData, setChartData] = React.useState([]);
   const [histogram, setHistogram] = React.useState([]);
-  const [commitsByMonth, setCommitsByMonth] = useState({});
+  
 
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
@@ -40,6 +38,7 @@ export default function Home() {
           `https://100045.pythonanywhere.com/reports/get-backup-reports/${portfolio.org_id}/`
         );
         if (response.data.data.length === 0) {
+          console.log("error");
         } else {
           setData(response.data.data);
 
@@ -118,18 +117,18 @@ export default function Home() {
 
     // Prepare the data for the bar chart
     const chartData = [
-      { name: "January", commits: commitsPerMonth[0] },
-      { name: "February", commits: commitsPerMonth[1] },
-      { name: "March", commits: commitsPerMonth[2] },
-      { name: "April", commits: commitsPerMonth[3] },
+      { name: "Jan", commits: commitsPerMonth[0] },
+      { name: "Feb", commits: commitsPerMonth[1] },
+      { name: "Mar", commits: commitsPerMonth[2] },
+      { name: "Apr", commits: commitsPerMonth[3] },
       { name: "May", commits: commitsPerMonth[4] },
-      { name: "June", commits: commitsPerMonth[5] },
-      { name: "July", commits: commitsPerMonth[6] },
-      { name: "August", commits: commitsPerMonth[7] },
-      { name: "September", commits: commitsPerMonth[8] },
-      { name: "October", commits: commitsPerMonth[9] },
-      { name: "November", commits: commitsPerMonth[10] },
-      { name: "December", commits: commitsPerMonth[11] },
+      { name: "Jun", commits: commitsPerMonth[5] },
+      { name: "Jul", commits: commitsPerMonth[6] },
+      { name: "Aug", commits: commitsPerMonth[7] },
+      { name: "Sep", commits: commitsPerMonth[8] },
+      { name: "Oct", commits: commitsPerMonth[9] },
+      { name: "Nov", commits: commitsPerMonth[10] },
+      { name: "Dec", commits: commitsPerMonth[11] },
     ];
     setChartData(chartData);
 
@@ -163,7 +162,7 @@ export default function Home() {
         }));
 
     setHistogram(processedData);
-    console.log(histogram);
+    console.log(chartData);
     }, [datas, selectedRepository]);
     
 
