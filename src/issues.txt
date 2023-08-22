@@ -1,29 +1,491 @@
+import React, { useState, useEffect } from "react";
+import "./Table.css";
+import { useStateValue } from "../../Context/StateProvider";
+import Popup from "../Popup/Popup";
+import Loader from "../Loader/Loader";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import fileDownload from "js-file-download";
+
+function BackupRepo() {
+  const [state, dispatch] = useStateValue();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedData, setSelectedData] = useState([]);
+  const [buttonPopup, setButtonPopup] = React.useState(false);
+  const [data, setData] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+
+  const [portfolio] = state.user?.portfolio_info?.filter(
+    (item) => item?.product === "Secure Repositories"
+  );
   useEffect(() => {
-    // Assuming you have the API response in a variable called apiResponse
-    if (apiResponse.isSuccess) {
-      const repositoryCommits = {};
-
-      apiResponse.data.forEach((item) => {
-        const { pusher, backup_time, repository_name } = item;
-        const month = new Date(backup_time).toLocaleString('default', { month: 'short' });
-        const key = `${repository_name}-${month}`;
-
-        if (repositoryCommits[key]) {
-          repositoryCommits[key]++;
+    // Use useEffect to make the API call and update data state
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://100045.pythonanywhere.com/reports/get-backup-reports/${portfolio.org_id}/`
+        );
+        if (response.data.data.length === 0) {
+          setData(["empty"]);
         } else {
-          repositoryCommits[key] = 1;
+          setData(response.data.data);
         }
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-      const newData = Object.keys(repositoryCommits).map((key) => {
-        const [repository_name, month] = key.split('-');
-        return {
-          name: repository_name,
-          month,
-          commits: repositoryCommits[key],
-        };
-      });
+    const fetchGraph = async () => {
+      try {
+        const response = await axios.get(
+          `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchGraph();
+    fetchData(); // Call the async function
+  }, [portfolio.org_id]);
 
-      setRepositoryData(newData);
-    }
-  }, []);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = data.slice(startIndex, endIndex);
+
+  function handleClick(row) {
+    setButtonPopup(true);
+    setSelectedData(row);
+    console.log(selectedData);
+  }
+
+  function handleChange(event) {
+    const { value } = event.target;
+
+    setSearchInput((prev) => value);
+  }
+
+  function handleDownload(row) {
+    axios
+      .get(row[0].file_url, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        fileDownload(res.data, `${row[0].zip_file_name}.zip`);
+      });
+  }
+
+  const squareli = [];
+  for (var i = 1; i < 365; i++) {
+    const level = Math.floor(Math.random() * 3);
+    squareli.push(<li data-level={level}></li>);
+  }
+
+  return (
+    <>
+      <div className="table-container">
+        <h3>Backup Report</h3>
+        <input
+          className="pagecontrol"
+          placeholder="rows"
+          type="number"
+          max={10}
+          min={4}
+          value={itemsPerPage}
+          name="itemsPerPage"
+          onChange={(event) =>
+            itemsPerPage && setItemsPerPage(event.target.value)
+          }
+        />
+        <Popup trigger={buttonPopup} setTrigger={setButtonPopup} copy={false}>
+          <div className="content">
+            <div className="row">
+              <h3>Repository Name</h3>
+              <p>{selectedData[0]?.repository_name}</p>
+            </div>
+            <div className="row">
+              <h3>Backup Time</h3>
+              <p>{selectedData[0]?.backup_time}</p>
+            </div>
+            <div className="row">
+              <h3>Added Files</h3>
+              {selectedData[0]?.added_file &&
+              selectedData[0].added_file.length > 0 ? (
+                // selectedData[0].added_file.map(item => <p>{item}</p>)
+                <p>{selectedData[0].added_file[0]}</p>
+              ) : (
+                <p>No Added Files</p>
+              )}
+            </div>
+            <div className="row">
+              <h3>Modified Files</h3>
+              {selectedData[0]?.modified_file &&
+              selectedData[0].modified_file.length > 0 ? (
+                <p>{selectedData[0].modified_file[0]}</p>
+              ) : (
+                <p>No modified Files</p>
+              )}
+            </div>
+            <div className="row">
+              <h3>Removed Files</h3>
+              {selectedData[0]?.removed_file &&
+              selectedData[0].removed_file.length > 0 ? (
+                <p>{selectedData[0].removed_file[0]}</p>
+              ) : (
+                <p>No Deleted Files</p>
+              )}
+            </div>
+            <div className="row">
+              <h3>Created By</h3>
+              <p>{selectedData[0]?.pusher}</p>
+            </div>
+            <div className="row">
+              <h3>Commit URL</h3>
+              <p>{selectedData[0]?.commit_url}</p>
+            </div>
+          </div>
+        </Popup>
+        {currentItems.length === 0 ? (
+          <Loader />
+        ) : (
+          <>
+            <form>
+              <input
+                className="searchbar"
+                placeholder="search repository Name"
+                onChange={handleChange}
+                name="searchInput"
+                value={searchInput}
+              />
+            </form>
+            <table>
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Repository</th>
+                  <th>Commit Message</th>
+                  <th>Show More</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data[0] !== "empty" &&
+                  currentItems
+                    .filter((item) => {
+                      return searchInput.toLowerCase() === ""
+                        ? item
+                        : item.repository_name
+                            .toLowerCase()
+                            .includes(searchInput);
+                    })
+                    .map((row, rowIndex) => (
+                      <tr className="tabdata" key={rowIndex}>
+                        <td>{startIndex + rowIndex + 1}</td>
+                        <td>{row.repository_name}</td>
+                        <td>{row.commit_message}</td>
+                        <td>
+                          <button
+                            className="button-know-more"
+                            onClick={() => handleClick([row])}
+                          >
+                            Show More
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            className="button-know-more"
+                            onClick={() => handleDownload([row])}
+                          >
+                            Download
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+              </tbody>
+            </table>
+          </>
+        )}
+        <div className="pagination">
+          {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map(
+            (item, index) => (
+              <button
+                key={index}
+                className={currentPage === index + 1 ? "active" : ""}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </button>
+            )
+          )}
+        </div>
+      </div>
+      {/* <div className="table-container">
+        <div className="graph">
+          <ul className="months">
+            <li>Jan</li>
+            <li>Feb</li>
+            <li>Mar</li>
+            <li>Apr</li>
+            <li>May</li>
+            <li>Jun</li>
+            <li>Jul</li>
+            <li>Aug</li>
+            <li>Sep</li>
+            <li>Oct</li>
+            <li>Nov</li>
+            <li>Dec</li>
+          </ul>
+          <ul className="days">
+            <li>Sun</li>
+            <li>Mon</li>
+            <li>Tue</li>
+            <li>Wed</li>
+            <li>Thu</li>
+            <li>Fri</li>
+            <li>Sat</li>
+          </ul>
+          <ul className="squares">{squareli}</ul>
+        </div>
+      </div> */}
+    </>
+  );
+}
+
+export default BackupRepo;
+
+
+
+.table-container {
+  /* margin-top: 5rem; */
+  margin: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  min-height: max-content;
+  border: 0.2px solid #e6e4e3;
+  border-radius: 10px;
+  
+}
+
+form{
+  width: 100%;
+}
+
+.loader-container {
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table {
+  width: 100%;
+  border: 0.2px solid #e6e4e3;
+  border-spacing: 0;
+  border-collapse: collapse;
+  text-align: center;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 30px;
+}
+tr th {
+  background-color: #333;
+  padding: 1rem 0.5rem;
+  color: white;
+}
+
+tr td {
+  margin: 9px 0px;
+  padding: 9px;
+  word-break: break-all;
+  font-size: 1.1rem;
+}
+
+.tabdata:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.tabdata {
+  background-color: #F0EEED;
+  font-weight: 700;
+  color: #100f0f;
+}
+
+.button-know-more {
+  background-color: #fff;
+  border-radius: 4px;
+  border: .1px solid #222;
+  box-sizing: border-box;
+  color: #222;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0;
+  max-width: none;
+  min-height: 44px;
+  min-width: 50px;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 80%;
+}
+
+.button-know-more:hover,
+.button-know-more:focus {
+  opacity: 0.75;
+}
+
+@media screen and (max-width: 700px) {
+  tr th, tbody tr td {
+    font-size: 0.8rem;
+  }
+
+  .tabdata {
+    font-size: 1rem;
+  }
+  .table-container {
+    padding: 1rem 0.3rem;
+  }
+  .button-know-more {
+    font-size: 8px;
+    min-height: 30px;
+    width: 100%;
+  }
+
+  .table-container {
+  margin: 1.5rem;
+  padding: 1rem 1.5rem;
+}
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  margin: 0 0.5rem;
+  border: none;
+  background-color: #fff;
+  color: #222;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+.pagination button.active {
+  background-color: #222;
+  color: #fff;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+:root {
+  --square-size: 15px;
+  --square-gap: 5px;
+  --week-width: calc(var(--square-size) + var(--square-gap));
+}
+
+.months { grid-area: months; }
+.days { grid-area: days; }
+.squares { grid-area: squares; }
+
+.graph {
+  display: inline-grid;
+  grid-template-areas: "empty months"
+                       "days squares";
+  grid-template-columns: auto 1fr;
+  grid-gap: 10px;
+}
+
+.months {
+  display: grid;
+  grid-template-columns: calc(var(--week-width) * 4) /* Jan */
+                         calc(var(--week-width) * 4) /* Feb */
+                         calc(var(--week-width) * 4) /* Mar */
+                         calc(var(--week-width) * 5) /* Apr */
+                         calc(var(--week-width) * 4) /* May */
+                         calc(var(--week-width) * 4) /* Jun */
+                         calc(var(--week-width) * 5) /* Jul */
+                         calc(var(--week-width) * 4) /* Aug */
+                         calc(var(--week-width) * 4) /* Sep */
+                         calc(var(--week-width) * 5) /* Oct */
+                         calc(var(--week-width) * 4) /* Nov */
+                         calc(var(--week-width) * 5) /* Dec */;
+                         list-style: none;
+}
+
+.days,
+.squares {
+  display: grid;
+  grid-gap: var(--square-gap);
+  grid-template-rows: repeat(7, var(--square-size));
+  list-style: none;
+}
+
+.squares {
+  grid-auto-flow: column;
+  grid-auto-columns: var(--square-size);
+}
+
+
+.graph {
+  padding: 20px;
+  border: 1px #e1e4e8 solid;
+  margin: 20px;
+  border-radius: 10px;
+}
+
+/* .days li:nth-child(odd) {
+  visibility: hidden;
+} */
+
+.squares li {
+  background-color: #ebedf0;
+}
+
+
+.squares li[data-level="1"] {
+  background-color: #c6e48b;
+}
+
+.squares li[data-level="2"] {
+  background-color: #7bc96f;
+}
+
+.squares li[data-level="3"] {
+  background-color: #196127;
+}
+
+.pagecontrol{
+  align-self: flex-end;
+  margin-right: 30px;
+  padding: 5px;
+  border-radius: 10px;
+  outline: 0;
+  border: 0;
+  text-align: center;
+  background-color:#e1e4e8 ;
+}

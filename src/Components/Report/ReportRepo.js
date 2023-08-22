@@ -52,7 +52,7 @@ function ReportRepo() {
   }
 
   function handleChange(event) {
-    const {value } = event.target;
+    const { value } = event.target;
 
     setSearchInput((prev) => value);
   }
@@ -60,7 +60,18 @@ function ReportRepo() {
   return (
     <div className="table-container">
       <h3>Repository Reports</h3>
-      <input className="pagecontrol" placeholder="rows" type="number" max={10} min={4} value={itemsPerPage} name="itemsPerPage" onChange={(event) => itemsPerPage && setItemsPerPage(event.target.value)}/>
+      <input
+        className="pagecontrol"
+        placeholder="rows"
+        type="number"
+        max={10}
+        min={4}
+        value={itemsPerPage}
+        name="itemsPerPage"
+        onChange={(event) =>
+          itemsPerPage && setItemsPerPage(event.target.value)
+        }
+      />
       <Popup trigger={buttonPopup} setTrigger={setButtonPopup} copy={false}>
         <div className="content">
           <div className="row">
@@ -91,7 +102,7 @@ function ReportRepo() {
             <h3>Data Type</h3>
             <p>{selectedData[0]?.data_type}</p>
           </div>
-          </div>
+        </div>
       </Popup>
       {data.length === 0 ? (
         <Loader />
