@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "./home.css";
 import { useStateValue } from "../../Context/StateProvider";
+import Select from "react-select";
 import {
   PieChart,
   Pie,
@@ -22,7 +23,7 @@ export default function Home() {
   const [repositoryData, setRepositoryData] = useState([]);
   const [datas, setData] = useState();
   const [repositoryNames, setRepositoryNames] = useState([]);
-  const [selectedRepository, setSelectedRepository] = useState("");
+  const [selectedRepository, setSelectedRepository] = useState();
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
@@ -41,32 +42,25 @@ export default function Home() {
           console.log("error");
         } else {
           setData(response.data.data);
-
-          const pusherCommits = {};
-          response.data.data
-            .filter((item) => item.repository_name === selectedRepository)
-            .forEach((item) => {
-              const { pusher } = item;
-              if (pusherCommits[pusher]) {
-                pusherCommits[pusher]++;
-              } else {
-                pusherCommits[pusher] = 1;
-              }
-            });
-
-          const newData = Object.keys(pusherCommits).map((pusher) => ({
-            name: pusher,
-            value: pusherCommits[pusher],
-            fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
-          }));
-
-          setRepositoryData(newData);
-
           // Get all unique repository names for select input options
           const uniqueRepositoryNames = Array.from(
-            new Set(response.data.data.map((item) => item.repository_name))
+            new Set(response.data.data.map((item) =>item.repository_name))
           );
+          const uniquePusherNames = Array.from(
+            new Set(response.data.data.map((item) => ({label:item.pusher , value: item.pusher})))
+          );
+  console.log(uniquePusherNames);
+
           setRepositoryNames(uniqueRepositoryNames);
+        
+           if (uniqueRepositoryNames.length > 0) {
+             setSelectedRepository([
+               {
+                 label: uniqueRepositoryNames[0],
+                 value: uniqueRepositoryNames[0],
+               },
+             ]);
+           }
           // histogram logic
         }
       } catch (error) {
@@ -75,11 +69,13 @@ export default function Home() {
       // Call the async function
     };
     fetchData();
-  }, [portfolio.org_id, selectedRepository]);
 
-  const handleSelectChange = (event) => {
-    setSelectedRepository(event.target.value);
+  }, [portfolio.org_id]);
+
+  const handleSelectChange = (selectedRepository) => {
+    setSelectedRepository(selectedRepository);
   };
+
 
   const getCommitsForRepository = (pusherName, repoName) => {
     let commits = 0;
@@ -98,6 +94,28 @@ export default function Home() {
   // State to store the commits per month data
   React.useEffect(() => {
     if (!datas) return;
+    // pie chart logic
+    const pusherCommits = {};
+    datas
+      .filter((item) => item.repository_name === selectedRepository.label)
+      .forEach((item) => {
+        const { pusher } = item;
+        if (pusherCommits[pusher]) {
+          pusherCommits[pusher]++;
+        } else {
+          pusherCommits[pusher] = 1;
+        }
+      });
+
+    const newData = Object.keys(pusherCommits).map((pusher) => ({
+      name: pusher,
+      value: pusherCommits[pusher],
+      fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
+    }));
+
+    setRepositoryData(newData);
+
+
     const currentYear = new Date().getFullYear();
 
     // Filter data to include only commits from the current year
@@ -182,6 +200,12 @@ export default function Home() {
         <div className="container">
           <h3>Please select Repository to view Insights On</h3>
           <label htmlFor="repository">Choose a repository: </label>
+          <Select
+            options={repositoryNames.map((opt) => ({ label: opt, value: opt }))}
+            isMulti
+            value={selectedRepository}
+            onChange={handleSelectChange}
+          />
           <select value={selectedRepository} onChange={handleSelectChange}>
             {/* <option value="">select a repository</option> */}
             {repositoryNames.map((repoName) => (
