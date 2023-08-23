@@ -20,48 +20,44 @@ import moment from "moment";
 
 export default function Home() {
   const [state] = useStateValue();
-  const [repositoryData, setRepositoryData] = useState([]);
-  const [datas, setData] = useState();
+  const [data, setData] = useState([]);
   const [repositoryNames, setRepositoryNames] = useState([]);
+  const [pushers, setPushers] = useState([]);
   const [selectedRepository, setSelectedRepository] = useState();
+  const [selectedPushers, setSelectedPushers] = useState();
+  const [repositoryData, setRepositoryData] = useState([]);
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
-  const [chartData, setChartData] = React.useState([]);
-  const [histogram, setHistogram] = React.useState([]);
-  
 
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/get-backup-reports/${portfolio.org_id}/`
+          `https://100045.pythonanywhere.com/reports/get-statistics/6385c0f18eca0fb652c94561/`
         );
         if (response.data.data.length === 0) {
           console.log("error");
         } else {
           setData(response.data.data);
+
           // Get all unique repository names for select input options
           const uniqueRepositoryNames = Array.from(
-            new Set(response.data.data.map((item) =>item.repository_name))
+            new Set(response.data.data.map((item) => item.repository_name))
           );
-          const uniquePusherNames = Array.from(
-            new Set(response.data.data.map((item) => ({label:item.pusher , value: item.pusher})))
-          );
-  console.log(uniquePusherNames);
+          
 
           setRepositoryNames(uniqueRepositoryNames);
-        
-           if (uniqueRepositoryNames.length > 0) {
-             setSelectedRepository([
-               {
-                 label: uniqueRepositoryNames[0],
-                 value: uniqueRepositoryNames[0],
-               },
-             ]);
-           }
-          // histogram logic
+
+          if (uniqueRepositoryNames.length > 0) {
+            setSelectedRepository([
+              {
+                label: uniqueRepositoryNames[0],
+                value: uniqueRepositoryNames[0],
+              },
+            ]);
+          }
         }
       } catch (error) {
         console.error(error);
@@ -69,120 +65,60 @@ export default function Home() {
       // Call the async function
     };
     fetchData();
-
   }, [portfolio.org_id]);
 
   const handleSelectChange = (selectedRepository) => {
     setSelectedRepository(selectedRepository);
+    setSelectedPushers(null);
   };
 
+  const handlePusherChange = (selectedPushers) => {
+    setSelectedPushers(selectedPushers);
+  }
 
-  const getCommitsForRepository = (pusherName, repoName) => {
-    let commits = 0;
-
-    datas.forEach((item) => {
-      const { name, repository_name } = item;
-      if (name === pusherName && repository_name === repoName) {
-        commits++;
-      }
-    });
-
-    return commits;
-  };
-
-  // bar chart data
-  // State to store the commits per month data
   React.useEffect(() => {
-    if (!datas) return;
-    // pie chart logic
-    const pusherCommits = {};
-    datas
-      .filter((item) => item.repository_name === selectedRepository.label)
-      .forEach((item) => {
-        const { pusher } = item;
-        if (pusherCommits[pusher]) {
-          pusherCommits[pusher]++;
-        } else {
-          pusherCommits[pusher] = 1;
-        }
-      });
-
-    const newData = Object.keys(pusherCommits).map((pusher) => ({
-      name: pusher,
-      value: pusherCommits[pusher],
-      fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
-    }));
-
-    setRepositoryData(newData);
-
-
-    const currentYear = new Date().getFullYear();
-
-    // Filter data to include only commits from the current year
-    const commitsThisYear = datas.filter((item) => {
-      const itemYear = moment(item.backup_time).year();
-      return (
-        itemYear === currentYear && item.repository_name === selectedRepository
+    if (data.length > 0 && selectedRepository) {
+      const selectedItem = data.find(
+        (item) => item.repository_name === selectedRepository.label
       );
-    });
 
-    // Count the number of commits per month
-    const commitsPerMonth = Array(12).fill(0);
-    commitsThisYear.forEach((item) => {
-      const month = moment(item.backup_time).month();
-      commitsPerMonth[month]++;
-    });
+    const uniquePusherNames = Array.from(
+      new Set(
+        selectedItem?.metadata.map((item) => item.pusher)
+      )
+      );
+      
+      setPushers(uniquePusherNames);
+          // pie chart logic
+  
 
-    // Prepare the data for the bar chart
-    const chartData = [
-      { name: "Jan", commits: commitsPerMonth[0] },
-      { name: "Feb", commits: commitsPerMonth[1] },
-      { name: "Mar", commits: commitsPerMonth[2] },
-      { name: "Apr", commits: commitsPerMonth[3] },
-      { name: "May", commits: commitsPerMonth[4] },
-      { name: "Jun", commits: commitsPerMonth[5] },
-      { name: "Jul", commits: commitsPerMonth[6] },
-      { name: "Aug", commits: commitsPerMonth[7] },
-      { name: "Sep", commits: commitsPerMonth[8] },
-      { name: "Oct", commits: commitsPerMonth[9] },
-      { name: "Nov", commits: commitsPerMonth[10] },
-      { name: "Dec", commits: commitsPerMonth[11] },
-    ];
-    setChartData(chartData);
+      if (selectedItem) {
+        const commitsByPusher = {};
+        selectedItem.metadata.forEach((commit) => {
+          const pusher = commit.pusher;
+          if (commitsByPusher[pusher]) {
+            commitsByPusher[pusher]++;
+          } else {
+            commitsByPusher[pusher] = 1;
+          }
+        });
 
-    const commitsByMonth = datas?.reduce((acc, commit) => {
-      const month = new Date(commit.backup_time).toLocaleString("default", {
-        month: "long",
-      });
-      acc[month] = acc[month] || [];
-      acc[month].push(commit);
-      return acc;
-    }, {});
+        const commitsPerPusherData = Object.entries(commitsByPusher).map(
+          ([pusher, commits]) => ({
+            name: pusher,
+            value: commits,
+            fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
+          })
+        );
 
-    // Calculate the number of added, modified, and deleted files for each month
-      const processedData =
-        commitsByMonth !== null &&
-        commitsByMonth !== undefined &&
-        Object.entries(commitsByMonth).map(([month, commits]) => ({
-          name: month,
-          uv: commits.reduce(
-            (total, commit) => total + commit.added_file.length,
-            0
-          ),
-          pv: commits.reduce(
-            (total, commit) => total + commit.modified_file.length,
-            0
-          ),
-          qv: commits.reduce(
-            (total, commit) => total + commit.removed_file.length,
-            0
-          ),
-        }));
+        setRepositoryData(commitsPerPusherData);
+      }
+    }
+  }, [selectedRepository, data]);
 
-    setHistogram(processedData);
-    console.log(chartData);
-    }, [datas, selectedRepository]);
-    
+     
+    console.log(repositoryData);
+    console.log("hi")
 
   return (
     <div className="home-container">
@@ -202,18 +138,9 @@ export default function Home() {
           <label htmlFor="repository">Choose a repository: </label>
           <Select
             options={repositoryNames.map((opt) => ({ label: opt, value: opt }))}
-            isMulti
             value={selectedRepository}
             onChange={handleSelectChange}
           />
-          <select value={selectedRepository} onChange={handleSelectChange}>
-            {/* <option value="">select a repository</option> */}
-            {repositoryNames.map((repoName) => (
-              <option key={repoName} value={repoName}>
-                {repoName}
-              </option>
-            ))}
-          </select>
         </div>
 
         <div className="container-pie bar">
@@ -231,7 +158,7 @@ export default function Home() {
                 label
               />
               <Tooltip />
-              <Legend layout="vertical" verticalAlign="middle" align="right" />
+              <Legend layout ="vertical" verticalAlign="middle" align="right" />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -239,66 +166,21 @@ export default function Home() {
       <div className="right">
         <div className="container bar">
           <h3>Bar chart showing commits by different contributors</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              data={chartData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
-            >
-              <XAxis
-                dataKey="name"
-                scale="point"
-                padding={{ left: 10, right: 10 }}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <CartesianGrid strokeDasharray="3 3" />
-              <Bar
-                dataKey="commits"
-                fill="#164B60"
-                background={{ fill: "#eee" }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <h4 style={{ marginTop: "50px" }}>
+            Please select a contributor in this repository
+          </h4>
+          <label htmlFor="repository">Choose a Pusher: </label>
+          <Select
+            options={pushers.map((opt) => ({ label: opt, value: opt }))}
+            value={selectedPushers}
+            onChange={handlePusherChange}
+          />
         </div>
         <div className="container bar">
           <h3>
             Histogram - commit sizes vs distribution of commits across time
             periods
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              width={500}
-              height={300}
-              data={histogram}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend
-                layout="horizontal"
-                align="center"
-                verticalAlign="bottom"
-              />
-              <Bar dataKey="uv" fill="#164B60" name="Added Files" />
-              <Bar dataKey="pv" fill="orange" name="Modified Files" />
-              <Bar dataKey="qv" fill="red" name="Deleted Files" />
-            </BarChart>
-          </ResponsiveContainer>
         </div>
 
         {/* <p>Stacked Bar chart - features vs contributors</p>
@@ -311,6 +193,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-

@@ -163,8 +163,3 @@ select{
   flex-direction: row;
 }
 
-.recharts-default-legend {
-  display: flex; /* Use flexbox to make the legend items horizontal */
-  flex-direction: row;
-  justify-content: center; /* Align items horizontally in the center */
-}
