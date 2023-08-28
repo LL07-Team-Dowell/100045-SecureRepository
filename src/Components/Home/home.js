@@ -27,6 +27,7 @@ export default function Home() {
   const [selectedPushers, setSelectedPushers] = useState();
   const [repositoryData, setRepositoryData] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [histogram, setHistogram] = useState([]);
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
@@ -113,6 +114,8 @@ export default function Home() {
           })
         );
 
+        setRepositoryData(commitsPerPusherData);
+
         // bar chart logic
         const currentYear = new Date().getFullYear();
         const commitsThisYear = selectedItem?.metadata?.filter((item) => {
@@ -128,9 +131,6 @@ export default function Home() {
             );
           }
         });
-
-      console.log(commitsThisYear);
-
 
         // Count the number of commits per month
         const commitsPerMonth = Array(12).fill(0);
@@ -156,15 +156,47 @@ export default function Home() {
         ];
         setChartData(chartData);
 
-        setRepositoryData(commitsPerPusherData);
+        // histogram logic
+          const commitsByMonth =( selectedPushers?selectedItem?.metadata.filter(item=>item.pusher === selectedPushers?.label):selectedItem?.metadata).reduce((acc, commit) => {
+            const month = new Date(commit.data).toLocaleString(
+              "default",
+              {
+                month: "long",
+              }
+            );
+            acc[month] = acc[month] || [];
+            acc[month].push(commit);
+            return acc;
+          }, {});
+        
+         const processedData =
+           commitsByMonth !== null &&
+           commitsByMonth !== undefined &&
+           Object.entries(commitsByMonth).map(([month, commits]) => ({
+             name: month,
+             uv: commits.reduce(
+               (total, commit) => total + commit.created_files,
+               0
+             ),
+             pv: commits.reduce(
+               (total, commit) => total + commit.modified_files,
+               0
+             ),
+             qv: commits.reduce(
+               (total, commit) => total + commit.removed_files,
+               0
+             ),
+           }));
+
+         setHistogram(processedData);
+        
       }
     }
 
-
   }, [selectedRepository, data, selectedPushers]);
 
-     
 
+     
   return (
     <div className="home-container">
       <div className="left">
@@ -214,7 +246,9 @@ export default function Home() {
         <div className="container bar">
           <h3>
             Bar chart showing commits by{" "}
-            {selectedPushers?.label ? selectedPushers.label : "different contributors"}
+            {selectedPushers?.label
+              ? selectedPushers.label
+              : "different contributors"}
           </h3>
           <h4 style={{ marginTop: "50px" }}>
             Please select a contributor in this repository
@@ -225,8 +259,11 @@ export default function Home() {
             value={selectedPushers}
             onChange={handlePusherChange}
           />
-
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+            style={{ marginTop: "200px" }}
+          >
             <BarChart
               data={chartData}
               margin={{
@@ -256,9 +293,39 @@ export default function Home() {
         </div>
         <div className="container bar">
           <h3>
-            Histogram - commit sizes vs distribution of commits across time
-            periods
+            Histogram file distribution by{" "}
+            {selectedPushers?.label
+              ? selectedPushers.label
+              : "different contributors"}
           </h3>
+
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              width={500}
+              height={300}
+              data={histogram}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              barSize={20}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend
+                layout="horizontal"
+                align="center"
+                verticalAlign="bottom"
+              />
+              <Bar dataKey="uv" fill="#164B60" name="Added Files" />
+              <Bar dataKey="pv" fill="orange" name="Modified Files" />
+              <Bar dataKey="qv" fill="red" name="Deleted Files" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
         {/* <p>Stacked Bar chart - features vs contributors</p>
