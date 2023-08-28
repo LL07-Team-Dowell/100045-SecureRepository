@@ -26,6 +26,7 @@ export default function Home() {
   const [selectedRepository, setSelectedRepository] = useState();
   const [selectedPushers, setSelectedPushers] = useState();
   const [repositoryData, setRepositoryData] = useState([]);
+  const [chartData, setChartData] = useState([]);
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
@@ -57,6 +58,7 @@ export default function Home() {
                 value: uniqueRepositoryNames[0],
               },
             ]);
+
           }
         }
       } catch (error) {
@@ -111,14 +113,57 @@ export default function Home() {
           })
         );
 
+        // bar chart logic
+        const currentYear = new Date().getFullYear();
+        const commitsThisYear = selectedItem?.metadata?.filter((item) => {
+          const itemYear = moment(item.data).year();
+
+          if (selectedPushers) {
+          return (
+            itemYear === currentYear && item.pusher === selectedPushers?.label
+          );
+          } else {
+            return (
+              itemYear === currentYear
+            );
+          }
+        });
+
+      console.log(commitsThisYear);
+
+
+        // Count the number of commits per month
+        const commitsPerMonth = Array(12).fill(0);
+        commitsThisYear.forEach((item) => {
+          const month = moment(item.data).month();
+          commitsPerMonth[month]++;
+        });
+
+        // Prepare the data for the bar chart
+        const chartData = [
+          { name: "Jan", commits: commitsPerMonth[0] },
+          { name: "Feb", commits: commitsPerMonth[1] },
+          { name: "Mar", commits: commitsPerMonth[2] },
+          { name: "Apr", commits: commitsPerMonth[3] },
+          { name: "May", commits: commitsPerMonth[4] },
+          { name: "Jun", commits: commitsPerMonth[5] },
+          { name: "Jul", commits: commitsPerMonth[6] },
+          { name: "Aug", commits: commitsPerMonth[7] },
+          { name: "Sep", commits: commitsPerMonth[8] },
+          { name: "Oct", commits: commitsPerMonth[9] },
+          { name: "Nov", commits: commitsPerMonth[10] },
+          { name: "Dec", commits: commitsPerMonth[11] },
+        ];
+        setChartData(chartData);
+
         setRepositoryData(commitsPerPusherData);
       }
     }
-  }, [selectedRepository, data]);
+
+
+  }, [selectedRepository, data, selectedPushers]);
 
      
-    console.log(repositoryData);
-    console.log("hi")
 
   return (
     <div className="home-container">
@@ -135,7 +180,9 @@ export default function Home() {
 
         <div className="container">
           <h3>Please select Repository to view Insights On</h3>
-          <label htmlFor="repository">Choose a repository: </label>
+          <label htmlFor="repository" style={{ marginBottom: "20px" }}>
+            Choose a repository:{" "}
+          </label>
           <Select
             options={repositoryNames.map((opt) => ({ label: opt, value: opt }))}
             value={selectedRepository}
@@ -158,14 +205,17 @@ export default function Home() {
                 label
               />
               <Tooltip />
-              <Legend layout ="vertical" verticalAlign="middle" align="right" />
+              <Legend layout="vertical" verticalAlign="middle" align="right" />
             </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
       <div className="right">
         <div className="container bar">
-          <h3>Bar chart showing commits by different contributors</h3>
+          <h3>
+            Bar chart showing commits by{" "}
+            {selectedPushers?.label ? selectedPushers.label : "different contributors"}
+          </h3>
           <h4 style={{ marginTop: "50px" }}>
             Please select a contributor in this repository
           </h4>
@@ -175,6 +225,34 @@ export default function Home() {
             value={selectedPushers}
             onChange={handlePusherChange}
           />
+
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={chartData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              barSize={20}
+            >
+              <XAxis
+                dataKey="name"
+                scale="point"
+                padding={{ left: 10, right: 10 }}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Bar
+                dataKey="commits"
+                fill="#164B60"
+                background={{ fill: "#eee" }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
         <div className="container bar">
           <h3>
