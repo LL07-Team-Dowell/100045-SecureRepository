@@ -1,4 +1,3 @@
-import { Link, json } from "react-router-dom";
 import "./home.css";
 import FaceIcon from "@mui/icons-material/Face";
 import { useStateValue } from "../../Context/StateProvider";
