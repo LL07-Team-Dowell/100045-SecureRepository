@@ -37,7 +37,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/get-statistics/6385c0f18eca0fb652c94561/`
+          `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
         );
         if (response.data.data.length === 0) {
           console.log("error");
