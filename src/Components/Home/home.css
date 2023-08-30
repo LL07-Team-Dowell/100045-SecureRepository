@@ -29,9 +29,9 @@
   margin: 20px;
 }
 
-.bar{
+/* .bar{
   width:800px;
-}
+} */
 
 .container-pie {
   border: 0.2px solid #e6e4e3;
@@ -71,7 +71,6 @@
   padding: 10px 0;
   border-radius: 20px;
   outline: none;
-  border: none;
   border: none;
   width: 50%;
   color: #fff;
@@ -136,14 +135,14 @@
 
 .bar{
   max-width: 600px;
-  width:calc(100%-10px);
+  width:calc(100% - 10px);
 }
 
 }
 
 @media screen and (max-width: 400px) {
 .bar{
-  width:calc(100%-10px);
+  width:calc(100% - 10px);
 }
 
 

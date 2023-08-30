@@ -344,13 +344,6 @@ export default function Home() {
             </ResponsiveContainer>
           )}
         </div>
-
-        {/* <p>Stacked Bar chart - features vs contributors</p>
-        <p>Heat Map present</p>
-        <p>
-          {" "}
-          Bubble chart- Visualize commit activity (number and size) vs time made
-        </p> */}
       </div>
     </div>
   );
