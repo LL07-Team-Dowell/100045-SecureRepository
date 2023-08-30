@@ -135,8 +135,8 @@
 }
 
 .bar{
+  max-width: 600px;
   width:calc(100%-10px);
-
 }
 
 }

@@ -37,7 +37,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
+          `https://100045.pythonanywhere.com/reports/get-statistics/6385c0f18eca0fb652c94561/`
         );
         if (response.data.data.length === 0) {
           console.log("error");
@@ -48,19 +48,17 @@ export default function Home() {
           const uniqueRepositoryNames = Array.from(
             new Set(response.data.data.map((item) => item.repository_name))
           );
-          
 
           setRepositoryNames(uniqueRepositoryNames);
 
-          if (uniqueRepositoryNames.length > 0 && response.data.data) {
-            setSelectedRepository([
-              {
-                label: uniqueRepositoryNames[0],
-                value: uniqueRepositoryNames[0],
-              },
-            ]);
-
-          }
+          // if (uniqueRepositoryNames.length > 0 && response.data.data) {
+          //   setSelectedRepository([
+          //     {
+          //       label: uniqueRepositoryNames[0],
+          //       value: uniqueRepositoryNames[0],
+          //     },
+          //   ]);
+          // }
         }
       } catch (error) {
         console.error(error);
@@ -77,7 +75,7 @@ export default function Home() {
 
   const handlePusherChange = (selectedPushers) => {
     setSelectedPushers(selectedPushers);
-  }
+  };
 
   React.useEffect(() => {
     if (data.length > 0 && selectedRepository) {
@@ -85,15 +83,12 @@ export default function Home() {
         (item) => item.repository_name === selectedRepository.label
       );
 
-    const uniquePusherNames = Array.from(
-      new Set(
-        selectedItem?.metadata.map((item) => item.pusher)
-      )
+      const uniquePusherNames = Array.from(
+        new Set(selectedItem?.metadata.map((item) => item.pusher))
       );
-      
+
       setPushers(uniquePusherNames);
-          // pie chart logic
-  
+      // pie chart logic
 
       if (selectedItem) {
         const commitsByPusher = {};
@@ -122,13 +117,11 @@ export default function Home() {
           const itemYear = moment(item.data).year();
 
           if (selectedPushers) {
-          return (
-            itemYear === currentYear && item.pusher === selectedPushers?.label
-          );
-          } else {
             return (
-              itemYear === currentYear
+              itemYear === currentYear && item.pusher === selectedPushers?.label
             );
+          } else {
+            return itemYear === currentYear;
           }
         });
 
@@ -157,46 +150,45 @@ export default function Home() {
         setChartData(chartData);
 
         // histogram logic
-          const commitsByMonth =( selectedPushers?selectedItem?.metadata.filter(item=>item.pusher === selectedPushers?.label):selectedItem?.metadata).reduce((acc, commit) => {
-            const month = new Date(commit.data).toLocaleString(
-              "default",
-              {
-                month: "long",
-              }
-            );
-            acc[month] = acc[month] || [];
-            acc[month].push(commit);
-            return acc;
-          }, {});
-        
-         const processedData =
-           commitsByMonth !== null &&
-           commitsByMonth !== undefined &&
-           Object.entries(commitsByMonth).map(([month, commits]) => ({
-             name: month,
-             uv: commits.reduce(
-               (total, commit) => total + commit.created_files,
-               0
-             ),
-             pv: commits.reduce(
-               (total, commit) => total + commit.modified_files,
-               0
-             ),
-             qv: commits.reduce(
-               (total, commit) => total + commit.removed_files,
-               0
-             ),
-           }));
+        const commitsByMonth = (
+          selectedPushers
+            ? selectedItem?.metadata.filter(
+                (item) => item.pusher === selectedPushers?.label
+              )
+            : selectedItem?.metadata
+        ).reduce((acc, commit) => {
+          const month = new Date(commit.data).toLocaleString("default", {
+            month: "long",
+          });
+          acc[month] = acc[month] || [];
+          acc[month].push(commit);
+          return acc;
+        }, {});
 
-         setHistogram(processedData);
-        
+        const processedData =
+          commitsByMonth !== null &&
+          commitsByMonth !== undefined &&
+          Object.entries(commitsByMonth).map(([month, commits]) => ({
+            name: month,
+            uv: commits.reduce(
+              (total, commit) => total + commit.created_files,
+              0
+            ),
+            pv: commits.reduce(
+              (total, commit) => total + commit.modified_files,
+              0
+            ),
+            qv: commits.reduce(
+              (total, commit) => total + commit.removed_files,
+              0
+            ),
+          }));
+
+        setHistogram(processedData);
       }
     }
-
   }, [selectedRepository, data, selectedPushers]);
 
-
-     
   return (
     <div className="home-container">
       <div className="left">
@@ -224,22 +216,33 @@ export default function Home() {
 
         <div className="container-pie bar">
           <h3>Pie Chart showing pushers in this repository</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart style={{ position: "relative" }}>
-              <Pie
-                dataKey="value"
-                isAnimationActive={false}
-                data={repositoryData}
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                fill="#164B60"
-                label
-              />
-              <Tooltip />
-              <Legend layout="vertical" verticalAlign="middle" align="right" />
-            </PieChart>
-          </ResponsiveContainer>
+          {!selectedRepository && (
+            <h4 style={{ color: "red", fontWeight: "600" }}>
+              Please select a repository
+            </h4>
+          )}
+          {selectedRepository && (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart style={{ position: "relative" }}>
+                <Pie
+                  dataKey="value"
+                  isAnimationActive={false}
+                  data={repositoryData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#164B60"
+                  label
+                />
+                <Tooltip />
+                <Legend
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
       <div className="right">
@@ -250,6 +253,11 @@ export default function Home() {
               ? selectedPushers.label
               : "different contributors"}
           </h3>
+          {!selectedRepository && (
+            <h4 style={{ color: "red", fontWeight: "600" }}>
+              Please select a repository
+            </h4>
+          )}
           <h4 style={{ marginTop: "50px" }}>
             Please select a contributor in this repository
           </h4>
@@ -259,37 +267,39 @@ export default function Home() {
             value={selectedPushers}
             onChange={handlePusherChange}
           />
-          <ResponsiveContainer
-            width="100%"
-            height={300}
-            style={{ marginTop: "200px" }}
-          >
-            <BarChart
-              data={chartData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
+          {selectedRepository && (
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              style={{ marginTop: "200px" }}
             >
-              <XAxis
-                dataKey="name"
-                scale="point"
-                padding={{ left: 10, right: 10 }}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <CartesianGrid strokeDasharray="3 3" />
-              <Bar
-                dataKey="commits"
-                fill="#164B60"
-                background={{ fill: "#eee" }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+              <BarChart
+                data={chartData}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+                barSize={20}
+              >
+                <XAxis
+                  dataKey="name"
+                  scale="point"
+                  padding={{ left: 10, right: 10 }}
+                />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Bar
+                  dataKey="commits"
+                  fill="#164B60"
+                  background={{ fill: "#eee" }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
         <div className="container bar">
           <h3>
@@ -298,34 +308,41 @@ export default function Home() {
               ? selectedPushers.label
               : "different contributors"}
           </h3>
+          {!selectedRepository && (
+            <h4 style={{ color: "red", fontWeight: "600" }}>
+              Please select a repository
+            </h4>
+          )}
 
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              width={500}
-              height={300}
-              data={histogram}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend
-                layout="horizontal"
-                align="center"
-                verticalAlign="bottom"
-              />
-              <Bar dataKey="uv" fill="#164B60" name="Added Files" />
-              <Bar dataKey="pv" fill="orange" name="Modified Files" />
-              <Bar dataKey="qv" fill="red" name="Deleted Files" />
-            </BarChart>
-          </ResponsiveContainer>
+          {selectedRepository && (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                width={500}
+                height={300}
+                data={histogram}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+                barSize={20}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend
+                  layout="horizontal"
+                  align="center"
+                  verticalAlign="bottom"
+                />
+                <Bar dataKey="uv" fill="#164B60" name="Added Files" />
+                <Bar dataKey="pv" fill="orange" name="Modified Files" />
+                <Bar dataKey="qv" fill="red" name="Deleted Files" />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
 
         {/* <p>Stacked Bar chart - features vs contributors</p>
