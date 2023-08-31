@@ -17,6 +17,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import moment from "moment";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 
 export default function Home() {
   const [state] = useStateValue();
@@ -189,6 +191,31 @@ export default function Home() {
     }
   }, [selectedRepository, data, selectedPushers]);
 
+
+  const exportPDF = (type, name , element)=>{
+    
+        html2canvas(document.querySelector(`.${element}`)).then(canvas => {
+          let dataURL = canvas.toDataURL('image/png');
+    
+          if (type === 'pdf') {
+            const pdf = new jsPDF({
+              orientation: "potrait",
+              unit: "in",
+              format: [14, 10]
+            });
+    
+            pdf.addImage(dataURL, 'PNG', .6, .6);
+            pdf.save(`${name}.pdf`);
+    
+          } else if (type === 'png') {
+            const link = document.createElement('a');
+            link.download = `${name}.png`;
+            link.href = dataURL;
+            link.click();
+          }
+        });
+     }
+
   return (
     <div className="home-container">
       <div className="left">
@@ -216,6 +243,16 @@ export default function Home() {
 
         <div className="container-pie bar">
           <h3>Pie Chart showing pushers in this repository</h3>
+          {selectedRepository && (
+            <button
+              className="register-button"
+              onClick={() =>
+                exportPDF("pdf", "my-content", "container-pie.bar")
+              }
+            >
+              Download PieChart
+            </button>
+          )}
           {!selectedRepository && (
             <h4 style={{ color: "red", fontWeight: "600" }}>
               Please select a repository
@@ -268,6 +305,14 @@ export default function Home() {
             onChange={handlePusherChange}
           />
           {selectedRepository && (
+            <button
+              className="register-button"
+              onClick={() => exportPDF("pdf", "my-content", "container.bar")}
+            >
+              Download BarChart
+            </button>
+          )}
+          {selectedRepository && (
             <ResponsiveContainer
               width="100%"
               height={300}
@@ -301,7 +346,7 @@ export default function Home() {
             </ResponsiveContainer>
           )}
         </div>
-        <div className="container bar">
+        <div className="container bar histogram">
           <h3>
             Histogram file distribution by{" "}
             {selectedPushers?.label
@@ -312,6 +357,14 @@ export default function Home() {
             <h4 style={{ color: "red", fontWeight: "600" }}>
               Please select a repository
             </h4>
+          )}
+          {selectedRepository && (
+            <button
+              className="register-button"
+              onClick={() => exportPDF("pdf", "my-content", "container.bar.histogram")}
+            >
+              Download Histogram
+            </button>
           )}
 
           {selectedRepository && (
