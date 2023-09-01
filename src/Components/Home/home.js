@@ -199,9 +199,9 @@ export default function Home() {
     
           if (type === 'pdf') {
             const pdf = new jsPDF({
-              orientation: "potrait",
+              orientation: "landscape",
               unit: "in",
-              format: [14, 10]
+              format: [23,15]
             });
     
             pdf.addImage(dataURL, 'PNG', .6, .6);
@@ -227,6 +227,14 @@ export default function Home() {
           <Link to="/register">
             <button className="register-button">Register</button>
           </Link>
+          {selectedRepository && (
+            <button
+              className="register-button"
+              onClick={() => exportPDF("pdf", `Reports for ${selectedRepository.label+ ' '+ new Date().toJSON().slice(0,10).replace(/-/g,'/')}`, "home-container")}
+            >
+              Download Page
+            </button>
+          )}
         </div>
 
         <div className="container">
@@ -243,16 +251,6 @@ export default function Home() {
 
         <div className="container-pie bar">
           <h3>Pie Chart showing pushers in this repository</h3>
-          {selectedRepository && (
-            <button
-              className="register-button"
-              onClick={() =>
-                exportPDF("pdf", "my-content", "container-pie.bar")
-              }
-            >
-              Download PieChart
-            </button>
-          )}
           {!selectedRepository && (
             <h4 style={{ color: "red", fontWeight: "600" }}>
               Please select a repository
@@ -304,14 +302,7 @@ export default function Home() {
             value={selectedPushers}
             onChange={handlePusherChange}
           />
-          {selectedRepository && (
-            <button
-              className="register-button"
-              onClick={() => exportPDF("pdf", "my-content", "container.bar")}
-            >
-              Download BarChart
-            </button>
-          )}
+
           {selectedRepository && (
             <ResponsiveContainer
               width="100%"
@@ -358,16 +349,7 @@ export default function Home() {
               Please select a repository
             </h4>
           )}
-          {selectedRepository && (
-            <button
-              className="register-button"
-              onClick={() => exportPDF("pdf", "my-content", "container.bar.histogram")}
-            >
-              Download Histogram
-            </button>
-          )}
-
-          {selectedRepository && (
+            {selectedRepository && (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 width={500}
