@@ -39,7 +39,8 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
+          // `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
+            `https://100045.pythonanywhere.com/reports/get-statistics/6385c0f18eca0fb652c94561/`
         );
         if (response.data.data.length === 0) {
           console.log("error");
@@ -201,7 +202,7 @@ export default function Home() {
             const pdf = new jsPDF({
               orientation: "landscape",
               unit: "in",
-              format: [23,15]
+              format: [21,15]
             });
     
             pdf.addImage(dataURL, 'PNG', .6, .6);
