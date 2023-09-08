@@ -1,14 +1,16 @@
 import "./home.css";
 import React from "react";
 import { useStateValue } from "../../Context/StateProvider";
-import { AddBoxOutlined} from "@mui/icons-material";
+import { AddBoxOutlined } from "@mui/icons-material";
 import Popup from "../Popup/Popup";
 import axios from "axios";
 import _ from "lodash";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { FileCopy } from "@mui/icons-material";
 
 export default function Profile() {
   const [state] = useStateValue();
-  const [link, setLinks] = React.useState(0);
+  const [link, setLinks] = React.useState([]);
   const [toggle, setToggle] = React.useState(0);
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
@@ -27,10 +29,8 @@ export default function Profile() {
     setButtonPopup(true);
   }
 
-
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
-
 
     const fetchQRids = async () => {
       try {
@@ -40,7 +40,6 @@ export default function Profile() {
         if (response.data === 0) {
           console.log("error");
         } else {
-          // Get all unique repository names for select input options
           setLinks(response.data.data);
         }
       } catch (error) {
@@ -57,60 +56,17 @@ export default function Profile() {
           console.log("error");
         } else {
           console.log(response.data);
-          // Get all unique repository names for select input options
         }
       } catch (error) {
         console.error(error);
       }
-      // Call the async function
     };
-
-    // post request
-
     fetchQRids();
 
     fetchMasterLinks();
   }, [portfolio.org_id]);
 
-  // difference between userinfo qr and links
-  function diff(obj1, obj2) {
-    // Make sure an object to compare is provided
-    if (!obj2 || Object.prototype.toString.call(obj2) !== "[object Object]") {
-      return obj1;
-    }
-
-    // Variables
-    const diffs = {};
-    let key;
-
-    // Compare obj1 to obj2, and push any differences to the diffs object
-    for (key in obj1) {
-      if (obj1.hasOwnProperty(key)) {
-        if (_.isEqual(obj1[key], obj2[key])) {
-          continue;
-        } else {
-          diffs[key] = obj2[key];
-        }
-      }
-    }
-
-    // Compare obj2 to obj1, and push any differences to the diffs object
-    for (key in obj2) {
-      if (obj2.hasOwnProperty(key)) {
-        if (_.isEqual(obj2[key], obj1[key])) {
-          continue;
-        } else {
-          diffs[key] = obj2[key];
-        }
-      }
-    }
-
-    // Return the diffs object
-    return diffs;
-  }
-
-  let unusedlinks = diff(link, qrIDS);
-
+  
   function handleLinkNoChange(event) {
     const { value } = event.target;
     setLinkNo((prev) => {
@@ -158,12 +114,27 @@ export default function Profile() {
   };
 
   console.log(message, qrCode, masterLink);
-  const userInfoQrLinks = new Set(state.user?.selected_product?.userportfolio
-    .filter((item) => {
-      return item.member_type === "public";
-    })
-    .map((item) => item?.username).flat());
+  const userInfoQrLinks = new Set(
+    state.user?.selected_product?.userportfolio
+      .filter((item) => {
+        return item.member_type === "public";
+      })
+      .map((item) => item?.username)
+      .flat()
+  );
 
+  // difference between userinfo qr and links
+
+
+  let unusedlinks = [
+    ...Array.from(userInfoQrLinks).filter(
+      (value) => !Object.values(link).includes(value)
+    ),
+    ...Object.values(link).filter((value) =>
+      !Array.from(userInfoQrLinks).includes(value)
+    ),
+  ];
+  console.log(`unused ${unusedlinks}`);
 
   return (
     <div className="product" style={{ maxWidth: "500px" }}>
@@ -218,8 +189,10 @@ export default function Profile() {
             </label>
             <button
               onClick={() => {
-                createMaster(selectLinks, customName);
-                setToggle("2");
+                customName === ""
+                  ? alert("please enter a custom Name")
+                  : createMaster(selectLinks, customName) && setToggle("2");
+                
               }}
             >
               Generate Link
@@ -228,19 +201,36 @@ export default function Profile() {
         ) : toggle === "2" ? (
           message &&
           qrCode &&
-          masterLink && (
-            <div>
-              <h4>{message}</h4>
-              <p
-                style={{
-                  color: "#333",
-                }}
+          masterLink &&
+          <div style={{ marginTop: "60px" }} className="api-result">
+            <h4>Created Successfully! {message}</h4>
+            <p>
+              <b>Master Link: </b>
+              {masterLink}
+              <CopyToClipboard
+                text={masterLink}
+                onCopy={() => alert("Master link copied succesfully")}
               >
-                {qrCode}
-              </p>
-              <img src={qrCode} alt="qr" />
-            </div>
-          )
+                <FileCopy className="icon" />
+              </CopyToClipboard>
+            </p>
+            <p>
+              <b>Qr code: </b>
+              {qrCode}
+              <CopyToClipboard
+                text={qrCode}
+                onCopy={() => alert("Qr code copied successfully")}
+              >
+                <FileCopy className="icon" />
+              </CopyToClipboard>
+            </p>
+            <center>
+              <img
+                src={qrCode}
+                alt="qr-code"
+              />
+            </center>
+          </div>
         ) : (
           <div className="content">
             <h3>Share this Product</h3>
@@ -300,7 +290,7 @@ export default function Profile() {
                   multiple
                   onChange={handleSelectChange}
                 >
-                  {Array.from(userInfoQrLinks).map((key, i) => {
+                  {Array.from(unusedlinks).map((key, i) => {
                     if (i >= linkNo) {
                       return (
                         <option key={i} value={key}>
@@ -320,7 +310,15 @@ export default function Profile() {
                   })}
                 </select>
               </form>
-              <button onClick={() => setToggle("1")}>Generate Link</button>
+              <button
+                onClick={() =>
+                  selectLinks.length == 0
+                    ? alert("please select at least one qrcode link")
+                    : setToggle("1")
+                }
+              >
+                Generate Link
+              </button>
             </div>
           </div>
         )}

@@ -4,20 +4,19 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  
 }
 
-.home-container{
+.home-container {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.left, .right{
+.left,
+.right {
   flex-basis: 50%;
 }
-
 
 .container,
 .profile-container {
@@ -46,7 +45,7 @@
   flex-direction: column;
 }
 
-.profile-container{
+.profile-container {
   max-width: 600px;
 }
 
@@ -107,12 +106,13 @@
     margin: 20px auto;
   }
 
-  .home-container{
+  .home-container {
     flex-direction: column;
     gap: 0;
   }
 
-  .container , .profile-container{
+  .container,
+  .profile-container {
     padding: 20px;
     width: 90%;
   }
@@ -121,33 +121,30 @@
     font-size: 24px;
   }
 
-.message {
-  font-size: 16px;
-}
+  .message {
+    font-size: 16px;
+  }
 
-.register-button {
-  margin-top: 1.2rem;
-}
+  .register-button {
+    margin-top: 1.2rem;
+  }
 
-.profile-row  .right{
-  font-size: 13px;
-}
+  .profile-row .right {
+    font-size: 13px;
+  }
 
-.bar{
-  max-width: 600px;
-  width:calc(100% - 10px);
-}
-
+  .bar {
+    max-width: 600px;
+    width: calc(100% - 10px);
+  }
 }
 
 @media screen and (max-width: 400px) {
-.bar{
-  width:calc(100% - 10px);
+  .bar {
+    width: calc(100% - 10px);
+  }
 }
-
-
-}
-select{
+select {
   display: block;
   outline: none;
   border: 0.2px solid #c8c5c4;
@@ -157,9 +154,23 @@ select{
   border-radius: 10px;
 }
 
-
-.recharts-wrapper{
-   display: flex;
+.recharts-wrapper {
+  display: flex;
   flex-direction: row;
 }
 
+.api-result p{
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.api-result .icon{
+  margin-left: 10px;
+  font-size: 16px;
+  color: dimgray;
+}
+
+.api-result img {
+  width: 300px;
+  margin-top: 10px auto;
+}
