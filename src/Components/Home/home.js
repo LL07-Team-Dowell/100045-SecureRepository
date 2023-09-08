@@ -52,15 +52,6 @@ export default function Home() {
           );
 
           setRepositoryNames(uniqueRepositoryNames);
-
-          // if (uniqueRepositoryNames.length > 0 && response.data.data) {
-          //   setSelectedRepository([
-          //     {
-          //       label: uniqueRepositoryNames[0],
-          //       value: uniqueRepositoryNames[0],
-          //     },
-          //   ]);
-          // }
         }
       } catch (error) {
         console.error(error);

@@ -1,168 +1,376 @@
-const getCommitsForRepository = (pusherName, repoName) => {
-    let commits = 0;
-
-    datas.forEach((item) => {
-      const { name, repository_name } = item;
-      if (name === pusherName && repository_name === repoName) {
-        commits++;
-      }
-    });
-
-    return commits;
-  };
-
-  // bar chart data
-  // State to store the commits per month data
-  React.useEffect(() => {
-    if (!datas) return;
-    // pie chart logic
-    const pusherCommits = {};
-    datas
-      .filter((item) => item.repository_name === selectedRepository.label)
-      .forEach((item) => {
-        const { pusher } = item;
-        if (pusherCommits[pusher]) {
-          pusherCommits[pusher]++;
-        } else {
-          pusherCommits[pusher] = 1;
+{
+    "selected_product": {
+       
+        "userportfolio": [
+            {
+                "username": [
+                    "HalimaAliWario"
+                ],
+                "member_type": "owner",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "View",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "Repository1",
+                "portfolio_code": "12345",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "HalimaAliWario"
+                ],
+                "member_type": "owner",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Admin",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "secure1",
+                "portfolio_code": "8698679",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable",
+                "org_id": "6458e0dc872f46db5b4e113b",
+                "owner_name": "HalimaAliWario",
+                "org_name": "HalimaAliWario"
+            },
+            {
+                "org_id": "6458e0dc872f46db5b4e113b",
+                "org_name": "HalimaAliWario",
+                "username": [
+                    "HalimaAliWario"
+                ],
+                "member_type": "owner",
+                "product": "Secure Repositories",
+                "data_type": "Real_data",
+                "operations_right": "Add/Edit",
+                "role": "owner",
+                "security_layer": "None",
+                "portfolio_name": "default",
+                "portfolio_code": "6cinII",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "default",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "PublicLinks",
+                "portfolio_code": "PL3789",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "portfolio_name": "PublicLinks",
+                "portfolio_code": "PL3789",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "PublicLinks1",
+                "portfolio_code": "PL03834",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "portfolio_name": "PublicLinks1",
+                "portfolio_code": "PL03834",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            }
+        ],
+        "payment_status": "unpaid"
+    },
+    "settings": null,
+    "roles": [
+        {
+            "level1_item": "department1",
+            "level2_item": "level2item",
+            "level3_item": "level3item",
+            "level4_item": "level4item",
+            "level5_item": "level5item",
+            "security_layer": "Layer 01",
+            "role_name": "HalimaAliWario",
+            "role_code": "5001",
+            "role_details": "",
+            "role_uni_code": "",
+            "role_specification": "",
+            "status": "enable"
         }
-      });
-
-    const newData = Object.keys(pusherCommits).map((pusher) => ({
-      name: pusher,
-      value: pusherCommits[pusher],
-      fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
-    }));
-
-    setRepositoryData(newData);
+    ]
+}
 
 
-    const currentYear = new Date().getFullYear();
-
-    // Filter data to include only commits from the current year
-    const commitsThisYear = datas.filter((item) => {
-      const itemYear = moment(item.backup_time).year();
-      return (
-        itemYear === currentYear && item.repository_name === selectedRepository
-      );
-    });
-
-    // Count the number of commits per month
-    const commitsPerMonth = Array(12).fill(0);
-    commitsThisYear.forEach((item) => {
-      const month = moment(item.backup_time).month();
-      commitsPerMonth[month]++;
-    });
-
-    // Prepare the data for the bar chart
-    const chartData = [
-      { name: "Jan", commits: commitsPerMonth[0] },
-      { name: "Feb", commits: commitsPerMonth[1] },
-      { name: "Mar", commits: commitsPerMonth[2] },
-      { name: "Apr", commits: commitsPerMonth[3] },
-      { name: "May", commits: commitsPerMonth[4] },
-      { name: "Jun", commits: commitsPerMonth[5] },
-      { name: "Jul", commits: commitsPerMonth[6] },
-      { name: "Aug", commits: commitsPerMonth[7] },
-      { name: "Sep", commits: commitsPerMonth[8] },
-      { name: "Oct", commits: commitsPerMonth[9] },
-      { name: "Nov", commits: commitsPerMonth[10] },
-      { name: "Dec", commits: commitsPerMonth[11] },
-    ];
-    setChartData(chartData);
-
-    const commitsByMonth = datas?.reduce((acc, commit) => {
-      const month = new Date(commit.backup_time).toLocaleString("default", {
-        month: "long",
-      });
-      acc[month] = acc[month] || [];
-      acc[month].push(commit);
-      return acc;
-    }, {});
-
-    // Calculate the number of added, modified, and deleted files for each month
-      const processedData =
-        commitsByMonth !== null &&
-        commitsByMonth !== undefined &&
-        Object.entries(commitsByMonth).map(([month, commits]) => ({
-          name: month,
-          uv: commits.reduce(
-            (total, commit) => total + commit.added_file.length,
-            0
-          ),
-          pv: commits.reduce(
-            (total, commit) => total + commit.modified_file.length,
-            0
-          ),
-          qv: commits.reduce(
-            (total, commit) => total + commit.removed_file.length,
-            0
-          ),
-        }));
-
-    setHistogram(processedData);
-    console.log(chartData);
-    }, [datas, selectedRepository]);
 
 
-      <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              data={chartData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
-            >
-              <XAxis
-                dataKey="name"
-                scale="point"
-                padding={{ left: 10, right: 10 }}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <CartesianGrid strokeDasharray="3 3" />
-              <Bar
-                dataKey="commits"
-                fill="#164B60"
-                background={{ fill: "#eee" }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
 
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              width={500}
-              height={300}
-              data={histogram}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend
-                layout="horizontal"
-                align="center"
-                verticalAlign="bottom"
-              />
-              <Bar dataKey="uv" fill="#164B60" name="Added Files" />
-              <Bar dataKey="pv" fill="orange" name="Modified Files" />
-              <Bar dataKey="qv" fill="red" name="Deleted Files" />
-            </BarChart>
-          </ResponsiveContainer>
 
-          .recharts-default-legend {
-  display: flex; /* Use flexbox to make the legend items horizontal */
-  flex-direction: column;
-  justify-content: center; /* Align items horizontally in the center */
+
+
+**********************************************************************
+{
+   
+    "selected_product": {
+       
+        "userportfolio": [
+            {
+                "username": [
+                    "HalimaAliWario"
+                ],
+                "member_type": "owner",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "View",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "Repository1",
+                "portfolio_code": "12345",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "HalimaAliWario"
+                ],
+                "member_type": "owner",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Admin",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "secure1",
+                "portfolio_code": "8698679",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable",
+                "org_id": "6458e0dc872f46db5b4e113b",
+                "owner_name": "HalimaAliWario",
+                "org_name": "HalimaAliWario"
+            },
+            {
+                "org_id": "6458e0dc872f46db5b4e113b",
+                "org_name": "HalimaAliWario",
+                "username": [
+                    "HalimaAliWario"
+                ],
+                "member_type": "owner",
+                "product": "Secure Repositories",
+                "data_type": "Real_data",
+                "operations_right": "Add/Edit",
+                "role": "owner",
+                "security_layer": "None",
+                "portfolio_name": "default",
+                "portfolio_code": "6cinII",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "default",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "PublicLinks",
+                "portfolio_code": "PL3789",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "portfolio_name": "PublicLinks",
+                "portfolio_code": "PL3789",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "security_layer": "None",
+                "portfolio_name": "PublicLinks1",
+                "portfolio_code": "PL03834",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            },
+            {
+                "username": [
+                    "aPtBgJsQOrB0",
+                    "orp3d5CQULqY",
+                    "MjNHrQuhuVK9",
+                    "vUwoMvZ7CqA0",
+                    "9HUSKlVb1VhO",
+                    "UpCpoDfPeBxR",
+                    "cRIuklsoQ7Vl",
+                    "HV06shbID0SM",
+                    "iNuxdodOui3l",
+                    "kUBnHubjXdM6"
+                ],
+                "member_type": "public",
+                "product": "Secure Repositories",
+                "data_type": "Real_Data",
+                "operations_right": "Add/Edit",
+                "role": "HalimaAliWario",
+                "portfolio_name": "PublicLinks1",
+                "portfolio_code": "PL03834",
+                "portfolio_specification": "",
+                "portfolio_uni_code": "",
+                "portfolio_details": "",
+                "status": "enable"
+            }
+        ],
+        "payment_status": "unpaid"
+    },
+    "settings": null,
+    "roles": [
+        {
+            "level1_item": "department1",
+            "level2_item": "level2item",
+            "level3_item": "level3item",
+            "level4_item": "level4item",
+            "level5_item": "level5item",
+            "security_layer": "Layer 01",
+            "role_name": "HalimaAliWario",
+            "role_code": "5001",
+            "role_details": "",
+            "role_uni_code": "",
+            "role_specification": "",
+            "status": "enable"
+        }
+    ]
 }

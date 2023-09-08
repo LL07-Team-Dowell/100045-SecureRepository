@@ -11,11 +11,11 @@ export default function RegisterForm() {
   });
   const [buttonPopup, setButtonPopup] = React.useState(false);
 
-  const [status, setStatus] = React.useState(null);
+  const [setStatus] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [webHookLink, setWebHookLink] = React.useState(false);
 
-  const [error, setError] = React.useState(" ");
+  const [setError] = React.useState(" ");
   function handleChange(event) {
     const { name, value } = event.target;
 
