@@ -5,10 +5,10 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import HomeIcon from "@mui/icons-material/Home";
 import BackupIcon from "@mui/icons-material/Backup";
 import SummarizeIcon from "@mui/icons-material/Summarize";
-import { Person, Logout } from "@mui/icons-material";
+import {Logout, LinkOutlined } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import  logo  from "../../Images/logo.png"
-function Navbar() { 
+function Navbar(props) { 
   const [click, setClick] = React.useState(false);
 
   const handleClick = () => setClick(!click);
@@ -19,7 +19,35 @@ function Navbar() {
       window.location.origin +
       "/100045-SecureRepository";
   
-  return (
+  return props.public ? (
+    <div>
+      <div className={click ? "main-container" : ""} onClick={() => Close()} />
+      <nav className="navbar" onClick={(e) => e.stopPropagation()}>
+        <div className="nav-container">
+          <NavLink to="#" className="nav-logo">
+            <img src={logo} alt="logo" style={{ width: "70px" }} />
+            <span style={{ color: "#fff" }}> Secure Repositories</span>
+          </NavLink>
+          <ul className={click ? "nav-menu active" : "nav-menu"}>
+            <li className="nav-item">
+              <NavLink
+                to="/viewpublic"
+                activeClassName="active"
+                className="nav-links"
+                onClick={click ? handleClick : null}
+              >
+                <LinkOutlined className="icon" />
+                Public
+              </NavLink>
+            </li>
+          </ul>
+          <div className="nav-icon" onClick={handleClick}>
+            <MenuIcon />
+          </div>
+        </div>
+      </nav>
+    </div>
+  ) : (
     <div>
       <div className={click ? "main-container" : ""} onClick={() => Close()} />
       <nav className="navbar" onClick={(e) => e.stopPropagation()}>
@@ -42,13 +70,13 @@ function Navbar() {
             </li>
             <li className="nav-item">
               <NavLink
-                to="profile"
+                  to="/public"
                 activeClassName="active"
                 className="nav-links"
                 onClick={click ? handleClick : null}
               >
-                <Person className="icon" />
-                Profile
+                <LinkOutlined className="icon" />
+                Public
               </NavLink>
             </li>
             <li className="nav-item">
@@ -84,16 +112,6 @@ function Navbar() {
                 Repository reports
               </NavLink>
             </li>
-            {/* <li className="nav-item">
-              <NavLink
-                to="profile"
-                activeClassName="active"
-                className="nav-links"
-                onClick={click ? handleClick : null}
-              >
-                <Person className="icon" />
-              </NavLink>
-            </li> */}
             <li className="nav-item">
               <NavLink
                 to={logoutUrl}

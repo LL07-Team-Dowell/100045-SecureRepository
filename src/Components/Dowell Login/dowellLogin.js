@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useStateValue } from "./../../Context/StateProvider";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const dowellLoginUrl =
   "https://100014.pythonanywhere.com/?redirect_url=" +
@@ -17,10 +18,10 @@ const getUserInfoOther = async (session_id, dispatch) => {
     data: session,
   });
   sessionStorage.setItem("userinfo", JSON.stringify(res.data));
-   dispatch({
-     type: "SET_USER",
-     user: res.data,
-   }); // Update user info in context
+  dispatch({
+    type: "SET_USER",
+    user: res.data,
+  }); // Update user info in context
 };
 
 const getUserInfo = async (session_id, dispatch) => {
@@ -34,10 +35,10 @@ const getUserInfo = async (session_id, dispatch) => {
     data: session,
   });
   sessionStorage.setItem("userInfo", JSON.stringify(res.data));
-   dispatch({
-     type: "SET_USER",
-     user: res.data,
-   }); // Update user info in context
+  dispatch({
+    type: "SET_USER",
+    user: res.data,
+  }); // Update user info in context
 };
 
 export default function useDowellLogin() {
@@ -46,6 +47,10 @@ export default function useDowellLogin() {
   const queryParams = new URLSearchParams(window.location.search);
   const searchParams = queryParams.get("session_id");
   const searchParams2 = queryParams.get("id");
+  const publicParams = queryParams.get("view");
+  const qr_idParams = queryParams.get("qr_id");
+  const company_idParams = queryParams.get("company_id");
+  const navigate = useNavigate();
 
   const localSession = sessionStorage.getItem("session_id")
     ? sessionStorage.getItem("session_id")
@@ -54,10 +59,17 @@ export default function useDowellLogin() {
     ? sessionStorage.getItem("id")
     : null;
 
+
   React.useEffect(() => {
     const session_id = searchParams;
     const id = searchParams2;
+    const public_view = publicParams;
 
+      if (public_view && public_view == "public" && qr_idParams && company_idParams) {
+        navigate("/viewproduct");
+        return;
+      }
+   
     if (session_id) {
       sessionStorage.setItem("session_id", session_id);
       if (id || localId) {
