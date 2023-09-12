@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "../Home/home.css";
-import { FileCopy } from "@mui/icons-material";
+import { CheckCircleOutlineOutlined, FileCopy } from "@mui/icons-material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function ViewPublic() {
@@ -10,8 +10,10 @@ export default function ViewPublic() {
   const qr_idParams = queryParams.get("qr_id");
   const company_idParams = queryParams.get("company_id");
   const [data, setData] = React.useState([]);
- const [qrData, setQrData] = React.useState();
- const [expired, setExpired] = React.useState(false);
+  const [qrData, setQrData] = React.useState();
+  const [expired, setExpired] = React.useState(false);
+  const [masterCopy, setMasterCopy] = React.useState(false);
+  const [qr_codeCopy, setQr_codeCopy] = React.useState(false);
 
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
@@ -40,11 +42,11 @@ export default function ViewPublic() {
       }
     };
 
-   fetchMasterLinks();
-   
-     setTimeout(() => {
-       setExpired(true);
-     }, 6000);
+    fetchMasterLinks();
+
+    setTimeout(() => {
+      setExpired(true);
+    }, 6000);
   }, [company_idParams]);
 
   console.log(qrData);
@@ -57,7 +59,7 @@ export default function ViewPublic() {
         top: "100px",
         maxWidth: "800px",
         margin: "20px auto",
-        wordWrap: "wrap",
+        wordWrap: "break-word",
       }}
     >
       {data.length > 0 ? (
@@ -68,9 +70,13 @@ export default function ViewPublic() {
             {qrData[0]?.master_link}
             <CopyToClipboard
               text={qrData[0]?.master_link}
-              onCopy={() => alert("Master link copied succesfully")}
+              onCopy={() => setMasterCopy(true)}
             >
-              <FileCopy className="icon" />
+              {masterCopy ? (
+                <CheckCircleOutlineOutlined className="icon" />
+              ) : (
+                <FileCopy className="icon" />
+              )}
             </CopyToClipboard>
           </p>
           <p>
@@ -79,13 +85,23 @@ export default function ViewPublic() {
 
             <CopyToClipboard
               text={qrData[0]?.qr_code}
-              onCopy={() => alert("Qr code copied successfully")}
+              onCopy={() => setQr_codeCopy(true)}
             >
-              <FileCopy className="icon" />
+              {qr_codeCopy ? (
+                <CheckCircleOutlineOutlined className="icon" />
+              ) : (
+                <FileCopy className="icon" />
+              )}
             </CopyToClipboard>
           </p>
           <center>
-            <img src={qrData[0]?.qr_code} alt="qr-code" />
+            <img
+              src={qrData[0]?.qr_code}
+              alt="qr-code"
+              style={{
+                width: "90%",
+              }}
+            />
           </center>
           <h3>Details about this Link</h3>
           <p>
@@ -101,7 +117,7 @@ export default function ViewPublic() {
         </>
       ) : (
         <>
-       {!expired && <h4>Loading ...</h4>}
+          {!expired && <h4>Loading ...</h4>}
           {expired && (
             <p>
               The link is expired. please contact owner for correct Link details
