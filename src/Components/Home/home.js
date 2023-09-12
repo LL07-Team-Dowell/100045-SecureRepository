@@ -20,7 +20,7 @@ import moment from "moment";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
-export default function Home() {
+export default function Home(props) {
   const [state] = useStateValue();
   const [data, setData] = useState([]);
   const [repositoryNames, setRepositoryNames] = useState([]);
@@ -182,30 +182,29 @@ export default function Home() {
     }
   }, [selectedRepository, data, selectedPushers]);
 
+  const exportPDF = (type, name, element) => {
+    html2canvas(document.querySelector(`.${element}`)).then((canvas) => {
+      let dataURL = canvas.toDataURL("image/png");
 
-  const exportPDF = (type, name , element)=>{
-    
-        html2canvas(document.querySelector(`.${element}`)).then(canvas => {
-          let dataURL = canvas.toDataURL('image/png');
-    
-          if (type === 'pdf') {
-            const pdf = new jsPDF({
-              orientation: "landscape",
-              unit: "in",
-              format: [21,15]
-            });
-    
-            pdf.addImage(dataURL, 'PNG', .6, .6);
-            pdf.save(`${name}.pdf`);
-    
-          } else if (type === 'png') {
-            const link = document.createElement('a');
-            link.download = `${name}.png`;
-            link.href = dataURL;
-            link.click();
-          }
+      if (type === "pdf") {
+        const pdf = new jsPDF({
+          orientation: "landscape",
+          unit: "in",
+          format: [21, 15],
         });
-     }
+
+        pdf.addImage(dataURL, "PNG", 0.6, 0.6);
+        pdf.save(`${name}.pdf`);
+      } else if (type === "png") {
+        const link = document.createElement("a");
+        link.download = `${name}.png`;
+        link.href = dataURL;
+        link.click();
+      }
+    });
+  };
+
+  console.log(`company id : ${JSON.stringify(props)}`);
 
   return (
     <div className="home-container">
@@ -221,7 +220,17 @@ export default function Home() {
           {selectedRepository && (
             <button
               className="register-button"
-              onClick={() => exportPDF("pdf", `Reports for ${selectedRepository.label+ ' '+ new Date().toJSON().slice(0,10).replace(/-/g,'/')}`, "home-container")}
+              onClick={() =>
+                exportPDF(
+                  "pdf",
+                  `Reports for ${
+                    selectedRepository.label +
+                    " " +
+                    new Date().toJSON().slice(0, 10).replace(/-/g, "/")
+                  }`,
+                  "home-container"
+                )
+              }
             >
               Download Page
             </button>
@@ -340,7 +349,7 @@ export default function Home() {
               Please select a repository
             </h4>
           )}
-            {selectedRepository && (
+          {selectedRepository && (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 width={500}
