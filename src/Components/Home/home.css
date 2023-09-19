@@ -171,3 +171,22 @@ select {
 }
 
 
+.tabs{
+  width: 100%;
+  background-color: #e6e4e3;
+}
+
+.tabs ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-evenly;
+}
+
+.tabs ul li{
+  padding: 10px;
+}
+
+.tabs ul .active{
+  font-weight: bold;
+  font-size: 18px;
+}

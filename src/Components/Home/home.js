@@ -30,6 +30,7 @@ export default function Home(props) {
   const [repositoryData, setRepositoryData] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [histogram, setHistogram] = useState([]);
+  const [toggle, setToggle] = useState("repository");
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
@@ -207,179 +208,352 @@ export default function Home(props) {
   console.log(`company id : ${JSON.stringify(props)}`);
 
   return (
-    <div className="home-container">
-      <div className="left">
-        <div className="container">
-          <h1 className="title">Welcome to Secure Repository!</h1>
-          <p className="message">
-            Please click the 'Register' button to Secure your Repository
-          </p>
-          <Link to="/register">
-            <button className="register-button">Register</button>
-          </Link>
-          {selectedRepository && (
-            <button
-              className="register-button"
-              onClick={() =>
-                exportPDF(
-                  "pdf",
-                  `Reports for ${
-                    selectedRepository.label +
-                    " " +
-                    new Date().toJSON().slice(0, 10).replace(/-/g, "/")
-                  }`,
-                  "home-container"
-                )
-              }
-            >
-              Download Page
-            </button>
-          )}
-        </div>
-
-        <div className="container">
-          <h3>Please select Repository to view Insights On</h3>
-          <label htmlFor="repository" style={{ marginBottom: "20px" }}>
-            Choose a repository:{" "}
-          </label>
-          <Select
-            options={repositoryNames.map((opt) => ({ label: opt, value: opt }))}
-            value={selectedRepository}
-            onChange={handleSelectChange}
-          />
-        </div>
-
-        <div className="container-pie bar">
-          <h3>Pie Chart showing pushers in this repository</h3>
-          {!selectedRepository && (
-            <h4 style={{ color: "red", fontWeight: "600" }}>
-              Please select a repository
-            </h4>
-          )}
-          {selectedRepository && (
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart style={{ position: "relative" }}>
-                <Pie
-                  dataKey="value"
-                  isAnimationActive={false}
-                  data={repositoryData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#164B60"
-                  label
-                />
-                <Tooltip />
-                <Legend
-                  layout="vertical"
-                  verticalAlign="middle"
-                  align="right"
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          )}
-        </div>
+    <>
+      <div className="tabs">
+        <ul>
+          <li
+            className={toggle === "repository" && "active"}
+            onClick={() => setToggle("repository")}
+          >
+            Search by repository
+          </li>
+          <li
+            className={toggle === "user" && "active"}
+            onClick={() => setToggle("user")}
+          >
+            Search by User ID
+          </li>
+        </ul>
       </div>
-      <div className="right">
-        <div className="container bar">
-          <h3>
-            Bar chart showing commits by{" "}
-            {selectedPushers?.label
-              ? selectedPushers.label
-              : "different contributors"}
-          </h3>
-          {!selectedRepository && (
-            <h4 style={{ color: "red", fontWeight: "600" }}>
-              Please select a repository
-            </h4>
-          )}
-          <h4 style={{ marginTop: "50px" }}>
-            Please select a contributor in this repository
-          </h4>
-          <label htmlFor="repository">Choose a Pusher: </label>
-          <Select
-            options={pushers.map((opt) => ({ label: opt, value: opt }))}
-            value={selectedPushers}
-            onChange={handlePusherChange}
-          />
+      {toggle === "repository" ? (
+        <div className="home-container">
+          <div className="left">
+            <div className="container">
+              <h1 className="title">Welcome to Secure Repository!</h1>
+              <p className="message">
+                Please click the 'Register' button to Secure your Repository
+              </p>
+              <Link to="/register">
+                <button className="register-button">Register</button>
+              </Link>
+              {selectedRepository && (
+                <button
+                  className="register-button"
+                  onClick={() =>
+                    exportPDF(
+                      "pdf",
+                      `Reports for ${
+                        selectedRepository.label +
+                        " " +
+                        new Date().toJSON().slice(0, 10).replace(/-/g, "/")
+                      }`,
+                      "home-container"
+                    )
+                  }
+                >
+                  Download Page
+                </button>
+              )}
+            </div>
 
-          {selectedRepository && (
-            <ResponsiveContainer
-              width="100%"
-              height={300}
-              style={{ marginTop: "200px" }}
-            >
-              <BarChart
-                data={chartData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-                barSize={20}
-              >
-                <XAxis
-                  dataKey="name"
-                  scale="point"
-                  padding={{ left: 10, right: 10 }}
-                />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Bar
-                  dataKey="commits"
-                  fill="#164B60"
-                  background={{ fill: "#eee" }}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
+            <div className="container">
+              <h3>Please select Repository to view Insights On</h3>
+              <label htmlFor="repository" style={{ marginBottom: "20px" }}>
+                Choose a repository:{" "}
+              </label>
+              <Select
+                options={repositoryNames.map((opt) => ({
+                  label: opt,
+                  value: opt,
+                }))}
+                value={selectedRepository}
+                onChange={handleSelectChange}
+              />
+            </div>
+
+            <div className="container-pie bar">
+              <h3>Pie Chart showing pushers in this repository</h3>
+              {!selectedRepository && (
+                <h4 style={{ color: "red", fontWeight: "600" }}>
+                  Please select a repository
+                </h4>
+              )}
+              {selectedRepository && (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart style={{ position: "relative" }}>
+                    <Pie
+                      dataKey="value"
+                      isAnimationActive={false}
+                      data={repositoryData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#164B60"
+                      label
+                    />
+                    <Tooltip />
+                    <Legend
+                      layout="vertical"
+                      verticalAlign="middle"
+                      align="right"
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+          </div>
+          <div className="right">
+            <div className="container bar">
+              <h3>
+                Bar chart showing commits by{" "}
+                {selectedPushers?.label
+                  ? selectedPushers.label
+                  : "different contributors"}
+              </h3>
+              {!selectedRepository && (
+                <h4 style={{ color: "red", fontWeight: "600" }}>
+                  Please select a repository
+                </h4>
+              )}
+              <h4 style={{ marginTop: "50px" }}>
+                Please select a contributor in this repository
+              </h4>
+              <label htmlFor="repository">Choose a Pusher: </label>
+              <Select
+                options={pushers.map((opt) => ({ label: opt, value: opt }))}
+                value={selectedPushers}
+                onChange={handlePusherChange}
+              />
+
+              {selectedRepository && (
+                <ResponsiveContainer
+                  width="100%"
+                  height={300}
+                  style={{ marginTop: "200px" }}
+                >
+                  <BarChart
+                    data={chartData}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    barSize={20}
+                  >
+                    <XAxis
+                      dataKey="name"
+                      scale="point"
+                      padding={{ left: 10, right: 10 }}
+                    />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Bar
+                      dataKey="commits"
+                      fill="#164B60"
+                      background={{ fill: "#eee" }}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+            <div className="container bar histogram">
+              <h3>
+                Histogram file distribution by{" "}
+                {selectedPushers?.label
+                  ? selectedPushers.label
+                  : "different contributors"}
+              </h3>
+              {!selectedRepository && (
+                <h4 style={{ color: "red", fontWeight: "600" }}>
+                  Please select a repository
+                </h4>
+              )}
+              {selectedRepository && (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={histogram}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    barSize={20}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend
+                      layout="horizontal"
+                      align="center"
+                      verticalAlign="bottom"
+                    />
+                    <Bar dataKey="uv" fill="#164B60" name="Added Files" />
+                    <Bar dataKey="pv" fill="orange" name="Modified Files" />
+                    <Bar dataKey="qv" fill="red" name="Deleted Files" />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="container bar histogram">
-          <h3>
-            Histogram file distribution by{" "}
-            {selectedPushers?.label
-              ? selectedPushers.label
-              : "different contributors"}
-          </h3>
-          {!selectedRepository && (
-            <h4 style={{ color: "red", fontWeight: "600" }}>
-              Please select a repository
-            </h4>
-          )}
-          {selectedRepository && (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                width={500}
-                height={300}
-                data={histogram}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-                barSize={20}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend
-                  layout="horizontal"
-                  align="center"
-                  verticalAlign="bottom"
-                />
-                <Bar dataKey="uv" fill="#164B60" name="Added Files" />
-                <Bar dataKey="pv" fill="orange" name="Modified Files" />
-                <Bar dataKey="qv" fill="red" name="Deleted Files" />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
+      ) : (
+        <div className="home-container">
+          <div className="left">
+            <div className="container">
+              <h3>Please select UserID to view Insights On</h3>
+              <label htmlFor="repository" style={{ marginBottom: "20px" }}>
+                Choose a user:{" "}
+              </label>
+              <Select
+                options={repositoryNames.map((opt) => ({
+                  label: opt,
+                  value: opt,
+                }))}
+                value={selectedRepository}
+                onChange={handleSelectChange}
+              />
+            </div>
+
+            <div className="container-pie bar">
+              <h3>Pie Chart showing userID contribution to  different repositories</h3>
+              {!selectedRepository && (
+                <h4 style={{ color: "red", fontWeight: "600" }}>
+                  Please select a repository
+                </h4>
+              )}
+              {selectedRepository && (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart style={{ position: "relative" }}>
+                    <Pie
+                      dataKey="value"
+                      isAnimationActive={false}
+                      data={repositoryData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#164B60"
+                      label
+                    />
+                    <Tooltip />
+                    <Legend
+                      layout="vertical"
+                      verticalAlign="middle"
+                      align="right"
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+          </div>
+          <div className="right">
+            <div className="container bar">
+              <h3>
+                Bar chart showing commits by{" "}
+                {selectedPushers?.label
+                  ? selectedPushers.label
+                  : "different contributors"}
+              </h3>
+              {!selectedRepository && (
+                <h4 style={{ color: "red", fontWeight: "600" }}>
+                  Please select a repository
+                </h4>
+              )}
+              <h4 style={{ marginTop: "50px" }}>
+                Please select a contributor in this repository
+              </h4>
+              <label htmlFor="repository">Choose a Pusher: </label>
+              <Select
+                options={pushers.map((opt) => ({ label: opt, value: opt }))}
+                value={selectedPushers}
+                onChange={handlePusherChange}
+              />
+
+              {selectedRepository && (
+                <ResponsiveContainer
+                  width="100%"
+                  height={300}
+                  style={{ marginTop: "200px" }}
+                >
+                  <BarChart
+                    data={chartData}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    barSize={20}
+                  >
+                    <XAxis
+                      dataKey="name"
+                      scale="point"
+                      padding={{ left: 10, right: 10 }}
+                    />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Bar
+                      dataKey="commits"
+                      fill="#164B60"
+                      background={{ fill: "#eee" }}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+            <div className="container bar histogram">
+              <h3>
+                Histogram file distribution by{" "}
+                {selectedPushers?.label
+                  ? selectedPushers.label
+                  : "different contributors"}
+              </h3>
+              {!selectedRepository && (
+                <h4 style={{ color: "red", fontWeight: "600" }}>
+                  Please select a repository
+                </h4>
+              )}
+              {selectedRepository && (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={histogram}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    barSize={20}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend
+                      layout="horizontal"
+                      align="center"
+                      verticalAlign="bottom"
+                    />
+                    <Bar dataKey="uv" fill="#164B60" name="Added Files" />
+                    <Bar dataKey="pv" fill="orange" name="Modified Files" />
+                    <Bar dataKey="qv" fill="red" name="Deleted Files" />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
