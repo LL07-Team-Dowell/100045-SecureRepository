@@ -11,11 +11,11 @@ export default function RegisterForm() {
   });
   const [buttonPopup, setButtonPopup] = React.useState(false);
 
-  const [setStatus] = React.useState(null);
+  const [status, setStatus] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [webHookLink, setWebHookLink] = React.useState(false);
 
-  const [setError] = React.useState(" ");
+  const [error, setError] = React.useState(" ");
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -37,7 +37,7 @@ export default function RegisterForm() {
       setError("link");
     } else if (!re2.test(formData.name)) {
       alert("Password Required");
-      setError("name must start with a character");
+      // setError("name must start with a character");
     } else {
       setError("");
       console.log("no error");
@@ -99,17 +99,17 @@ export default function RegisterForm() {
         <button onClick={handleSubmit}>Submit</button>
       </form>
       {/* loader after submit - popup after request is finished */}
-        <Popup
-          trigger={buttonPopup}
-          setTrigger={setButtonPopup}
-          form={buttonPopup}
-          copy={true}
-        >
-          <div className="content">
-            <p>{webHookLink}</p>
-          </div>
-        </Popup>
-    {loading && <Loader />}
+      <Popup
+        trigger={buttonPopup}
+        setTrigger={setButtonPopup}
+        form={buttonPopup}
+        copy={true}
+      >
+        <div className="content">
+          <p>{webHookLink}</p>
+        </div>
+      </Popup>
+      {loading && <Loader />}
     </div>
   );
 }
