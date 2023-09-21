@@ -24,11 +24,17 @@ export default function Home(props) {
   const [state] = useStateValue();
   const [data, setData] = useState([]);
   const [repositoryNames, setRepositoryNames] = useState([]);
+  const [userRepositoryNames, setUserRepositoryNames] = useState([]);
+  const [allpushers, setAllPushers] = useState([]);
   const [pushers, setPushers] = useState([]);
   const [selectedRepository, setSelectedRepository] = useState();
+  const [selectedUser, setSelectedUser] = useState();
+  const [selectedUserRepository, setSelectedUserRepository] = useState();
   const [selectedPushers, setSelectedPushers] = useState();
   const [repositoryData, setRepositoryData] = useState([]);
+  const [repositoryUserData, setRepositoryUserData] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [chartUserData, setChartUserData] = useState([]);
   const [histogram, setHistogram] = useState([]);
   const [toggle, setToggle] = useState("repository");
   const [portfolio] = state.user?.portfolio_info?.filter(
@@ -40,7 +46,7 @@ export default function Home(props) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
+          `https://100045.pythonanywhere.com/reports/get-statistics/6385c0f18eca0fb652c94561/`
         );
         if (response.data.data.length === 0) {
           console.log("error");
@@ -52,6 +58,22 @@ export default function Home(props) {
             new Set(response.data.data.map((item) => item.repository_name))
           );
 
+          const allPushers = response.data.data.reduce((pushers, item) => {
+            const metadata = item.metadata;
+            if (metadata && Array.isArray(metadata)) {
+              metadata.forEach((meta) => {
+                const pusher = meta.pusher;
+                if (pusher && !pushers.includes(pusher)) {
+                  pushers.push(pusher);
+                }
+              });
+            }
+            return pushers;
+          }, []);
+
+          setAllPushers(allPushers);
+
+          setAllPushers(allPushers);
           setRepositoryNames(uniqueRepositoryNames);
         }
       } catch (error) {
@@ -71,7 +93,114 @@ export default function Home(props) {
     setSelectedPushers(selectedPushers);
   };
 
+  const handleUserChange = (selectedUser) => {
+    setSelectedUser(selectedUser);
+  };
+
   React.useEffect(() => {
+    if (data.length > 0 && selectedUser) {
+      // pie chart logic - userID loop
+
+      const pusherCommits = {};
+      data.forEach((item) => {
+        const repositoryName = item.repository_name;
+        const metadata = item.metadata;
+
+        if (metadata && Array.isArray(metadata)) {
+          metadata.forEach((meta) => {
+            const pusher = meta.pusher;
+            if (pusher) {
+              if (!pusherCommits[pusher]) {
+                pusherCommits[pusher] = {};
+              }
+              if (!pusherCommits[pusher][repositoryName]) {
+                pusherCommits[pusher][repositoryName] = 1;
+              } else {
+                pusherCommits[pusher][repositoryName]++;
+              }
+            }
+          });
+        }
+      });
+
+      const commitCountsForTargetPusher = pusherCommits[selectedUser.label];
+
+      // Initialize an empty array to store the commit counts as objects
+      const commitCountsArray = [];
+
+      // Check if the target pusher exists in the data
+      if (commitCountsForTargetPusher) {
+        // Convert the nested object into an array of objects
+        for (const repositoryName in commitCountsForTargetPusher) {
+          commitCountsArray.push({
+            name: repositoryName,
+            commits: commitCountsForTargetPusher[repositoryName],
+            fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
+          });
+        }
+
+        // Now, commitCountsArray contains the commit counts as an array of objects
+      }
+
+      // Now, pusherCommits object contains the number of commits for each pusher in each repository
+      setChartUserData(commitCountsArray);
+
+      const userRepositories = commitCountsArray.map((item) => ({
+        label: item.name,
+        value: item.name,
+      }));
+      setUserRepositoryNames(userRepositories);
+
+      // USER BARCHART LOGIC
+      const currentYear = new Date().getFullYear();
+
+      // Filter commits made by the selected pusher in the current year
+      const commitsThisYear = data.filter((item) => {
+        item.metadata.forEach((meta) => {
+          const pusher = meta.pusher;
+          const itemYear = moment(meta).year();
+          const itemMonth = moment(meta).month();
+          return (
+            itemYear === currentYear && item.metadata[0].pusher === selectedUser // Replace with the actual pusher you're interested in
+          );
+        });
+      });
+
+      // Check if it's the current year and the selected pusher
+
+      // Initialize an array to store the number of commits for each month
+      const commitsPerMonth = Array(12).fill(0);
+      commitsThisYear.forEach((item) => {
+        const month = moment(item.data).month();
+        commitsPerMonth[month]++;
+      });
+      console.log(commitsPerMonth);
+
+      // Count the commits for each month
+      commitsThisYear.forEach((item) => {
+        const itemMonth = moment(item.metadata[0].data).month();
+        commitsPerMonth[itemMonth]++;
+      });
+
+      // Prepare the data for the bar chart
+      const chartData = [
+        { name: "Jan", commits: commitsPerMonth[0] },
+        { name: "Feb", commits: commitsPerMonth[1] },
+        { name: "Mar", commits: commitsPerMonth[2] },
+        { name: "Apr", commits: commitsPerMonth[3] },
+        { name: "May", commits: commitsPerMonth[4] },
+        { name: "Jun", commits: commitsPerMonth[5] },
+        { name: "Jul", commits: commitsPerMonth[6] },
+        { name: "Aug", commits: commitsPerMonth[7] },
+        { name: "Sep", commits: commitsPerMonth[8] },
+        { name: "Oct", commits: commitsPerMonth[9] },
+        { name: "Nov", commits: commitsPerMonth[10] },
+        { name: "Dec", commits: commitsPerMonth[11] },
+      ];
+
+      setRepositoryUserData(chartData);
+    }
+
     if (data.length > 0 && selectedRepository) {
       const selectedItem = data.find(
         (item) => item.repository_name === selectedRepository.label
@@ -181,7 +310,7 @@ export default function Home(props) {
         setHistogram(processedData);
       }
     }
-  }, [selectedRepository, data, selectedPushers]);
+  }, [selectedRepository, data, selectedPushers, selectedUser]);
 
   const exportPDF = (type, name, element) => {
     html2canvas(document.querySelector(`.${element}`)).then((canvas) => {
@@ -205,20 +334,18 @@ export default function Home(props) {
     });
   };
 
-  console.log(`company id : ${JSON.stringify(props)}`);
-
   return (
     <>
       <div className="tabs">
         <ul>
           <li
-            className={toggle === "repository" && "active"}
+            className={toggle === "repository" ? "active" : ""}
             onClick={() => setToggle("repository")}
           >
             Search by repository
           </li>
           <li
-            className={toggle === "user" && "active"}
+            className={toggle === "user" ? "active" : ""}
             onClick={() => setToggle("user")}
           >
             Search by User ID
@@ -407,34 +534,58 @@ export default function Home(props) {
         <div className="home-container">
           <div className="left">
             <div className="container">
+              {selectedUser && (
+                <button
+                  className="register-button"
+                  onClick={() =>
+                    exportPDF(
+                      "pdf",
+                      `Reports for ${
+                        selectedRepository.label +
+                        " " +
+                        new Date().toJSON().slice(0, 10).replace(/-/g, "/")
+                      }`,
+                      "home-container"
+                    )
+                  }
+                  style={{ marginBottom: "20px" }}
+                >
+                  Download Page
+                </button>
+              )}
               <h3>Please select UserID to view Insights On</h3>
               <label htmlFor="repository" style={{ marginBottom: "20px" }}>
                 Choose a user:{" "}
               </label>
               <Select
-                options={repositoryNames.map((opt) => ({
+                options={allpushers.map((opt) => ({
                   label: opt,
                   value: opt,
                 }))}
-                value={selectedRepository}
-                onChange={handleSelectChange}
+                value={selectedUser}
+                onChange={handleUserChange}
               />
             </div>
 
             <div className="container-pie bar">
-              <h3>Pie Chart showing userID contribution to  different repositories</h3>
-              {!selectedRepository && (
+              <h3>
+                Pie Chart showing{" "}
+                {selectedUser?.label ? selectedUser.label : "userID"}
+                {"'s "}
+                contribution to different repositories
+              </h3>
+              {!selectedUser && (
                 <h4 style={{ color: "red", fontWeight: "600" }}>
-                  Please select a repository
+                  Please select a User
                 </h4>
               )}
-              {selectedRepository && (
+              {selectedUser && (
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart style={{ position: "relative" }}>
                     <Pie
-                      dataKey="value"
+                      dataKey="commits"
                       isAnimationActive={false}
-                      data={repositoryData}
+                      data={chartUserData}
                       cx="50%"
                       cy="50%"
                       outerRadius={80}
@@ -456,33 +607,32 @@ export default function Home(props) {
             <div className="container bar">
               <h3>
                 Bar chart showing commits by{" "}
-                {selectedPushers?.label
-                  ? selectedPushers.label
-                  : "different contributors"}
+                {selectedUser?.label ? selectedUser.label : "userID"} in
+                different repositories
               </h3>
-              {!selectedRepository && (
+              {!selectedUser && (
                 <h4 style={{ color: "red", fontWeight: "600" }}>
                   Please select a repository
                 </h4>
               )}
-              <h4 style={{ marginTop: "50px" }}>
-                Please select a contributor in this repository
-              </h4>
-              <label htmlFor="repository">Choose a Pusher: </label>
+              <h4 style={{ marginTop: "50px" }}>Please select a repository</h4>
+              <label htmlFor="repository">Choose a Repository: </label>
               <Select
-                options={pushers.map((opt) => ({ label: opt, value: opt }))}
-                value={selectedPushers}
-                onChange={handlePusherChange}
+                options={userRepositoryNames}
+                value={selectedUserRepository}
+                onChange={(selectedUserRepository) =>
+                  setSelectedUserRepository(selectedUserRepository)
+                }
               />
 
-              {selectedRepository && (
+              {selectedUser && (
                 <ResponsiveContainer
                   width="100%"
                   height={300}
                   style={{ marginTop: "200px" }}
                 >
                   <BarChart
-                    data={chartData}
+                    data={repositoryUserData}
                     margin={{
                       top: 5,
                       right: 30,
@@ -516,40 +666,6 @@ export default function Home(props) {
                   ? selectedPushers.label
                   : "different contributors"}
               </h3>
-              {!selectedRepository && (
-                <h4 style={{ color: "red", fontWeight: "600" }}>
-                  Please select a repository
-                </h4>
-              )}
-              {selectedRepository && (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart
-                    width={500}
-                    height={300}
-                    data={histogram}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                    barSize={20}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend
-                      layout="horizontal"
-                      align="center"
-                      verticalAlign="bottom"
-                    />
-                    <Bar dataKey="uv" fill="#164B60" name="Added Files" />
-                    <Bar dataKey="pv" fill="orange" name="Modified Files" />
-                    <Bar dataKey="qv" fill="red" name="Deleted Files" />
-                  </BarChart>
-                </ResponsiveContainer>
-              )}
             </div>
           </div>
         </div>
