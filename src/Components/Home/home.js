@@ -168,10 +168,10 @@ export default function Home(props) {
             ),
           };
         });
+      console.log(selectedItem);
 
       const commitCounts = Array(12).fill(0);
 
-      console.log(`selectedItems: ${JSON.stringify(selectedItem)}`);
       selectedItem.forEach((item) => {
         item.metadata.forEach((meta) => {
           const month = moment(meta.data).month();
@@ -183,8 +183,6 @@ export default function Home(props) {
           commitCounts[month]++;
         });
       });
-
-      console.log(commitCounts);
 
       // Prepare the data for the bar chart
       const chartData = [
@@ -208,25 +206,42 @@ export default function Home(props) {
 
       // HISTOGRAM LOGIC
       // Check if selectedItem and selectedPushers are defined
+      if (selectedUser) {
+        const commitsByMonth = selectedItem.reduce((acc, commit) => {
+          commit?.metadata.forEach((commit)=>  {if (commit?.pusher === selectedUser.label) {
+         
+            const month = new Date(commit?.data).toLocaleString(
+              "default",
+              {
+                month: "long",
+              }
+            );
+            acc[month] = acc[month] || { added: 0, modified: 0, removed: 0 };
+            acc[month].added += commit.created_files;
+            acc[month].modified += commit.modified_files;
+            acc[month].removed += commit.removed_files;
+          }})
+        
+          return acc;
+        }, {});
 
-      
-      const processedData =        
-        Object.entries(commitCounts).map(([name, commits]) => ({
-          name: name,
-          uv: commits.reduce(
-            (total, commit) => total + commit.created_files,
-            0
-          ),
-          pv: commits.reduce(
-            (total, commit) => total + commit.modified_files,
-            0
-          ),
-          qv: commits.reduce(
-            (total, commit) => total + commit.removed_files,
-            0
-          ),
-        }));
-      setUserHistogram(processedData);
+        // Convert commitsByMonth into the desired format
+        const processedData = Object.entries(commitsByMonth).map(
+          ([month, commits]) => ({
+            name: month,
+            uv: commits.added,
+            pv: commits.modified,
+            qv: commits.removed,
+          })
+        );
+
+        // processedData now contains the number of added, modified, and removed files per month
+        console.log(`processed ${JSON.stringify(processedData)}`);
+        setUserHistogram(processedData);
+      } else {
+        // Handle the case where selectedItem or selectedPushers is not defined
+        console.log("No data available.");
+      }
     }
 
     if (data.length > 0 && selectedRepository) {
@@ -334,7 +349,7 @@ export default function Home(props) {
               0
             ),
           }));
-
+        console.log(processedData);
         setHistogram(processedData);
       }
     }
@@ -369,6 +384,7 @@ export default function Home(props) {
   };
 
   console.log("hi");
+  console.log("histogram" + userHistogram);
 
   return (
     <>
@@ -746,6 +762,5 @@ export default function Home(props) {
     </>
   );
 }
-
 
 //32 tasks
