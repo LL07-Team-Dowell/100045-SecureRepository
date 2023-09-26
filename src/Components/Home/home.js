@@ -36,6 +36,7 @@ export default function Home(props) {
   const [chartData, setChartData] = useState([]);
   const [chartUserData, setChartUserData] = useState([]);
   const [histogram, setHistogram] = useState([]);
+  const [userHistogram, setUserHistogram] = useState([]);
   const [toggle, setToggle] = useState("repository");
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
@@ -95,6 +96,7 @@ export default function Home(props) {
 
   const handleUserChange = (selectedUser) => {
     setSelectedUser(selectedUser);
+    setSelectedUserRepository(null);
   };
 
   React.useEffect(() => {
@@ -152,53 +154,79 @@ export default function Home(props) {
       setUserRepositoryNames(userRepositories);
 
       // USER BARCHART LOGIC
-      const currentYear = new Date().getFullYear();
+      const selectedItem = data
+        .filter(
+          (item) =>
+            !selectedUserRepository ||
+            item.repository_name === selectedUserRepository.label
+        ) // Filter by selected repository
+        .map((item) => {
+          return {
+            repository_name: item.repository_name,
+            metadata: item.metadata.filter(
+              (meta) => meta.pusher === selectedUser.label
+            ),
+          };
+        });
 
-      // Filter commits made by the selected pusher in the current year
-      const commitsThisYear = data.filter((item) => {
+      const commitCounts = Array(12).fill(0);
+
+      console.log(`selectedItems: ${JSON.stringify(selectedItem)}`);
+      selectedItem.forEach((item) => {
         item.metadata.forEach((meta) => {
-          const pusher = meta.pusher;
-          const itemYear = moment(meta).year();
-          const itemMonth = moment(meta).month();
-          return (
-            itemYear === currentYear && item.metadata[0].pusher === selectedUser // Replace with the actual pusher you're interested in
-          );
+          const month = moment(meta.data).month();
+
+          if (!commitCounts[month]) {
+            commitCounts[month] = 0;
+          }
+
+          commitCounts[month]++;
         });
       });
 
-      // Check if it's the current year and the selected pusher
-
-      // Initialize an array to store the number of commits for each month
-      const commitsPerMonth = Array(12).fill(0);
-      commitsThisYear.forEach((item) => {
-        const month = moment(item.data).month();
-        commitsPerMonth[month]++;
-      });
-      console.log(commitsPerMonth);
-
-      // Count the commits for each month
-      commitsThisYear.forEach((item) => {
-        const itemMonth = moment(item.metadata[0].data).month();
-        commitsPerMonth[itemMonth]++;
-      });
+      console.log(commitCounts);
 
       // Prepare the data for the bar chart
       const chartData = [
-        { name: "Jan", commits: commitsPerMonth[0] },
-        { name: "Feb", commits: commitsPerMonth[1] },
-        { name: "Mar", commits: commitsPerMonth[2] },
-        { name: "Apr", commits: commitsPerMonth[3] },
-        { name: "May", commits: commitsPerMonth[4] },
-        { name: "Jun", commits: commitsPerMonth[5] },
-        { name: "Jul", commits: commitsPerMonth[6] },
-        { name: "Aug", commits: commitsPerMonth[7] },
-        { name: "Sep", commits: commitsPerMonth[8] },
-        { name: "Oct", commits: commitsPerMonth[9] },
-        { name: "Nov", commits: commitsPerMonth[10] },
-        { name: "Dec", commits: commitsPerMonth[11] },
+        { name: "Jan", commits: commitCounts[0] },
+        { name: "Feb", commits: commitCounts[1] },
+        { name: "Mar", commits: commitCounts[2] },
+        { name: "Apr", commits: commitCounts[3] },
+        { name: "May", commits: commitCounts[4] },
+        { name: "Jun", commits: commitCounts[5] },
+        { name: "Jul", commits: commitCounts[6] },
+        { name: "Aug", commits: commitCounts[7] },
+        { name: "Sep", commits: commitCounts[8] },
+        { name: "Oct", commits: commitCounts[9] },
+        { name: "Nov", commits: commitCounts[10] },
+        { name: "Dec", commits: commitCounts[11] },
       ];
 
+      // Now, chartData contains the commits per month for the selected pusher in the selected repository
+
       setRepositoryUserData(chartData);
+
+      // HISTOGRAM LOGIC
+      // Check if selectedItem and selectedPushers are defined
+
+      
+      const processedData =        
+        Object.entries(commitCounts).map(([name, commits]) => ({
+          name: name,
+          uv: commits.reduce(
+            (total, commit) => total + commit.created_files,
+            0
+          ),
+          pv: commits.reduce(
+            (total, commit) => total + commit.modified_files,
+            0
+          ),
+          qv: commits.reduce(
+            (total, commit) => total + commit.removed_files,
+            0
+          ),
+        }));
+      setUserHistogram(processedData);
     }
 
     if (data.length > 0 && selectedRepository) {
@@ -310,7 +338,13 @@ export default function Home(props) {
         setHistogram(processedData);
       }
     }
-  }, [selectedRepository, data, selectedPushers, selectedUser]);
+  }, [
+    selectedRepository,
+    data,
+    selectedPushers,
+    selectedUser,
+    selectedUserRepository,
+  ]);
 
   const exportPDF = (type, name, element) => {
     html2canvas(document.querySelector(`.${element}`)).then((canvas) => {
@@ -333,6 +367,8 @@ export default function Home(props) {
       }
     });
   };
+
+  console.log("hi");
 
   return (
     <>
@@ -541,7 +577,7 @@ export default function Home(props) {
                     exportPDF(
                       "pdf",
                       `Reports for ${
-                        selectedRepository.label +
+                        selectedUser.label +
                         " " +
                         new Date().toJSON().slice(0, 10).replace(/-/g, "/")
                       }`,
@@ -607,8 +643,10 @@ export default function Home(props) {
             <div className="container bar">
               <h3>
                 Bar chart showing commits by{" "}
-                {selectedUser?.label ? selectedUser.label : "userID"} in
-                different repositories
+                {selectedUser?.label ? selectedUser.label : "userID"} in{" "}
+                {selectedUserRepository?.label
+                  ? selectedUserRepository.label
+                  : "different repositories"}
               </h3>
               {!selectedUser && (
                 <h4 style={{ color: "red", fontWeight: "600" }}>
@@ -661,11 +699,46 @@ export default function Home(props) {
             </div>
             <div className="container bar histogram">
               <h3>
-                Histogram file distribution by{" "}
-                {selectedPushers?.label
-                  ? selectedPushers.label
-                  : "different contributors"}
+                Histogram showing file distributions by{" "}
+                {selectedUser?.label ? selectedUser.label : "userID"} in{" "}
+                {selectedUserRepository?.label
+                  ? selectedUserRepository.label
+                  : "different repositories"}
               </h3>
+              {!selectedUser && (
+                <h4 style={{ color: "red", fontWeight: "600" }}>
+                  Please select a repository
+                </h4>
+              )}
+              {selectedUser && (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={userHistogram}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    barSize={20}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend
+                      layout="horizontal"
+                      align="center"
+                      verticalAlign="bottom"
+                    />
+                    <Bar dataKey="uv" fill="#164B60" name="Added Files" />
+                    <Bar dataKey="pv" fill="orange" name="Modified Files" />
+                    <Bar dataKey="qv" fill="red" name="Deleted Files" />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
             </div>
           </div>
         </div>
@@ -673,3 +746,6 @@ export default function Home(props) {
     </>
   );
 }
+
+
+//32 tasks
