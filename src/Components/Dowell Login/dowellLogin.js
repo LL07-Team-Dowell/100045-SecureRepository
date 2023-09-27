@@ -17,7 +17,7 @@ const getUserInfoOther = async (session_id, dispatch) => {
     url: "https://100093.pythonanywhere.com/api/userinfo/",
     data: session,
   });
-  sessionStorage.setItem("userinfo", JSON.stringify(res.data));
+  sessionStorage.setItem("userInfo", JSON.stringify(res.data));
   dispatch({
     type: "SET_USER",
     user: res.data,

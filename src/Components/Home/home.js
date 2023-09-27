@@ -47,7 +47,7 @@ export default function Home(props) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
+          `https://100045.pythonanywhere.com/reports/get-statistics/6385c0f18eca0fb652c94561/`
         );
         if (response.data.data.length === 0) {
           console.log("error");
@@ -208,18 +208,20 @@ export default function Home(props) {
       // Check if selectedItem and selectedPushers are defined
       if (selectedUser) {
         const commitsByMonth = selectedItem.reduce((acc, commit) => {
-          commit?.metadata.forEach((commit) => {
-            if (commit?.pusher === selectedUser.label) {
-              const month = new Date(commit?.data).toLocaleString("default", {
+          commit?.metadata.forEach((commit)=>  {if (commit?.pusher === selectedUser.label) {
+         
+            const month = new Date(commit?.data).toLocaleString(
+              "default",
+              {
                 month: "long",
-              });
-              acc[month] = acc[month] || { added: 0, modified: 0, removed: 0 };
-              acc[month].added += commit.created_files;
-              acc[month].modified += commit.modified_files;
-              acc[month].removed += commit.removed_files;
-            }
-          });
-
+              }
+            );
+            acc[month] = acc[month] || { added: 0, modified: 0, removed: 0 };
+            acc[month].added += commit.created_files;
+            acc[month].modified += commit.modified_files;
+            acc[month].removed += commit.removed_files;
+          }})
+        
           return acc;
         }, {});
 

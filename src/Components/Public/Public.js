@@ -10,13 +10,11 @@ export default function Public() {
   const [state] = useStateValue();
   const [link, setLinks] = React.useState([]);
   const [toggle, setToggle] = React.useState(0);
-  // const [portfolio] = state.user?.portfolio_info?.filter(
-  //   (item) => item?.product === "Secure Repositories"
-  // );
 
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
+
   const [linkNo, setLinkNo] = React.useState(0);
   // const [qrIDS, setQrIDS] = React.useState([]);
   const [selectLinks, setSelectLinks] = React.useState([]);
@@ -137,194 +135,189 @@ export default function Public() {
   console.log(`unused ${unusedlinks}`);
 
   return (
-      <div
-        className="product"
-        style={{ maxWidth: "500px", margin: "10px auto" }}
-      >
-        <div className="container">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <AddBoxOutlined style={{ fontSize: "20px", color: "green" }} />
-            <h3>Create a product link</h3>
-          </div>
-
-          <p style={{ display: "block" }}>
-            Create a product link to share this amazing product.
-          </p>
-          <button onClick={handleClick}>Generate Link</button>
+    <div className="product" style={{ maxWidth: "500px", margin: "10px auto" }}>
+      <div className="container">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <AddBoxOutlined style={{ fontSize: "20px", color: "green" }} />
+          <h3>Create a product link</h3>
         </div>
-        <Popup trigger={buttonPopup} setTrigger={setButtonPopup} copy={false}>
-          {toggle === "1" ? (
-            <div className="content">
-              <p
-                style={{ color: "#555", fontWeight: "bold" }}
-                onClick={() => setToggle(false)}
-              >
-                {"<"}-Back
-              </p>
-              <h3 style={{ marginBottom: "10px" }}>Create Custom Name</h3>
-              <p style={{ color: "#555", marginBottom: "20px" }}>
-                One last step add a custom name for this link
-              </p>
 
-              <label>
-                Enter a name for link <span style={{ color: "red" }}>*</span>
-                <input
-                  type="text"
-                  placeholder="custom link Name"
-                  style={{
-                    display: "block",
-                    border: "1px solid #555",
-                    outline: "none",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    width: "300px",
-                    marginTop: "8px",
-                  }}
-                  value={customName}
-                  onChange={(event) => setcustomName(event.target.value)}
-                />
-              </label>
-              <button
-                onClick={() => {
-                  customName === ""
-                    ? alert("please enter a custom Name")
-                    : createMaster(selectLinks, customName) && setToggle("2");
+        <p style={{ display: "block" }}>
+          Create a product link to share this amazing product.
+        </p>
+        <button onClick={handleClick}>Generate Link</button>
+      </div>
+      <Popup trigger={buttonPopup} setTrigger={setButtonPopup} copy={false}>
+        {toggle === "1" ? (
+          <div className="content">
+            <p
+              style={{ color: "#555", fontWeight: "bold" }}
+              onClick={() => setToggle(false)}
+            >
+              {"<"}-Back
+            </p>
+            <h3 style={{ marginBottom: "10px" }}>Create Custom Name</h3>
+            <p style={{ color: "#555", marginBottom: "20px" }}>
+              One last step add a custom name for this link
+            </p>
+
+            <label>
+              Enter a name for link <span style={{ color: "red" }}>*</span>
+              <input
+                type="text"
+                placeholder="custom link Name"
+                style={{
+                  display: "block",
+                  border: "1px solid #555",
+                  outline: "none",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  width: "300px",
+                  marginTop: "8px",
                 }}
+                value={customName}
+                onChange={(event) => setcustomName(event.target.value)}
+              />
+            </label>
+            <button
+              onClick={() => {
+                customName === ""
+                  ? alert("please enter a custom Name")
+                  : createMaster(selectLinks, customName) && setToggle("2");
+              }}
+            >
+              Generate Link
+            </button>
+          </div>
+        ) : toggle === "2" ? (
+          message &&
+          qrCode &&
+          masterLink && (
+            <div style={{ marginTop: "60px" }} className="api-result">
+              <h4>Created Successfully! {message}</h4>
+              <p>
+                <b>Master Link: </b>
+                {masterLink}
+                <CopyToClipboard
+                  text={masterLink}
+                  onCopy={() => alert("Master link copied succesfully")}
+                >
+                  <FileCopy className="icon" />
+                </CopyToClipboard>
+              </p>
+              <p>
+                <b>Qr code: </b>
+                {qrCode}
+                <CopyToClipboard
+                  text={qrCode}
+                  onCopy={() => alert("Qr code copied successfully")}
+                >
+                  <FileCopy className="icon" />
+                </CopyToClipboard>
+              </p>
+              <center>
+                <img src={qrCode} alt="qr-code" />
+              </center>
+            </div>
+          )
+        ) : (
+          <div className="content">
+            <h3>Share this Product</h3>
+            <p style={{ color: "#555" }}>
+              generate a Link to this product for others to view their secure
+              Repositories
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <h5 style={{ marginBottom: "10px" }}>Enter number of links</h5>
+                <form>
+                  <input
+                    type="number"
+                    min="0"
+                    style={{ marginBottom: "20px" }}
+                    value={linkNo}
+                    onChange={(event) => handleLinkNoChange(event)}
+                  />
+                </form>
+              </div>
+              <button style={{ width: "100px" }} onChange={handleGoClick}>
+                Go
+              </button>
+            </div>
+
+            <div>
+              <form>
+                <label
+                  for="links"
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <h5>Select number of public links</h5>
+                  <p style={{ fontSize: "13px", color: "#555" }}>
+                    Count: {selectToggle ? linkNo : "0"}
+                  </p>
+                </label>
+                <select
+                  style={{
+                    margin: "10px 0",
+                    outline: "0",
+                    backgroundColor: "#f4f4f4",
+                    border: " 1px solid #555",
+                    borderRadius: "5px",
+                  }}
+                  size={10}
+                  multiple
+                  onChange={handleSelectChange}
+                >
+                  {Array.from(unusedlinks).map((key, i) => {
+                    if (i >= linkNo) {
+                      return (
+                        <option key={i} value={key}>
+                          {key}
+                        </option>
+                      );
+                    } else {
+                      //   if (selectToggle) {
+                      return (
+                        <option key={i} value={key} selected>
+                          {key}
+                        </option>
+                      );
+                      //   }
+                      //
+                    }
+                  })}
+                </select>
+              </form>
+              <button
+                onClick={() =>
+                  selectLinks.length === 0
+                    ? alert("please select at least one qrcode link")
+                    : setToggle("1")
+                }
               >
                 Generate Link
               </button>
             </div>
-          ) : toggle === "2" ? (
-            message &&
-            qrCode &&
-            masterLink && (
-              <div style={{ marginTop: "60px" }} className="api-result">
-                <h4>Created Successfully! {message}</h4>
-                <p>
-                  <b>Master Link: </b>
-                  {masterLink}
-                  <CopyToClipboard
-                    text={masterLink}
-                    onCopy={() => alert("Master link copied succesfully")}
-                  >
-                    <FileCopy className="icon" />
-                  </CopyToClipboard>
-                </p>
-                <p>
-                  <b>Qr code: </b>
-                  {qrCode}
-                  <CopyToClipboard
-                    text={qrCode}
-                    onCopy={() => alert("Qr code copied successfully")}
-                  >
-                    <FileCopy className="icon" />
-                  </CopyToClipboard>
-                </p>
-                <center>
-                  <img src={qrCode} alt="qr-code" />
-                </center>
-              </div>
-            )
-          ) : (
-            <div className="content">
-              <h3>Share this Product</h3>
-              <p style={{ color: "#555" }}>
-                generate a Link to this product for others to view their secure
-                Repositories
-              </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>
-                  <h5 style={{ marginBottom: "10px" }}>
-                    Enter number of links
-                  </h5>
-                  <form>
-                    <input
-                      type="number"
-                      min="0"
-                      style={{ marginBottom: "20px" }}
-                      value={linkNo}
-                      onChange={(event) => handleLinkNoChange(event)}
-                    />
-                  </form>
-                </div>
-                <button style={{ width: "100px" }} onChange={handleGoClick}>
-                  Go
-                </button>
-              </div>
-
-              <div>
-                <form>
-                  <label
-                    for="links"
-                    style={{
-                      display: "flex",
-                      alignItems: "baseline",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <h5>Select number of public links</h5>
-                    <p style={{ fontSize: "13px", color: "#555" }}>
-                      Count: {selectToggle ? linkNo : "0"}
-                    </p>
-                  </label>
-                  <select
-                    style={{
-                      margin: "10px 0",
-                      outline: "0",
-                      backgroundColor: "#f4f4f4",
-                      border: " 1px solid #555",
-                      borderRadius: "5px",
-                    }}
-                    size={10}
-                    multiple
-                    onChange={handleSelectChange}
-                  >
-                    {Array.from(unusedlinks).map((key, i) => {
-                      if (i >= linkNo) {
-                        return (
-                          <option key={i} value={key}>
-                            {key}
-                          </option>
-                        );
-                      } else {
-                        //   if (selectToggle) {
-                        return (
-                          <option key={i} value={key} selected>
-                            {key}
-                          </option>
-                        );
-                        //   }
-                        //
-                      }
-                    })}
-                  </select>
-                </form>
-                <button
-                  onClick={() =>
-                    selectLinks.length === 0
-                      ? alert("please select at least one qrcode link")
-                      : setToggle("1")
-                  }
-                >
-                  Generate Link
-                </button>
-              </div>
-            </div>
-          )}
-        </Popup>
-      </div>
+          </div>
+        )}
+      </Popup>
+    </div>
   );
 }
