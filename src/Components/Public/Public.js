@@ -5,6 +5,7 @@ import { AddBoxOutlined, FileCopy } from "@mui/icons-material";
 import Popup from "../Popup/Popup";
 import axios from "axios";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import Loader from "../Loader/Loader"
 
 export default function Public() {
   const [state] = useStateValue();
@@ -198,7 +199,7 @@ export default function Public() {
         ) : toggle === "2" ? (
           message &&
           qrCode &&
-          masterLink && (
+          masterLink ? (
             <div style={{ marginTop: "60px" }} className="api-result">
               <h4>Created Successfully! {message}</h4>
               <p>
@@ -222,10 +223,10 @@ export default function Public() {
                 </CopyToClipboard>
               </p>
               <center>
-                <img src={qrCode} alt="qr-code" />
+                <img src={qrCode} alt="qr-code" width={300} />
               </center>
             </div>
-          )
+          ): <Loader />
         ) : (
           <div className="content">
             <h3>Share this Product</h3>

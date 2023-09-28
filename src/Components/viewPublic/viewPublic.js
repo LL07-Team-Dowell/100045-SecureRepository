@@ -3,7 +3,6 @@ import axios from "axios";
 import "../Home/home.css";
 import { Link } from "react-router-dom";
 import Select from "react-select";
-import Loader from "../Loader/Loader";
 import {
   PieChart,
   Pie,
@@ -22,11 +21,7 @@ import { jsPDF } from "jspdf";
 
 export default function ViewPublic() {
   const queryParams = new URLSearchParams(window.location.search);
-  const qr_idParams = queryParams.get("qr_id");
   const company_idParams = queryParams.get("company_id");
-  const [masterData, setMasterData] = React.useState([]);
-  const [qrData, setQrData] = React.useState();
-  const [expired, setExpired] = React.useState(false);
    const [data, setData] = useState([]);
   const [repositoryNames, setRepositoryNames] = useState([]);
   const [userRepositoryNames, setUserRepositoryNames] = useState([]);
