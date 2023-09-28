@@ -28,51 +28,25 @@ export default function ViewPublic() {
   const [qrData, setQrData] = React.useState();
   const [expired, setExpired] = React.useState(false);
    const [data, setData] = useState([]);
-   const [repositoryNames, setRepositoryNames] = useState([]);
-   const [userRepositoryNames, setUserRepositoryNames] = useState([]);
-   const [allpushers, setAllPushers] = useState([]);
-   const [pushers, setPushers] = useState([]);
-   const [selectedRepository, setSelectedRepository] = useState();
-   const [selectedUser, setSelectedUser] = useState();
-   const [selectedUserRepository, setSelectedUserRepository] = useState();
-   const [selectedPushers, setSelectedPushers] = useState();
-   const [repositoryData, setRepositoryData] = useState([]);
-   const [repositoryUserData, setRepositoryUserData] = useState([]);
-   const [chartData, setChartData] = useState([]);
-   const [chartUserData, setChartUserData] = useState([]);
-   const [histogram, setHistogram] = useState([]);
-   const [userHistogram, setUserHistogram] = useState([]);
-   const [toggle, setToggle] = useState("repository");
-   
+  const [repositoryNames, setRepositoryNames] = useState([]);
+  const [userRepositoryNames, setUserRepositoryNames] = useState([]);
+  const [allpushers, setAllPushers] = useState([]);
+  const [pushers, setPushers] = useState([]);
+  const [selectedRepository, setSelectedRepository] = useState();
+  const [selectedUser, setSelectedUser] = useState();
+  const [selectedUserRepository, setSelectedUserRepository] = useState();
+  const [selectedPushers, setSelectedPushers] = useState();
+  const [repositoryData, setRepositoryData] = useState([]);
+  const [repositoryUserData, setRepositoryUserData] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [chartUserData, setChartUserData] = useState([]);
+  const [histogram, setHistogram] = useState([]);
+  const [userHistogram, setUserHistogram] = useState([]);
+  const [toggle, setToggle] = useState("repository");
 
-  React.useEffect(() => { 
+
+  React.useEffect(() => {
     // Use useEffect to make the API call and update data state
-
-    const fetchMasterLinks = async () => {
-      try {
-        const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/generate-master-link/${company_idParams}/?type=master_link_details`
-        );
-        if (response.data === 0) {
-          console.log("error");
-        } else {
-          console.log(response.data);
-          setMasterData(response.data?.qr_ids);
-          let match = response.data?.qr_ids
-            .map((item) => {
-              if (item.qr_ids.includes(qr_idParams)) {
-                return item;
-              }
-              return null;
-            })
-            .filter((item) => item);
-          setQrData(match);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -88,6 +62,22 @@ export default function ViewPublic() {
             new Set(response.data.data.map((item) => item.repository_name))
           );
 
+          const allPushers = response.data.data.reduce((pushers, item) => {
+            const metadata = item.metadata;
+            if (metadata && Array.isArray(metadata)) {
+              metadata.forEach((meta) => {
+                const pusher = meta.pusher;
+                if (pusher && !pushers.includes(pusher)) {
+                  pushers.push(pusher);
+                }
+              });
+            }
+            return pushers;
+          }, []);
+
+          setAllPushers(allPushers);
+
+          setAllPushers(allPushers);
           setRepositoryNames(uniqueRepositoryNames);
         }
       } catch (error) {
@@ -96,13 +86,7 @@ export default function ViewPublic() {
       // Call the async function
     };
     fetchData();
-
-    fetchMasterLinks();
-
-    setTimeout(() => {
-      setExpired(true);
-    }, 7000);
-  }, [company_idParams , qr_idParams]);
+  }, [company_idParams]);
 
   const handleSelectChange = (selectedRepository) => {
     setSelectedRepository(selectedRepository);
@@ -112,14 +96,14 @@ export default function ViewPublic() {
   const handlePusherChange = (selectedPushers) => {
     setSelectedPushers(selectedPushers);
   };
-  
-    const handleUserChange = (selectedUser) => {
-      setSelectedUser(selectedUser);
-      setSelectedUserRepository(null);
-    };
+
+  const handleUserChange = (selectedUser) => {
+    setSelectedUser(selectedUser);
+    setSelectedUserRepository(null);
+  };
 
   React.useEffect(() => {
-   if (data.length > 0 && selectedUser) {
+    if (data.length > 0 && selectedUser) {
       // pie chart logic - userID loop
 
       const pusherCommits = {};
@@ -407,7 +391,7 @@ export default function ViewPublic() {
 
   return (
     <>
-      <div className="tabs">
+      <div className="tabs" style={{marginTop: "100px"}}>
         <ul>
           <li
             className={toggle === "repository" ? "active" : ""}

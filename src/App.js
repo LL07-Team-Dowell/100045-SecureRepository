@@ -32,7 +32,12 @@ function App() {
           company_idParams && (
             <>
               <Navbar public="true" />
-              <ViewPublic />
+              <ViewPublic
+                style={{
+                  position: "relative",
+                  top: "500px",
+                }}
+              />
             </>
           )}
       </>
