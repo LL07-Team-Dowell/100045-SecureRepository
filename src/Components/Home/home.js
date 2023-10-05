@@ -41,13 +41,14 @@ export default function Home(props) {
   const [portfolio] = state.user?.portfolio_info?.filter(
     (item) => item?.product === "Secure Repositories"
   );
+  const [usernameData, setUserNameData] = useState([]);
 
   React.useEffect(() => {
     // Use useEffect to make the API call and update data state
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://100045.pythonanywhere.com/reports/get-statistics/6385c0f18eca0fb652c94561/`
+          `https://100045.pythonanywhere.com/reports/get-statistics/${portfolio.org_id}/`
         );
         if (response.data.data.length === 0) {
           console.log("error");
@@ -82,6 +83,22 @@ export default function Home(props) {
       }
       // Call the async function
     };
+
+    const fetchUserName = async () => {
+      try {
+        const response = await axios.get(
+          `https://100098.pythonanywhere.com/updategithubprofile/`
+        );
+        if (response.data.success) {
+          // console.log(response.data.data);
+          setUserNameData(response.data.data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      // Call the async function
+    };
+    fetchUserName();
     fetchData();
   }, [portfolio.org_id]);
 
@@ -125,7 +142,7 @@ export default function Home(props) {
         }
       });
 
-      const commitCountsForTargetPusher = pusherCommits[selectedUser.label];
+      const commitCountsForTargetPusher = pusherCommits[selectedUser.value];
 
       // Initialize an empty array to store the commit counts as objects
       const commitCountsArray = [];
@@ -158,13 +175,13 @@ export default function Home(props) {
         .filter(
           (item) =>
             !selectedUserRepository ||
-            item.repository_name === selectedUserRepository.label
+            item.repository_name === selectedUserRepository.value
         ) // Filter by selected repository
         .map((item) => {
           return {
             repository_name: item.repository_name,
             metadata: item.metadata.filter(
-              (meta) => meta.pusher === selectedUser.label
+              (meta) => meta.pusher === selectedUser.value
             ),
           };
         });
@@ -208,20 +225,18 @@ export default function Home(props) {
       // Check if selectedItem and selectedPushers are defined
       if (selectedUser) {
         const commitsByMonth = selectedItem.reduce((acc, commit) => {
-          commit?.metadata.forEach((commit)=>  {if (commit?.pusher === selectedUser.label) {
-         
-            const month = new Date(commit?.data).toLocaleString(
-              "default",
-              {
+          commit?.metadata.forEach((commit) => {
+            if (commit?.pusher === selectedUser.value) {
+              const month = new Date(commit?.data).toLocaleString("default", {
                 month: "long",
-              }
-            );
-            acc[month] = acc[month] || { added: 0, modified: 0, removed: 0 };
-            acc[month].added += commit.created_files;
-            acc[month].modified += commit.modified_files;
-            acc[month].removed += commit.removed_files;
-          }})
-        
+              });
+              acc[month] = acc[month] || { added: 0, modified: 0, removed: 0 };
+              acc[month].added += commit.created_files;
+              acc[month].modified += commit.modified_files;
+              acc[month].removed += commit.removed_files;
+            }
+          });
+
           return acc;
         }, {});
 
@@ -246,7 +261,7 @@ export default function Home(props) {
 
     if (data.length > 0 && selectedRepository) {
       const selectedItem = data.find(
-        (item) => item.repository_name === selectedRepository.label
+        (item) => item.repository_name === selectedRepository.value
       );
 
       const uniquePusherNames = Array.from(
@@ -269,7 +284,9 @@ export default function Home(props) {
 
         const commitsPerPusherData = Object.entries(commitsByPusher).map(
           ([pusher, commits]) => ({
-            name: pusher,
+            name:
+              usernameData.find((item) => item?.github_id === pusher)
+                ?.username || pusher,
             value: commits,
             fill: "#" + Math.floor(Math.random() * 16777215).toString(16),
           })
@@ -284,7 +301,7 @@ export default function Home(props) {
 
           if (selectedPushers) {
             return (
-              itemYear === currentYear && item.pusher === selectedPushers?.label
+              itemYear === currentYear && item.pusher === selectedPushers?.value
             );
           } else {
             return itemYear === currentYear;
@@ -319,7 +336,7 @@ export default function Home(props) {
         const commitsByMonth = (
           selectedPushers
             ? selectedItem?.metadata.filter(
-                (item) => item.pusher === selectedPushers?.label
+                (item) => item.pusher === selectedPushers?.value
               )
             : selectedItem?.metadata
         ).reduce((acc, commit) => {
@@ -383,8 +400,8 @@ export default function Home(props) {
     });
   };
 
-  console.log("hi");
-  console.log("histogram" + userHistogram);
+  console.log("hiy");
+  console.log("histogram" + JSON.stringify(usernameData));
 
   return (
     <>
@@ -499,7 +516,12 @@ export default function Home(props) {
               </h4>
               <label htmlFor="repository">Choose a Pusher: </label>
               <Select
-                options={pushers.map((opt) => ({ label: opt, value: opt }))}
+                options={pushers.map((opt) => ({
+                  value: opt,
+                  label:
+                    usernameData.find((item) => item?.github_id === opt)
+                      ?.username || opt,
+                }))}
                 value={selectedPushers}
                 onChange={handlePusherChange}
               />
@@ -611,7 +633,9 @@ export default function Home(props) {
               </label>
               <Select
                 options={allpushers.map((opt) => ({
-                  label: opt,
+                  label:
+                    usernameData.find((item) => item?.github_id === opt)
+                      ?.username || opt,
                   value: opt,
                 }))}
                 value={selectedUser}
@@ -716,9 +740,9 @@ export default function Home(props) {
             <div className="container bar histogram">
               <h3>
                 Histogram showing file distributions by{" "}
-                {selectedUser?.label ? selectedUser.label : "userID"} in{" "}
-                {selectedUserRepository?.label
-                  ? selectedUserRepository.label
+                {selectedUser?.value ? selectedUser.value : "userID"} in{" "}
+                {selectedUserRepository?.value
+                  ? selectedUserRepository.value
                   : "different repositories"}
               </h3>
               {!selectedUser && (
